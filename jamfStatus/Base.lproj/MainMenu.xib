@@ -236,8 +236,9 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" usesFontPanel="YES" findStyle="panel" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="hL1-Tj-fib">
-                                                        <rect key="frame" x="0.0" y="0.0" width="494" height="387"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="494" height="402"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         <size key="minSize" width="494" height="270"/>
                                                         <size key="maxSize" width="494" height="10000000"/>
@@ -245,8 +246,9 @@
                                                             <fragment>
                                                                 <mutableString key="content">Keep an eye on the status of the Jamf Cloud environment with jamfStatus.app.  The application will place an icon in your menu bar to reflect the current cloud status.  You'll also get an alert window as the cloud status changes.
 
+Author: Leslie Helou
 License:
-Copyright 2017 Leslie N. Helou
+Copyright 2017 Jamf Professional Services
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -256,6 +258,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 </mutableString>
                                                                 <attributes>
+                                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <font key="NSFont" size="12" name="Geneva"/>
                                                                     <integer key="NSLigature" value="0"/>
                                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" defaultTabInterval="27.149999999999999" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
