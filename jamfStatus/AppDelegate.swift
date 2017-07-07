@@ -26,6 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     let fm = FileManager()
     let SMC = StatusMenuController()
     var pollingInterval: UInt32 = 300
+    var hideIcon: Bool = false
     
     let popover = NSPopover()
     
@@ -42,6 +43,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     @IBOutlet weak var prefWindowAlerts_Button: NSButton!
+    @IBOutlet weak var prefWindowIcon_Button: NSButton!
+    
     
     @IBAction func prefs_MenuItem(_ sender: NSMenuItem) {
         let local_pollingInterval = SMC.readSettings()?["pollingInterval"]  as! Int32
@@ -52,6 +55,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         } else {
             prefWindowAlerts_Button.state = NSOffState
         }
+        let local_IconPrefs_bool = SMC.readSettings()?["hideMenubarIcon"] as! Bool
+        if local_IconPrefs_bool {
+            prefWindowIcon_Button.state = NSOnState
+        } else {
+            prefWindowIcon_Button.state = NSOffState
+        }
+
         NSApplication.shared().activate(ignoringOtherApps: true)
         prefs_Panel.setIsVisible(true)
     }
@@ -65,6 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         }
         SMC.settingsPlistData["pollingInterval"] = pollingInterval
         SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state == 0 ? false:true)
+        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state == 0 ? false:true)
         // Write info to settings.plist
         (SMC.settingsPlistData as NSDictionary).write(toFile: SMC.SettingsPlistPath, atomically: false)
     }
@@ -72,9 +83,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBAction func prefWindowAlert_Action(_ sender: NSButton) {
         SMC.settingsPlistData["pollingInterval"] = SMC.readSettings()?["pollingInterval"]  as! Int32
         SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state == 0 ? false:true)
+        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state == 0 ? false:true)
         // Write info to settings.plist
         (SMC.settingsPlistData as NSDictionary).write(toFile: SMC.SettingsPlistPath, atomically: false)
     }
+    
+    @IBAction func prefWindowIcon_Action(_ sender: NSButton) {
+        SMC.settingsPlistData["pollingInterval"] = SMC.readSettings()?["pollingInterval"]  as! Int32
+        SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state == 0 ? false:true)
+        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state == 0 ? false:true)
+        // Write info to settings.plist
+        (SMC.settingsPlistData as NSDictionary).write(toFile: SMC.SettingsPlistPath, atomically: false)
+    }
+    
     
     @IBAction func back_button(_ sender: Any) {
         page_WebView.goBack()

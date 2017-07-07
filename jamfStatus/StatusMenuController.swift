@@ -55,6 +55,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     }
     
     override func awakeFromNib() {
+  
         let AppDlg = AppDelegate()
 
         icon = NSImage(named: iconName)
@@ -72,14 +73,28 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                     // Write info to settings.plist
                     (self.settingsPlistData as NSDictionary).write(toFile: self.SettingsPlistPath, atomically: false)
                 }
+                AppDlg.hideIcon = Bool(self.readSettings()?["hideMenubarIcon"]  as! Bool)
                 //print("Poll Interval: \(AppDlg.pollingInterval)")
+//                print("hide icon: \(AppDlg.hideIcon)")
+                
                 self.iconName = self.getStatus2()
-                self.icon = NSImage.init(named: self.iconName)
-                self.cloudStatusItem.image = self.icon
-                // added additional sleep and icon mumbo jumbo to get icon to refresh
-                sleep(10)
-                self.icon = NSImage.init(named: self.iconName)
-                self.cloudStatusItem.image = self.icon
+                for _ in 0...1 {
+                    if !(AppDlg.hideIcon) {
+                        self.icon = NSImage.init(named: self.iconName)
+                    } else {
+                        self.icon = NSImage.init(named: "minimizedIcon")
+                    }
+                    self.cloudStatusItem.image = self.icon
+                    // added additional sleep and icon mumbo jumbo to get icon to refresh
+                    sleep(5)
+                }
+//                if !(AppDlg.hideIcon) {
+//                    self.icon = NSImage.init(named: self.iconName)
+//                } else {
+//                    self.icon = NSImage.init(named: "minimizedIcon")
+//                }
+//                self.cloudStatusItem.image = self.icon
+                
                 sleep(UInt32(AppDlg.pollingInterval))
             }
         }
@@ -97,6 +112,12 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     }
     
     func displayAlert(currentState: String) {
+        // adjust font size so that alert message fits in text box.
+        if statusLine2.characters.count > 55 {
+            self.alert_TextFieldCell.font = NSFont(name: "System", size: 14.0)
+        } else {
+            self.alert_TextFieldCell.font = NSFont(name: "System", size: 18.0)
+        }
         if (readSettings()?["hideUntilStatusChange"] as! Bool) {
             alertWindowPref_Button.state = NSOnState
         } else {
@@ -121,17 +142,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         }
         prevState = currentState
     }
-  
-    func readSettings() -> NSMutableDictionary? {
-        let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: SettingsPlistPath) {
-            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
-            return dict
-        } else {
-            return .none
-        }
-    }
-
     
     func getStatus2() -> String {
         var localResult = ""
@@ -159,12 +169,16 @@ class StatusMenuController: NSObject, URLSessionDelegate {
             // try to capture status message from web page - start
             let marker = service.index(of: "<span class=\"status font-large\">")
             let marker2 = service.index(of: "<div class=\"incident-title font-large\">")
+//            print("marker: \(String(describing: marker))\n")
+//            print("marker2: \(String(describing: marker2))\n")
             if marker != nil {
                 alert_TextFieldCell.stringValue = "Jamf Cloud Status:\n\(service[marker!+1])"
                 print("Jamf Cloud: \(service[marker!+1])")
             } else if marker2 != nil {
                 statusLine = "\(service[marker2!+1])"
+                print("statusLine: \(service[marker2!+1])\n")
                 statusLine2 = ""
+                //statusLine2 = statusMsg(theLine: statusLine)
                 // substring
                 if let start = statusLine.range(of: ">"),
                     let end  = statusLine.range(of: "</a>", range: start.upperBound..<statusLine.endIndex) {
@@ -198,8 +212,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                     alert_TextFieldCell.stringValue = "Jamf Cloud status is fully operational."
                 }
                 displayAlert(currentState: localResult)
-                
-            } else if statusPageString.lowercased().contains("page-status status-minor") || statusPageString.lowercased().contains("unresolved-incident impact-minor") {
+            } else if statusPageString.lowercased().contains("page-status status-minor") || statusPageString.lowercased().contains("unresolved-incident impact-minor") || statusPageString.lowercased().contains("unresolved-incident impact-none") {
                 localResult = "cloudStatus-yellow"
                 alert_ImageView.image = alert_image_yellow
                 if alert_TextFieldCell.stringValue == "" {
@@ -229,7 +242,34 @@ class StatusMenuController: NSObject, URLSessionDelegate {
             print("Error: \(error)")
         }
         
-        return(localResult)
+        if (localResult != "cloudStatus-green") && (localResult != "cloudStatus-yellow") && (localResult != "cloudStatus-red") {
+            return("minimizedIcon")
+        } else {
+            return(localResult)
+        }
+    }
+    
+    func readSettings() -> NSMutableDictionary? {
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: SettingsPlistPath) {
+            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
+            return dict
+        } else {
+            return .none
+        }
+    }
+    
+    func statusMsg(theLine: String) -> String {
+        var range: Range<String.Index> = statusLine.range(of: ">")!
+        let startIndex: Int = statusLine.distance(from: statusLine.startIndex, to: range.lowerBound)
+        range = statusLine.range(of: "</a>")!
+        let endIndex: Int = statusLine.distance(from: statusLine.startIndex, to: range.lowerBound)
+        
+        let start = statusLine.index(statusLine.startIndex, offsetBy: startIndex+1)
+        let end = statusLine.index(statusLine.startIndex, offsetBy: endIndex)
+        let substrintRange = start..<end
+        
+        return statusLine.substring(with: substrintRange)
     }
 
 }

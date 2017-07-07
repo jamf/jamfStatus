@@ -6,5 +6,7 @@
 	<integer>300</integer>
 	<key>hideUntilStatusChange</key>
 	<false/>
+	<key>hideMenubarIcon</key>
+	<false/>
 </dict>
 </plist>
