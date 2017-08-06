@@ -21,6 +21,8 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     @IBOutlet weak var alert_TextFieldCell: NSTextFieldCell!
     @IBOutlet weak var alert_ImageCell: NSImageCell!
     
+    
+    let fileManager = FileManager.default
     let cloudStatusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
     let statusURL = "https://status.jamf.com"
     var statusPageString = ""
@@ -42,7 +44,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     let myBundlePath = Bundle.main.bundlePath
     let SettingsPlistPath = NSHomeDirectory()+"/Library/Preferences/com.jamf.jamfstatus.plist"
     var format = PropertyListSerialization.PropertyListFormat.xml //format of the property list file
-    
+        
     var settingsPlistData:[String:Any] = [:]
     
     var statusLine = ""
@@ -250,7 +252,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     }
     
     func readSettings() -> NSMutableDictionary? {
-        let fileManager = FileManager.default
+//        let fileManager = FileManager.default
         if fileManager.fileExists(atPath: SettingsPlistPath) {
             guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
             return dict

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="12120"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="12121"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="12121"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,12 +17,13 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jamfStatus" customModuleProvider="target">
             <connections>
-                <outlet property="About_TextField" destination="WWy-Un-Qvf" id="asp-jo-vrS"/>
                 <outlet property="about_NSWindow" destination="LmC-DW-plF" id="30K-WG-mBo"/>
+                <outlet property="about_WebView" destination="uZV-lt-phl" id="Ld0-TX-0J8"/>
+                <outlet property="launchAgent_Button" destination="149-0X-OJo" id="cYB-A9-OCc"/>
                 <outlet property="page_WebView" destination="9HZ-2x-Hgm" id="tuk-Gq-QYR"/>
-                <outlet property="pollingInterval_TextField" destination="Jdp-eV-GL9" id="vKQ-94-IdT"/>
-                <outlet property="prefWindowAlerts_Button" destination="SLI-gn-Ejs" id="zqi-cT-2wE"/>
-                <outlet property="prefWindowIcon_Button" destination="qeJ-Bb-E0c" id="kom-yk-gmX"/>
+                <outlet property="pollingInterval_TextField" destination="Jdp-eV-GL9" id="GNt-PN-H2M"/>
+                <outlet property="prefWindowAlerts_Button" destination="SLI-gn-Ejs" id="ckP-0i-7tD"/>
+                <outlet property="prefWindowIcon_Button" destination="qeJ-Bb-E0c" id="nQs-Cu-bqO"/>
                 <outlet property="prefs_Panel" destination="WEB-hD-Ngs" id="Pcq-WQ-pN4"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -158,14 +161,14 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WEB-hD-Ngs" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="100" y="712" width="387" height="104"/>
+            <rect key="contentRect" x="100" y="712" width="387" height="147"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="hgl-Mf-6ZA">
-                <rect key="frame" x="0.0" y="0.0" width="387" height="104"/>
+                <rect key="frame" x="0.0" y="0.0" width="387" height="147"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hdp-Rt-TNE">
-                        <rect key="frame" x="32" y="67" width="97" height="17"/>
+                        <rect key="frame" x="32" y="110" width="97" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Polling Interval:" id="9Ym-Ya-nhd">
                             <font key="font" metaFont="system"/>
@@ -174,7 +177,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8B-9U-oQy">
-                        <rect key="frame" x="193" y="67" width="149" height="17"/>
+                        <rect key="frame" x="193" y="110" width="149" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds (minimum 120)" id="dQn-Wc-zar">
                             <font key="font" metaFont="system"/>
@@ -183,7 +186,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jdp-eV-GL9">
-                        <rect key="frame" x="131" y="65" width="60" height="22"/>
+                        <rect key="frame" x="131" y="108" width="60" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" drawsBackground="YES" id="FhS-ec-xVO">
                             <font key="font" metaFont="system"/>
@@ -191,128 +194,75 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                         <connections>
-                            <action selector="pollingInterval_Action:" target="Voe-Tx-rLC" id="wp9-Ei-3di"/>
+                            <action selector="writePrefs:" target="Voe-Tx-rLC" id="MAo-OL-M6D"/>
                         </connections>
                     </textField>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SLI-gn-Ejs">
-                        <rect key="frame" x="33" y="36" width="330" height="18"/>
+                        <rect key="frame" x="33" y="79" width="330" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Do not redisplay status alert until there is a change" bezelStyle="regularSquare" imagePosition="left" inset="2" id="tFc-fI-cXw">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="prefWindowAlert_Action:" target="Voe-Tx-rLC" id="pMP-Ou-ROn"/>
+                            <action selector="writePrefs:" target="Voe-Tx-rLC" id="bRK-er-Qmg"/>
                         </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qeJ-Bb-E0c">
-                        <rect key="frame" x="33" y="10" width="137" height="18"/>
+                        <rect key="frame" x="33" y="53" width="162" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Hide Menubar Icon" bezelStyle="regularSquare" imagePosition="left" inset="2" id="POb-4P-M6t">
+                        <buttonCell key="cell" type="check" title="Minimize Menubar Icon" bezelStyle="regularSquare" imagePosition="left" inset="2" id="POb-4P-M6t">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="prefWindowIcon_Action:" target="Voe-Tx-rLC" id="Ku9-di-GF0"/>
+                            <action selector="writePrefs:" target="Voe-Tx-rLC" id="rsD-Dj-7fg"/>
                         </connections>
                     </button>
+                    <button toolTip="jamfStatus.app must exist in /Applications" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="149-0X-OJo">
+                        <rect key="frame" x="33" y="26" width="147" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Enable LaunchAgent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Y9P-dU-rHL">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="writePrefs:" target="Voe-Tx-rLC" id="nyq-Fa-ey8"/>
+                        </connections>
+                    </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1XS-oh-UqB">
+                        <rect key="frame" x="51" y="13" width="267" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="(jamfStatus.app must exist in /Applications)" id="GgS-AB-Nrq">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="-5.5" y="402"/>
+            <point key="canvasLocation" x="-5.5" y="423.5"/>
         </window>
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="70" y="561" width="497" height="270"/>
+            <rect key="contentRect" x="70" y="561" width="610" height="308"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="1XC-At-TYn">
-                <rect key="frame" x="0.0" y="0.0" width="497" height="270"/>
+                <rect key="frame" x="0.0" y="0.0" width="610" height="308"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBe-GU-dcf">
-                        <rect key="frame" x="0.0" y="0.0" width="496" height="273"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" ambiguous="YES" id="P6r-SG-BoK">
-                            <rect key="frame" x="1" y="1" width="494" height="271"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <view fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WWy-Un-Qvf" userLabel="About_TextField">
-                                    <rect key="frame" x="0.0" y="0.0" width="495" height="268"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7z-Y8-BYV">
-                                            <rect key="frame" x="0.0" y="-1" width="494" height="270"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <clipView key="contentView" ambiguous="YES" id="CE1-v2-Xbz">
-                                                <rect key="frame" x="0.0" y="0.0" width="494" height="270"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" usesFontPanel="YES" findStyle="panel" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="hL1-Tj-fib">
-                                                        <rect key="frame" x="0.0" y="0.0" width="494" height="270"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                        <size key="minSize" width="494" height="270"/>
-                                                        <size key="maxSize" width="494" height="10000000"/>
-                                                        <attributedString key="textStorage">
-                                                            <fragment>
-                                                                <mutableString key="content">Keep an eye on the status of the Jamf Cloud environment with jamfStatus.app.  The application will place an icon in your menu bar to reflect the current cloud status.  You'll also get an alert window as the cloud status changes.
-
-Author: Leslie Helou
-License:
-Copyright 2017 Jamf Professional Services
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-</mutableString>
-                                                                <attributes>
-                                                                    <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <font key="NSFont" size="12" name="Geneva"/>
-                                                                    <integer key="NSLigature" value="0"/>
-                                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" defaultTabInterval="27.149999999999999" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                        <tabStops>
-                                                                            <textTab alignment="left" location="27.149999618530273">
-                                                                                <options/>
-                                                                            </textTab>
-                                                                        </tabStops>
-                                                                    </paragraphStyle>
-                                                                </attributes>
-                                                            </fragment>
-                                                        </attributedString>
-                                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    </textView>
-                                                </subviews>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Ytr-tv-nl1">
-                                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                            <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="Kfb-Zr-Bvu">
-                                                <rect key="frame" x="478" y="0.0" width="16" height="270"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </scroller>
-                                        </scrollView>
-                                    </subviews>
-                                </view>
-                            </subviews>
-                        </clipView>
-                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="qTq-jv-Vzt">
-                            <rect key="frame" x="1" y="256" width="494" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Z0z-rg-2H0">
-                            <rect key="frame" x="479" y="1" width="16" height="271"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
+                    <wkWebView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
+                        <rect key="frame" x="1" y="0.0" width="608" height="308"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <wkWebViewConfiguration key="configuration">
+                            <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                            <wkPreferences key="preferences" javaScriptEnabled="NO"/>
+                        </wkWebViewConfiguration>
+                    </wkWebView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="-6" y="701"/>
+            <point key="canvasLocation" x="98" y="781"/>
         </window>
     </objects>
     <resources>

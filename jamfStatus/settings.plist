@@ -2,11 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>pollingInterval</key>
-	<integer>300</integer>
-	<key>hideUntilStatusChange</key>
-	<false/>
 	<key>hideMenubarIcon</key>
 	<false/>
+	<key>hideUntilStatusChange</key>
+	<false/>
+	<key>launchAgent</key>
+	<false/>
+	<key>pollingInterval</key>
+	<integer>300</integer>
 </dict>
 </plist>
