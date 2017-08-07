@@ -5,4 +5,4 @@ Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an 
 <p>
 You'll also get on screen notifications when the status changes.
 
-![alert](https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/alert.png)
+![](https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/alert.png "alert")
