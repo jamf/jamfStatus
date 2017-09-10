@@ -19,13 +19,14 @@
             <connections>
                 <outlet property="about_NSWindow" destination="LmC-DW-plF" id="30K-WG-mBo"/>
                 <outlet property="about_WebView" destination="uZV-lt-phl" id="Ld0-TX-0J8"/>
+                <outlet property="cloudStatusWindow" destination="QvC-M9-y7g" id="HC1-sI-Zvc"/>
+                <outlet property="cloudStatus_Toolbar" destination="CNq-wK-nx1" id="FJF-XG-Bh2"/>
                 <outlet property="launchAgent_Button" destination="149-0X-OJo" id="cYB-A9-OCc"/>
                 <outlet property="page_WebView" destination="9HZ-2x-Hgm" id="tuk-Gq-QYR"/>
                 <outlet property="pollingInterval_TextField" destination="Jdp-eV-GL9" id="GNt-PN-H2M"/>
                 <outlet property="prefWindowAlerts_Button" destination="SLI-gn-Ejs" id="ckP-0i-7tD"/>
                 <outlet property="prefWindowIcon_Button" destination="qeJ-Bb-E0c" id="nQs-Cu-bqO"/>
                 <outlet property="prefs_Panel" destination="WEB-hD-Ngs" id="Pcq-WQ-pN4"/>
-                <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -34,7 +35,8 @@
                 <outlet property="alertWindowPref_Button" destination="HJJ-90-lEi" id="DnD-Ul-Vs0"/>
                 <outlet property="alert_ImageCell" destination="CCx-9S-ESS" id="OrA-pk-Zrb"/>
                 <outlet property="alert_ImageView" destination="Lpu-7F-grg" id="9vj-e9-JOz"/>
-                <outlet property="alert_TextFieldCell" destination="aDa-sw-3yj" id="R2e-qP-2iF"/>
+                <outlet property="alert_TextFieldCell" destination="A6f-4N-wim" id="sym-V9-n3Y"/>
+                <outlet property="alert_TextView" destination="RHQ-cA-Kh8" id="c2P-vA-PlE"/>
                 <outlet property="alert_window" destination="c7c-gc-Sf1" id="qsb-Sy-4Xd"/>
                 <outlet property="cloudStatusMenu" destination="3WP-Vd-yUB" id="kWi-Y0-EFh"/>
             </connections>
@@ -69,8 +71,8 @@
             </items>
             <point key="canvasLocation" x="290" y="-264"/>
         </menu>
-        <window title="Jamf Cloud Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+        <window title="Jamf Cloud Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" unifiedTitleAndToolbar="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -79,73 +81,88 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <webView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9HZ-2x-Hgm">
-                        <rect key="frame" x="1" y="-3" width="479" height="339"/>
+                        <rect key="frame" x="0.0" y="-3" width="479" height="365"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
                             <nil key="identifier"/>
                         </webPreferences>
                     </webView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PGF-hS-67G">
-                        <rect key="frame" x="33" y="335" width="23" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundTextured" title="&gt;" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" refusesFirstResponder="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="TUG-JJ-w9j">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="forward_button:" target="Voe-Tx-rLC" id="bg5-O2-LnM"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i23-ne-TsY">
-                        <rect key="frame" x="11" y="335" width="23" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundTextured" title="&lt;" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" refusesFirstResponder="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="1T2-mQ-gw5">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="back_button:" target="Voe-Tx-rLC" id="Db1-il-2Nd"/>
-                        </connections>
-                    </button>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="39" y="85"/>
+            <toolbar key="toolbar" implicitIdentifier="8D0CFC97-0C69-401C-87F3-B35AB476439A" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="CNq-wK-nx1">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="B82CF4D4-9B97-4DB7-A05A-9E8A75F87842" label="Custom View" paletteLabel="Custom View" id="1nZ-yX-Sz2">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="25" height="25"/>
+                        <size key="maxSize" width="25" height="25"/>
+                        <button key="view" verticalHuggingPriority="750" id="9Sj-fO-GW5">
+                            <rect key="frame" x="26" y="14" width="25" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" title="&lt;" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UwJ-nb-KFX">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent">b</string>
+                            </buttonCell>
+                            <connections>
+                                <action selector="back_button:" target="Voe-Tx-rLC" id="AMS-sW-DbC"/>
+                            </connections>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="AA56209D-CA20-4D65-BE8F-4CF1E4412505" label="Custom View" paletteLabel="Custom View" id="IBG-r2-iX0">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="25" height="25"/>
+                        <size key="maxSize" width="25" height="25"/>
+                        <button key="view" verticalHuggingPriority="750" id="slf-WI-35s">
+                            <rect key="frame" x="26" y="14" width="25" height="25"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundTextured" title="&gt;" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qEj-Hf-A4V">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                                <string key="keyEquivalent">f</string>
+                            </buttonCell>
+                            <connections>
+                                <action selector="forward_button:" target="Voe-Tx-rLC" id="K6N-ae-9Hb"/>
+                            </connections>
+                        </button>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="PFE-jc-zSJ"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="GSc-SZ-Sie"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="boQ-7e-Sud"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Ltc-uj-ZwQ"/>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="1nZ-yX-Sz2"/>
+                    <toolbarItem reference="IBG-r2-iX0"/>
+                </defaultToolbarItems>
+            </toolbar>
+            <point key="canvasLocation" x="56" y="71"/>
         </window>
         <window title="alert" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="c7c-gc-Sf1" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="70" y="748" width="398" height="120"/>
+            <rect key="contentRect" x="70" y="748" width="398" height="99"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="1wr-TU-Bu1">
-                <rect key="frame" x="0.0" y="0.0" width="398" height="120"/>
+                <rect key="frame" x="0.0" y="0.0" width="398" height="99"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOd-so-Kt1">
-                        <rect key="frame" x="55" y="11" width="312" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <rect key="frame" x="55" y="3" width="332" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" title="Do not redisplay status alert until there is a change" drawsBackground="YES" id="8qs-RI-Nlp">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vlt-k8-dhv">
-                        <rect key="frame" x="86" y="41" width="288" height="69"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" id="aDa-sw-3yj">
-                            <font key="font" metaFont="system" size="18"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lpu-7F-grg">
-                        <rect key="frame" x="15" y="48" width="58" height="58"/>
+                        <rect key="frame" x="15" y="34" width="58" height="58"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="caution-yellow" id="CCx-9S-ESS"/>
                     </imageView>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HJJ-90-lEi">
-                        <rect key="frame" x="35" y="14" width="337" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <rect key="frame" x="35" y="6" width="336" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Obz-eb-Rcv">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -154,9 +171,18 @@
                             <action selector="alertWindowPref_Action:" target="J6O-sa-pS3" id="2tj-as-0Ef"/>
                         </connections>
                     </button>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHQ-cA-Kh8">
+                        <rect key="frame" x="79" y="-127" width="312" height="226"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" id="A6f-4N-wim">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="-15" y="-255"/>
+            <point key="canvasLocation" x="-119" y="-337.5"/>
         </window>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WEB-hD-Ngs" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
@@ -177,9 +203,9 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8B-9U-oQy">
-                        <rect key="frame" x="193" y="110" width="149" height="17"/>
+                        <rect key="frame" x="193" y="110" width="143" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds (minimum 120)" id="dQn-Wc-zar">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds (minimum 60)" id="dQn-Wc-zar">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -244,7 +270,7 @@
             <point key="canvasLocation" x="-5.5" y="423.5"/>
         </window>
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="70" y="561" width="610" height="308"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -252,9 +278,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="610" height="308"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <wkWebView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
-                        <rect key="frame" x="1" y="0.0" width="608" height="308"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                    <wkWebView wantsLayer="YES" canDrawConcurrently="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
+                        <rect key="frame" x="0.0" y="0.0" width="610" height="308"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <wkWebViewConfiguration key="configuration">
                             <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                             <wkPreferences key="preferences" javaScriptEnabled="NO"/>
