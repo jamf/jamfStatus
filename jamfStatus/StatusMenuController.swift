@@ -22,8 +22,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     @IBOutlet weak var alert_TextView: NSTextField!
     @IBOutlet weak var alert_TextFieldCell: NSTextFieldCell!
     
-//    @IBOutlet var alert_TextView: NSTextView!
-//    @IBOutlet weak var alert_TextFieldCell: NSTextFieldCell!
     @IBOutlet weak var alert_ImageCell: NSImageCell!
     
     let fileManager = FileManager.default
@@ -32,6 +30,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     var statusPageString = ""
     var dataString = ""
     var theResult = ""
+    var displayedStatus = ""
     var iconName = ""
     var icon = NSImage(named: "cloudStatus-red")
     
@@ -149,7 +148,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         self.alert_window.setIsVisible(true)
     }
     
-//    func getStatus2() -> String {
     func getStatus2(completion: @escaping (_ result: String) -> Void) {
         var localResult = ""
         
@@ -165,7 +163,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         
         //        JSON parsing - start
         let apiStatusUrl = "https://status.jamf.com/api/v2/components.json"
-//        let apiStatusUrl = "http://172.27.1.35/components.json"
         let encodedURL = NSURL(string: apiStatusUrl)
         let request = NSMutableURLRequest(url: encodedURL! as URL)
         request.httpMethod = "GET"
@@ -176,7 +173,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         let task = session.dataTask(with: request as URLRequest, completionHandler: {
             (data, response, error) -> Void in
             if (response as? HTTPURLResponse) != nil {
-//                print("httpResponse: \(String(describing: response))")
                 do {
                     if let data = data,
                         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -186,11 +182,18 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                                 let status = cloudService["status"] as? String {
                                 switch status {
                                 case "degraded_performance", "partial_outage":
-                                    warningArray.append(name + ": " + status)
+                                    if status == "partial_outage" {
+                                        self.displayedStatus = "Partial Outage"
+                                    } else {
+                                        self.displayedStatus = "Degraded Performance"
+                                    }
+                                    warningArray.append(name + ": " + self.displayedStatus)
                                 case "major_outage":
-                                    criticalArray.append(name + ": " + status)
+                                    self.displayedStatus = "Major Outage"
+                                    criticalArray.append(name + ": " + self.displayedStatus)
                                 default:
-                                    operationalArray.append(name + ": " + status)
+                                    self.displayedStatus = "Operational"
+                                    operationalArray.append(name + ": " + self.displayedStatus)
                                 }
                             }
                         }
@@ -247,7 +250,6 @@ class StatusMenuController: NSObject, URLSessionDelegate {
      }
     
     func readSettings() -> NSMutableDictionary? {
-//        let fileManager = FileManager.default
         if fileManager.fileExists(atPath: SettingsPlistPath) {
             guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
             return dict
