@@ -155,6 +155,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         var warningArray = [String]()
         var criticalArray = [String]()
         
+        // clear current arrays
         operationalArray.removeAll()
         warningArray.removeAll()
         criticalArray.removeAll()
@@ -222,7 +223,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                 self.alert_message = "Please be aware there is a minor issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
                 self.serviceCount = warningArray.count
                 self.displayAlert(currentState: localResult)
-            } else {
+            } else if operationalArray.count > 0 {
                 self.alert_header = "Notice"
                 localResult = "cloudStatus-green"
                 self.affectedServices = ""
