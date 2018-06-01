@@ -30,7 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     var pollingInterval: UInt32 = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
-    
+        
     let popover = NSPopover()
     
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
@@ -43,16 +43,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         
         about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
         
-        NSApplication.shared().activate(ignoringOtherApps: true)
+        NSApplication.shared.activate(ignoringOtherApps: true)
 
-        cloudStatusWindow.titleVisibility = NSWindowTitleVisibility.hidden
+        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
         about_NSWindow.setIsVisible(true)
     }
     
-    
     @IBAction func viewStatus(_ sender: Any) {
+        cloudStatusWindow.titleVisibility = .hidden
         page_WebView.mainFrameURL = SMC.statusURL
-        NSApplication.shared().activate(ignoringOtherApps: true)
+        NSApplication.shared.activate(ignoringOtherApps: true)
         cloudStatusWindow.setIsVisible(true)
     }
     
@@ -65,28 +65,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         
         let local_alertPrefs_bool = SMC.readSettings()?["hideUntilStatusChange"] as! Bool
         if local_alertPrefs_bool {
-            prefWindowAlerts_Button.state = NSOnState
+            prefWindowAlerts_Button.state = NSControl.StateValue.on
         } else {
-            prefWindowAlerts_Button.state = NSOffState
+            prefWindowAlerts_Button.state = NSControl.StateValue.off
         }
         let local_IconPrefs_bool = SMC.readSettings()?["hideMenubarIcon"] as! Bool
         if local_IconPrefs_bool {
-            prefWindowIcon_Button.state = NSOnState
+            prefWindowIcon_Button.state = NSControl.StateValue.on
         } else {
-            prefWindowIcon_Button.state = NSOffState
+            prefWindowIcon_Button.state = NSControl.StateValue.off
         }
         if (SMC.readSettings()?["launchAgent"]) != nil {
             let local_launchAgent_bool = SMC.readSettings()?["launchAgent"] as! Bool
             if local_launchAgent_bool {
-                launchAgent_Button.state = NSOnState
+                launchAgent_Button.state = NSControl.StateValue.on
             } else {
-                launchAgent_Button.state = NSOffState
+                launchAgent_Button.state = NSControl.StateValue.off
             }
         } else {
-            launchAgent_Button.state = NSOffState
+            launchAgent_Button.state = NSControl.StateValue.off
         }
 
-        NSApplication.shared().activate(ignoringOtherApps: true)
+        NSApplication.shared.activate(ignoringOtherApps: true)
         prefs_Panel.setIsVisible(true)
     }
     
@@ -119,11 +119,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             }
         }
         SMC.settingsPlistData["pollingInterval"] = pollingInterval
-        SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state == 0 ? false:true)
-        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state == 0 ? false:true)
-        SMC.settingsPlistData["launchAgent"] = (launchAgent_Button.state == 0 ? false:true)
+        SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
+        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state.rawValue == 0 ? false:true)
+        SMC.settingsPlistData["launchAgent"] = (launchAgent_Button.state.rawValue == 0 ? false:true)
         
-        if launchAgent_Button.state == 0 {
+        if launchAgent_Button.state.rawValue == 0 {
             if fm.fileExists(atPath: launchAgentPath) {
                 do {
                     try fm.removeItem(atPath: launchAgentPath)

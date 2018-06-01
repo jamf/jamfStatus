@@ -25,22 +25,22 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     @IBOutlet weak var alert_ImageCell: NSImageCell!
     
     let fileManager = FileManager.default
-    let cloudStatusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
+    let cloudStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let statusURL = "https://status.jamf.com"
     var statusPageString = ""
     var dataString = ""
     var theResult = ""
     var displayedStatus = ""
     var iconName = ""
-    var icon = NSImage(named: "cloudStatus-red")
+    var icon = NSImage(named: NSImage.Name(rawValue: "cloudStatus-red"))
     
     @IBOutlet weak var alertWindowPref_Button: NSButton!
     var alert_header = ""
     var alert_message = ""
     var serviceCount = 0
-    var alert_image_green = NSImage(named: "caution-green")
-    var alert_image_yellow = NSImage(named: "caution-yellow")
-    var alert_image_red = NSImage(named: "caution-red")
+    var alert_image_green = NSImage(named: NSImage.Name(rawValue: "caution-green"))
+    var alert_image_yellow = NSImage(named: NSImage.Name(rawValue: "caution-yellow"))
+    var alert_image_red = NSImage(named: NSImage.Name(rawValue: "caution-red"))
     var current_alert_pref = "green"
     var prevState = "cloudStatus-green"
     
@@ -56,14 +56,14 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     @IBOutlet weak var alert_ImageView: NSImageView!
 
     @IBAction func quitCloudStatus(_ sender: NSMenuItem) {
-        NSApplication.shared().terminate(self)
+        NSApplication.shared.terminate(self)
     }
     
     override func awakeFromNib() {
   
         let AppDlg = AppDelegate()
 
-        icon = NSImage(named: iconName)
+        icon = NSImage(named: NSImage.Name(rawValue: iconName))
         //icon?.isTemplate = true // best for dark mode
         cloudStatusItem.image = icon
         cloudStatusItem.menu = cloudStatusMenu
@@ -84,7 +84,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                         
                     DispatchQueue.main.async {
                         self.iconName = result
-                        AppDlg.hideIcon ? (self.icon = NSImage.init(named: "minimizedIcon")):(self.icon = NSImage.init(named: self.iconName))
+                        AppDlg.hideIcon ? (self.icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(self.icon = NSImage.init(named: NSImage.Name(rawValue: self.iconName)))
 
                             self.cloudStatusItem.image = self.icon
                     }
@@ -97,7 +97,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     @IBAction func alertWindowPref_Action(_ sender: NSButton) {
         settingsPlistData["pollingInterval"] = readSettings()?["pollingInterval"]  as! Int32
         settingsPlistData["hideMenubarIcon"] = readSettings()?["hideMenubarIcon"]  as! Bool
-        if alertWindowPref_Button.state == 0 {
+        if alertWindowPref_Button.state.rawValue == 0 {
             settingsPlistData["hideUntilStatusChange"] = false
         } else {
             settingsPlistData["hideUntilStatusChange"] = true
@@ -110,18 +110,18 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         var alertHeight = 0
         DispatchQueue.main.async {
             // adjust font size so that alert message fits in text box.
-            print("count: \(self.alert_message.characters.count)")
+            print("count: \(self.alert_message.count)")
             self.serviceCount > 2 ? (alertHeight = 99 + 18*(self.serviceCount-2)):(alertHeight = 99)
             self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
-            if self.alert_message.characters.count > 55 {
+            if self.alert_message.count > 55 {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 12.0)
             } else {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 18.0)
             }
             if (self.readSettings()?["hideUntilStatusChange"] as! Bool) {
-                self.alertWindowPref_Button.state = NSOnState
+                self.alertWindowPref_Button.state = NSControl.StateValue.on
             } else {
-                self.alertWindowPref_Button.state = NSOffState
+                self.alertWindowPref_Button.state = NSControl.StateValue.off
             }
             if self.prevState != currentState {
                 DispatchQueue.main.async {
@@ -164,6 +164,8 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         
         //        JSON parsing - start
         let apiStatusUrl = "https://status.jamf.com/api/v2/components.json"
+//        let apiStatusUrl = "https://test.server/cloudstatus/components.json"
+        
         let encodedURL = NSURL(string: apiStatusUrl)
         let request = NSMutableURLRequest(url: encodedURL! as URL)
         request.httpMethod = "GET"
