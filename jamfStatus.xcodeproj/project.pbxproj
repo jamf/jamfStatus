@@ -12,7 +12,8 @@
 		B5013BCC1E95817C0099300A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5013BCA1E95817C0099300A /* MainMenu.xib */; };
 		B515969F1E95BB2200ED3CA3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B515969E1E95BB2200ED3CA3 /* Images.xcassets */; };
 		B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */; };
-		B545CA501EA940400068E2B3 /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = B545CA4F1EA940400068E2B3 /* settings.plist */; };
+		B5A46CCD226F9B0700C2A88D /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A46CCC226F9B0700C2A88D /* Preferences.swift */; };
+		B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A470AF2271CE7200C2A88D /* WebKit.framework */; };
 		B5AC20321F36479A00C16EAA /* com.jamf.cloudmonitor.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */; };
 		B5AC20351F37858800C16EAA /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20341F37858800C16EAA /* index.html */; };
 		B5AC20371F37859F00C16EAA /* images in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20361F37859F00C16EAA /* images */; };
@@ -26,7 +27,9 @@
 		B5013BCD1E95817C0099300A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B515969E1E95BB2200ED3CA3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMenuController.swift; sourceTree = "<group>"; };
-		B545CA4F1EA940400068E2B3 /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
+		B5A46CCC226F9B0700C2A88D /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = jamfStatus.entitlements; sourceTree = "<group>"; };
+		B5A470AF2271CE7200C2A88D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.jamf.cloudmonitor.plist; sourceTree = "<group>"; };
 		B5AC20341F37858800C16EAA /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B5AC20361F37859F00C16EAA /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -37,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +52,7 @@
 			children = (
 				B5013BC51E95817C0099300A /* jamfStatus */,
 				B5013BC41E95817C0099300A /* Products */,
+				B5A46D07227145EA00C2A88D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,17 +67,26 @@
 		B5013BC51E95817C0099300A /* jamfStatus */ = {
 			isa = PBXGroup;
 			children = (
+				B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */,
 				B5AC20331F37855800C16EAA /* about */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
-				B5013BCA1E95817C0099300A /* MainMenu.xib */,
 				B5013BC81E95817C0099300A /* Assets.xcassets */,
 				B515969E1E95BB2200ED3CA3 /* Images.xcassets */,
+				B5013BCA1E95817C0099300A /* MainMenu.xib */,
 				B5013BCD1E95817C0099300A /* Info.plist */,
-				B545CA4F1EA940400068E2B3 /* settings.plist */,
 				B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */,
+				B5A46CCC226F9B0700C2A88D /* Preferences.swift */,
 			);
 			path = jamfStatus;
+			sourceTree = "<group>";
+		};
+		B5A46D07227145EA00C2A88D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B5A470AF2271CE7200C2A88D /* WebKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		B5AC20331F37855800C16EAA /* about */ = {
@@ -117,8 +131,16 @@
 					B5013BC21E95817C0099300A = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = PS2F6S478M;
-						LastSwiftMigration = 0930;
-						ProvisioningStyle = Manual;
+						LastSwiftMigration = 1020;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.HardenedRuntime = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -127,6 +149,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -146,7 +169,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B515969F1E95BB2200ED3CA3 /* Images.xcassets in Resources */,
-				B545CA501EA940400068E2B3 /* settings.plist in Resources */,
 				B5013BC91E95817C0099300A /* Assets.xcassets in Resources */,
 				B5AC20351F37858800C16EAA /* index.html in Resources */,
 				B5AC20321F36479A00C16EAA /* com.jamf.cloudmonitor.plist in Resources */,
@@ -164,6 +186,7 @@
 			files = (
 				B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
+				B5A46CCD226F9B0700C2A88D /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,18 +316,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = jamfStatus/jamfStatus.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PS2F6S478M;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+					"$(SDKROOT)/usr/lib/log",
+					"$(SDKROOT)/usr/lib/system/introspection",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -312,18 +342,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = jamfStatus/jamfStatus.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PS2F6S478M;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+					"$(SDKROOT)/usr/lib/log",
+					"$(SDKROOT)/usr/lib/system/introspection",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

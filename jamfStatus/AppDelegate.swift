@@ -13,25 +13,32 @@ import Cocoa
 import WebKit
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
-
+class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessionTaskDelegate {
+    
     @IBOutlet weak var cloudStatus_Toolbar: NSToolbar!
     @IBOutlet weak var cloudStatusWindow: NSWindow!
-    @IBOutlet weak var page_WebView: WebView!
+    
+    @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Panel: NSPanel!
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
     
+    //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
+    
+    
     @IBOutlet weak var about_NSWindow: NSWindow!
     @IBOutlet weak var about_WebView: WKWebView!
     
+    let prefs = Preferences()
+    let defaults = UserDefaults()
+    
     let fm = FileManager()
     let SMC = StatusMenuController()
-    var pollingInterval: UInt32 = 300
+    var pollingInterval: Int = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
-        
-    let popover = NSPopover()
+    
+    //    let popover = NSPopover()
     
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
         
@@ -44,85 +51,77 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
         
         NSApplication.shared.activate(ignoringOtherApps: true)
-
-        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
+        
+//        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
         about_NSWindow.setIsVisible(true)
     }
     
     @IBAction func viewStatus(_ sender: Any) {
-        cloudStatusWindow.titleVisibility = .hidden
-        page_WebView.mainFrameURL = SMC.statusURL
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        cloudStatusWindow.setIsVisible(true)
+
+        DispatchQueue.main.async {
+            if let url = URL(string: "https://status.jamf.com") {
+                let request = URLRequest(url: url)
+                
+                self.page_WebView?.load(request)
+
+            }
+            self.cloudStatusWindow.titleVisibility = .hidden
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            self.cloudStatusWindow.setIsVisible(true)
+        }
     }
     
     @IBOutlet weak var prefWindowAlerts_Button: NSButton!
     @IBOutlet weak var prefWindowIcon_Button: NSButton!
     
     @IBAction func prefs_MenuItem(_ sender: NSMenuItem) {
-        let local_pollingInterval = SMC.readSettings()?["pollingInterval"]  as! Int32
-        pollingInterval_TextField.stringValue = "\(local_pollingInterval)"
+        pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
         
-        let local_alertPrefs_bool = SMC.readSettings()?["hideUntilStatusChange"] as! Bool
-        if local_alertPrefs_bool {
+        if (defaults.bool(forKey: "hideUntilStatusChange")) {
             prefWindowAlerts_Button.state = NSControl.StateValue.on
         } else {
             prefWindowAlerts_Button.state = NSControl.StateValue.off
         }
-        let local_IconPrefs_bool = SMC.readSettings()?["hideMenubarIcon"] as! Bool
-        if local_IconPrefs_bool {
+        if (defaults.bool(forKey: "hideMenubarIcon")) {
             prefWindowIcon_Button.state = NSControl.StateValue.on
         } else {
             prefWindowIcon_Button.state = NSControl.StateValue.off
         }
-        if (SMC.readSettings()?["launchAgent"]) != nil {
-            let local_launchAgent_bool = SMC.readSettings()?["launchAgent"] as! Bool
-            if local_launchAgent_bool {
-                launchAgent_Button.state = NSControl.StateValue.on
-            } else {
-                launchAgent_Button.state = NSControl.StateValue.off
-            }
+        if (defaults.bool(forKey: "launchAgent")) {
+            launchAgent_Button.state = NSControl.StateValue.on
         } else {
             launchAgent_Button.state = NSControl.StateValue.off
         }
-
+        
         NSApplication.shared.activate(ignoringOtherApps: true)
         prefs_Panel.setIsVisible(true)
     }
     
-    @IBAction func back_button(_ sender: Any) {
-        page_WebView.goBack()
-    }
-    
-    @IBAction func forward_button(_ sender: Any) {
-        page_WebView.goForward()
-
-    }
-    
-    func setDefaultPrefs () {
-        let appPrefs = NSHomeDirectory()+"/Library/Preferences/com.jamf.jamfstatus.plist"
-        if !fm.fileExists(atPath: appPrefs) {
-            do {
-                try fm.copyItem(atPath: Bundle.main.bundlePath+"/Contents/Resources/settings.plist", toPath: appPrefs)
-            } catch {
-                print("failed to write prefs")
-            }
+    // actions for preferences window - start
+    @IBAction func pollInterval_Action(_ sender: NSTextField) {
+        prefs.pollingInterval = Int(pollingInterval_TextField.stringValue)
+        if prefs.pollingInterval! < 60 {
+            prefs.pollingInterval = 300
         }
+        defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
+        prefs.pollingInterval = defaults.object(forKey: "pollingInterval") as? Int
     }
-    
-    @IBAction func writePrefs(_ sender: Any) {
+    @IBAction func prefWindowAlerts_Action(_ sender: NSButton) {
+//        print("sender: \(String(describing: sender.identifier?.rawValue))")
+//        if ("\(String(describing: sender.identifier?.rawValue))" == "_NS:18") {
+//
+//        }
+        prefs.hideUntilStatusChange = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
+        defaults.set(prefs.hideUntilStatusChange, forKey: "hideUntilStatusChange")
+    }
+    @IBAction func hideMenubarIcon_Action(_ sender: NSButton) {
+        prefs.hideMenubarIcon = (prefWindowIcon_Button.state.rawValue == 0 ? false:true)
+        defaults.set(prefs.hideMenubarIcon, forKey: "hideMenubarIcon")
+    }
+    @IBAction func launchAgent_Action(_ sender: NSButton) {
         var isDir: ObjCBool = true
-        pollingInterval = 300
-        if let interval = UInt32(pollingInterval_TextField.stringValue) {
-            if interval >= 60 {
-                pollingInterval = interval
-            }
-        }
-        SMC.settingsPlistData["pollingInterval"] = pollingInterval
-        SMC.settingsPlistData["hideUntilStatusChange"] = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
-        SMC.settingsPlistData["hideMenubarIcon"] = (prefWindowIcon_Button.state.rawValue == 0 ? false:true)
-        SMC.settingsPlistData["launchAgent"] = (launchAgent_Button.state.rawValue == 0 ? false:true)
-        
+        prefs.launchAgent = (launchAgent_Button.state.rawValue == 0 ? false:true)
+        defaults.set(prefs.launchAgent, forKey: "launchAgent")
         if launchAgent_Button.state.rawValue == 0 {
             if fm.fileExists(atPath: launchAgentPath) {
                 do {
@@ -147,19 +146,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                 }
             }
         }
-        // Write info to settings.plist
-        (SMC.settingsPlistData as NSDictionary).write(toFile: SMC.SettingsPlistPath, atomically: false)
+    }
+    
+    // actions for preferences window - start
+    
+    @IBAction func back_button(_ sender: Any) {
+        page_WebView.goBack()
+    }
+    
+    @IBAction func forward_button(_ sender: Any) {
+        page_WebView.goForward()
+        
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
-
-
-
+    
 }
 

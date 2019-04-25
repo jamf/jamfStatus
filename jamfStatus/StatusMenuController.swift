@@ -11,10 +11,13 @@
 
 import AppKit
 import Cocoa
-import WebKit
+//import WebKit
 
-class StatusMenuController: NSObject, URLSessionDelegate {
-
+class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
+        
+    let defaults = UserDefaults.standard
+    let prefs = Preferences()
+    
     @IBOutlet weak var alert_window: NSPanel!
     @IBOutlet weak var cloudStatusMenu: NSMenu!
     @IBOutlet weak var status_Toolbar: NSToolbar!
@@ -32,15 +35,16 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     var theResult = ""
     var displayedStatus = ""
     var iconName = ""
-    var icon = NSImage(named: NSImage.Name(rawValue: "cloudStatus-red"))
+    var icon = NSImage(named: "cloudStatus-red")
     
     @IBOutlet weak var alertWindowPref_Button: NSButton!
     var alert_header = ""
     var alert_message = ""
     var serviceCount = 0
-    var alert_image_green = NSImage(named: NSImage.Name(rawValue: "caution-green"))
-    var alert_image_yellow = NSImage(named: NSImage.Name(rawValue: "caution-yellow"))
-    var alert_image_red = NSImage(named: NSImage.Name(rawValue: "caution-red"))
+
+    var alert_image_green = NSImage(named: "greenCloud")
+    var alert_image_yellow = NSImage(named: "yellowCloud")
+    var alert_image_red = NSImage(named: "redCloud")
     var current_alert_pref = "green"
     var prevState = "cloudStatus-green"
     
@@ -48,77 +52,120 @@ class StatusMenuController: NSObject, URLSessionDelegate {
     let myBundlePath = Bundle.main.bundlePath
     let SettingsPlistPath = NSHomeDirectory()+"/Library/Preferences/com.jamf.jamfstatus.plist"
     var format = PropertyListSerialization.PropertyListFormat.xml //format of the property list file
-        
+    
     var settingsPlistData:[String:Any] = [:]
     
     var affectedServices = ""
-
+    
     @IBOutlet weak var alert_ImageView: NSImageView!
-
+    
     @IBAction func quitCloudStatus(_ sender: NSMenuItem) {
         NSApplication.shared.terminate(self)
     }
     
     override func awakeFromNib() {
-  
-        let AppDlg = AppDelegate()
-
-        icon = NSImage(named: NSImage.Name(rawValue: iconName))
-        //icon?.isTemplate = true // best for dark mode
+        
+        if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
+            defaults.set(300, forKey: "pollingInterval")
+            prefs.pollingInterval = 300
+        } else {
+            prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int
+        }
+        
+        if (defaults.object(forKey:"hideUntilStatusChange") as? Bool == nil){
+            defaults.set(true, forKey: "hideUntilStatusChange")
+            prefs.hideUntilStatusChange = true
+        } else {
+            prefs.hideUntilStatusChange = defaults.bool(forKey:"hideUntilStatusChange")
+        }
+        
+        if (defaults.object(forKey:"hideMenubarIcon") as? Bool == nil) {
+            defaults.set(false, forKey: "hideMenubarIcon")
+            prefs.hideMenubarIcon = false
+        } else {
+            prefs.hideMenubarIcon = defaults.bool(forKey: "hideMenubarIcon")
+        }
+        
+        if (defaults.object(forKey:"launchAgent") as? Bool == nil){
+            defaults.set(false, forKey: "launchAgent")
+            prefs.launchAgent = false
+        } else {
+            prefs.launchAgent = defaults.bool(forKey:"launchAgent")
+        }
+        
+        if (defaults.object(forKey:"baseUrl") as? String == nil) {
+            defaults.set("https://status.jamf.com", forKey: "baseUrl")
+            prefs.baseUrl = "https://status.jamf.com"
+        } else {
+            prefs.baseUrl = defaults.string(forKey:"baseUrl")
+        }
+        
+        icon = NSImage(named: iconName)
+//        icon?.isTemplate = true // best for dark mode?
         cloudStatusItem.image = icon
         cloudStatusItem.menu = cloudStatusMenu
         DispatchQueue.global(qos: .background).async {
             while true {
-                AppDlg.setDefaultPrefs()
-                AppDlg.pollingInterval = UInt32(self.readSettings()?["pollingInterval"]  as! Int32)
-                if AppDlg.pollingInterval < 60 {
-                    AppDlg.pollingInterval = 300
-                    self.settingsPlistData["hideUntilStatusChange"] = self.readSettings()?["hideUntilStatusChange"]  as! Bool
-                    self.settingsPlistData["pollingInterval"] = 300     //as Any?
-                    // Write info to settings.plist
-                    (self.settingsPlistData as NSDictionary).write(toFile: self.SettingsPlistPath, atomically: false)
-                }
-                print("checking status")
+//                if self.prefs.pollingInterval! < Int(60) {
+//                    self.prefs.pollingInterval = 300
+//                    self.defaults.set(300, forKey: "pollingInterval")
+//                }
+                //                print("checking status")
+                self.prefs.pollingInterval = self.defaults.integer(forKey: "pollingInterval")
+                self.prefs.hideMenubarIcon = self.defaults.bool(forKey: "hideMenubarIcon")
                 self.getStatus2() {
                     (result: String) in
-                        
+                    
                     DispatchQueue.main.async {
                         self.iconName = result
-                        AppDlg.hideIcon ? (self.icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(self.icon = NSImage.init(named: NSImage.Name(rawValue: self.iconName)))
-
-                            self.cloudStatusItem.image = self.icon
+                        //                        AppDlg.hideIcon ? (self.icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(self.icon = NSImage.init(named: NSImage.Name(rawValue: self.iconName)))
+                        //                        print("iconName: \(result)")
+                        //                        print("hidemenubar is \(self.prefs.hideMenubarIcon!)")
+                        self.prefs.hideMenubarIcon! ? (self.icon = NSImage.init(named: "minimizedIcon")):(self.icon = NSImage.init(named: self.iconName))
+                        
+                        self.cloudStatusItem.image = self.icon
                     }
                 }
-                sleep(UInt32(AppDlg.pollingInterval))
+                sleep(UInt32(Int(self.prefs.pollingInterval!)))
             }
         }
     }
     
     @IBAction func alertWindowPref_Action(_ sender: NSButton) {
-        settingsPlistData["pollingInterval"] = readSettings()?["pollingInterval"]  as! Int32
-        settingsPlistData["hideMenubarIcon"] = readSettings()?["hideMenubarIcon"]  as! Bool
+        
         if alertWindowPref_Button.state.rawValue == 0 {
-            settingsPlistData["hideUntilStatusChange"] = false
+            defaults.set(false, forKey: "hideUntilStatusChange")
         } else {
-            settingsPlistData["hideUntilStatusChange"] = true
+            defaults.set(false, forKey: "hideUntilStatusChange")
         }
-        // Write info to settings.plist
-        (settingsPlistData as NSDictionary).write(toFile: SettingsPlistPath, atomically: true)
     }
     
     func displayAlert(currentState: String) {
         var alertHeight = 0
         DispatchQueue.main.async {
             // adjust font size so that alert message fits in text box.
-            print("count: \(self.alert_message.count)")
-            self.serviceCount > 2 ? (alertHeight = 99 + 18*(self.serviceCount-2)):(alertHeight = 99)
+            alertHeight = 99
+            //            print("count: \(self.alert_message.count)")
+            let alertLines = self.alert_message.split(separator: "\n")
+            //            print("alerts: \(alertLines)")
+            for i in 1..<alertLines.count {
+                //                print("line count: \(alertLines[i].count)")
+                let lineLength = alertLines[i].count/55 as Int
+                //                print("lineLength: \(lineLength)")
+                if ( i < 3 ) {
+                    alertHeight += 18*(lineLength)
+                } else {
+                    alertHeight += 18*(lineLength+1)
+                }
+            }
+            //            self.serviceCount > 2 ? (alertHeight = 99 + 18*(self.serviceCount-2)):(alertHeight = 99)
             self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
             if self.alert_message.count > 55 {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 12.0)
             } else {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 18.0)
             }
-            if (self.readSettings()?["hideUntilStatusChange"] as! Bool) {
+            if (self.defaults.bool(forKey:"hideUntilStatusChange")) {
                 self.alertWindowPref_Button.state = NSControl.StateValue.on
             } else {
                 self.alertWindowPref_Button.state = NSControl.StateValue.off
@@ -128,7 +175,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                     self.refreshAlert()
                 }
             } else {
-                if !((self.readSettings()?["hideUntilStatusChange"]) as! Bool) && self.prevState != "cloudStatus-green" {
+                if !(self.defaults.bool(forKey:"hideUntilStatusChange")) && self.prevState != "cloudStatus-green" {
                     DispatchQueue.main.async {
                         self.refreshAlert()
                     }
@@ -152,8 +199,8 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         var localResult = ""
         
         var operationalArray = [String]()
-        var warningArray = [String]()
-        var criticalArray = [String]()
+        var warningArray     = [String]()
+        var criticalArray    = [String]()
         
         // clear current arrays
         operationalArray.removeAll()
@@ -163,8 +210,9 @@ class StatusMenuController: NSObject, URLSessionDelegate {
         URLCache.shared.removeAllCachedResponses()
         
         //        JSON parsing - start
-        let apiStatusUrl = "https://status.jamf.com/api/v2/components.json"
-//        let apiStatusUrl = "https://test.server/cloudstatus/components.json"
+        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
+//        print("apiStatusUrl: \(apiStatusUrl)")
+        //        let apiStatusUrl = "https://test.server/cloudstatus/components.json"
         
         let encodedURL = NSURL(string: apiStatusUrl)
         let request = NSMutableURLRequest(url: encodedURL! as URL)
@@ -212,7 +260,7 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                     self.affectedServices.append("    \(service)\n")
                 }
                 self.alert_ImageView.image = self.alert_image_red
-                    self.alert_message = "Please be aware there is a major issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
+                self.alert_message = "Please be aware there is a major issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
                 self.serviceCount = criticalArray.count
                 self.displayAlert(currentState: localResult)
             } else if warningArray.count > 0 {
@@ -235,22 +283,22 @@ class StatusMenuController: NSObject, URLSessionDelegate {
                 self.displayAlert(currentState: localResult)
             }
             
-            print("operationalArray: \(operationalArray)\n")
-            print("warningArray: \(warningArray)\n")
-            print("criticalArray: \(criticalArray)\n")
+            //            print("operationalArray: \(operationalArray)\n")
+            //            print("warningArray: \(warningArray)\n")
+            //            print("criticalArray: \(criticalArray)\n")
             
             if (localResult != "cloudStatus-green") && (localResult != "cloudStatus-yellow") && (localResult != "cloudStatus-red") {
                 self.iconName = "minimizedIcon"
             } else {
                 self.iconName =  localResult
             }
-
-          completion(localResult)
+            
+            completion(localResult)
         })   // let task - end
         task.resume()
-        print("")
+//        print("")
         //        JSON parsing - end
-     }
+    }
     
     func readSettings() -> NSMutableDictionary? {
         if fileManager.fileExists(atPath: SettingsPlistPath) {
@@ -260,5 +308,5 @@ class StatusMenuController: NSObject, URLSessionDelegate {
             return .none
         }
     }
-
+    
 }
