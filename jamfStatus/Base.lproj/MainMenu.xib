@@ -71,23 +71,28 @@
             <point key="canvasLocation" x="290" y="-264"/>
         </menu>
         <window title="Jamf Cloud Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titleVisibility="hidden" id="QvC-M9-y7g">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="360"/>
+            <rect key="contentRect" x="335" y="390" width="573" height="436"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <rect key="frame" x="0.0" y="0.0" width="573" height="436"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <wkWebView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pOz-FB-VtV">
-                        <rect key="frame" x="0.0" y="0.0" width="485" height="394"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                    <wkWebView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pOz-FB-VtV">
+                        <rect key="frame" x="0.0" y="0.0" width="573" height="436"/>
                         <wkWebViewConfiguration key="configuration">
                             <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                             <wkPreferences key="preferences"/>
                         </wkWebViewConfiguration>
                     </wkWebView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="pOz-FB-VtV" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="9o5-wb-JBm"/>
+                    <constraint firstItem="pOz-FB-VtV" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" id="dhD-Aw-REX"/>
+                    <constraint firstAttribute="trailing" secondItem="pOz-FB-VtV" secondAttribute="trailing" id="v1u-QA-KBS"/>
+                    <constraint firstAttribute="bottom" secondItem="pOz-FB-VtV" secondAttribute="bottom" id="zVx-tt-Yob"/>
+                </constraints>
             </view>
             <toolbar key="toolbar" implicitIdentifier="8D0CFC97-0C69-401C-87F3-B35AB476439A" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="CNq-wK-nx1">
                 <allowedToolbarItems>
@@ -203,7 +208,7 @@
                     <toolbarItem reference="Ltc-uj-ZwQ"/>
                 </defaultToolbarItems>
             </toolbar>
-            <point key="canvasLocation" x="56" y="71"/>
+            <point key="canvasLocation" x="102.5" y="109"/>
         </window>
         <window title="alert" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="c7c-gc-Sf1" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
@@ -336,7 +341,7 @@
                     </textField>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="-5.5" y="423.5"/>
+            <point key="canvasLocation" x="67" y="474"/>
         </window>
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
