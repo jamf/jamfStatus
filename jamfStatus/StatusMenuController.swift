@@ -228,6 +228,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     if let data = data,
                         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                         let cloudServices = json["components"] as? [[String: Any]] {
+//                        print("cloudServices: \(cloudServices)")
                         for cloudService in cloudServices {
                             if let name = cloudService["name"] as? String,
                                 let status = cloudService["status"] as? String {
