@@ -20,6 +20,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     @IBOutlet weak var alert_window: NSPanel!
     @IBOutlet weak var cloudStatusMenu: NSMenu!
+    @IBOutlet weak var notifications_MenuItem: NSMenuItem!
     @IBOutlet weak var status_Toolbar: NSToolbar!
     
     @IBOutlet weak var alert_TextView: NSTextField!
@@ -100,16 +101,111 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             prefs.baseUrl = defaults.string(forKey:"baseUrl")
         }
         
+        if (defaults.object(forKey:"jamfServerUrl") as? String == nil) {
+            defaults.set("", forKey: "jamfServerUrl")
+            prefs.jamfServerUrl = ""
+        } else {
+            prefs.jamfServerUrl = defaults.string(forKey:"jamfServerUrl")!
+            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(prefs.jamfServerUrl)")
+            if credentialsArray.count == 2 {
+                prefs.username = credentialsArray[0]
+                prefs.password = credentialsArray[1]
+            } else {
+                prefs.username = ""
+                prefs.password = ""
+            }
+        }
+        
+        defaults.synchronize()
+        
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
         cloudStatusItem.image = icon
         cloudStatusItem.menu = cloudStatusMenu
         DispatchQueue.global(qos: .background).async {
             while true {
-//                if self.prefs.pollingInterval! < Int(60) {
-//                    self.prefs.pollingInterval = 300
-//                    self.defaults.set(300, forKey: "pollingInterval")
-//                }
+                
+                // check site server - start
+                UapiCall().get(endpoint: "notifications/alerts") {
+                    (notificationAlerts: [Dictionary<String, Any>]) in
+                    
+                    print("returned from checking site server")
+                    if notificationAlerts.count == 0 {
+                        self.notifications_MenuItem.isHidden = true
+                    } else {
+                        self.notifications_MenuItem.isHidden = false
+                        let subMenu      = NSMenu()
+                        var displayTitle = ""
+                        var subTitle     = ""
+                        // alert types found here:
+                        // .../tomcat/webapps/ROOT/ui/notifications/notification-alert.model.js
+                        // to-do: add preferences to allow selection of alerts to show
+                        self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
+                        for alert in notificationAlerts {
+                            let alertTitle = alert["type"]! as! String
+                            switch alertTitle {
+                            case "EXCEEDED_LICENSE_COUNT":
+                                displayTitle = "Exceeded License Count"
+                            case "VPP_ACCOUNT_EXPIRED":
+                                displayTitle = "VPP Account Has Expired"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                            case "VPP_ACCOUNT_WILL_EXPIRE":
+                                displayTitle = "VPP Account Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
+                            case "VPP_ACCOUNT_REVOKED":
+                                displayTitle = "VPP Token Has Been Revoked"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                            case "DEP_INSTANCE_EXPIRED":
+                                displayTitle = "DEP Instance Has Expired"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                            case "DEP_INSTANCE_WILL_EXPIRE":
+                                displayTitle = "DEP Instance Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
+                            case "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED":
+                                displayTitle = "DEP Terms And Conditions Are Not Signed"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tinstanceName: \(String(describing: paramDict["name"]!))"
+                            case "TOMCAT_SSL_CERT_EXPIRED":
+                                displayTitle = "Tomcat SSL Certificate Has Expired"
+                            case "TOMCAT_SSL_CERT_WILL_EXPIRE":
+                                displayTitle = "Tomcat SSL Certificate Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                            case "SSO_CERT_EXPIRED":
+                                displayTitle = "SSO Certificate Has Expired"
+                            case "SSO_CERT_WILL_EXPIRE":
+                                displayTitle = "SSO Certificate Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                            case "GSX_CERT_EXPIRED":
+                                displayTitle = "GSX Certificate Has Expired"
+                            case "GSX_CERT_WILL_EXPIRE":
+                                displayTitle = "GSX Certificate Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                            default:
+                                displayTitle = ""
+                                subTitle     = ""
+                            }
+                            print("alert: \(alert)")
+                            print("alertTitle: \(alertTitle)")
+                            subMenu.addItem(NSMenuItem(title: "\(displayTitle)", action: nil, keyEquivalent: ""))
+                            if subTitle != "" {
+                                subMenu.addItem(NSMenuItem(title: "\(subTitle)", action: nil, keyEquivalent: ""))
+                                subTitle = ""
+                            }
+                        }
+//                            NSApplication.shared.mainMenu = self.cloudStatusMenu
+                    }
+                    
+                }
+                // check site server - end
+
                 //                print("checking status")
                 self.prefs.pollingInterval = self.defaults.integer(forKey: "pollingInterval")
                 self.prefs.hideMenubarIcon = self.defaults.bool(forKey: "hideMenubarIcon")

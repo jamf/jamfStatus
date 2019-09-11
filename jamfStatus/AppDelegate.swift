@@ -22,6 +22,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
     @IBOutlet weak var prefs_Panel: NSPanel!
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
+
+    // site specific settings
+    @IBOutlet weak var jamfServerUrl_TextField: NSTextField!
+    @IBOutlet weak var username_TextField: NSTextField!
+    @IBOutlet weak var password_TextField: NSSecureTextField!
     
     //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
     
@@ -92,6 +97,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
         } else {
             launchAgent_Button.state = NSControl.StateValue.off
         }
+        let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
+        if serverUrl != "" {
+            jamfServerUrl_TextField.stringValue = serverUrl
+            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
+            //        username_TextField.stringValue = "\(String(describing: defaults.object(forKey:"username")!))"
+            //        password_TextField.stringValue = "\(String(describing: defaults.object(forKey:"password")!))"
+            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(serverFqdn)")
+            if credentialsArray.count == 2 {
+                prefs.username = credentialsArray[0]
+                prefs.password = credentialsArray[1]
+                username_TextField.stringValue = credentialsArray[0]
+                password_TextField.stringValue = credentialsArray[1]
+            } else {
+                prefs.username = ""
+                prefs.password = ""
+            }
+        }
         
         NSApplication.shared.activate(ignoringOtherApps: true)
         prefs_Panel.setIsVisible(true)
@@ -104,6 +127,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
             prefs.pollingInterval = 300
         }
         defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
+        defaults.synchronize()
         prefs.pollingInterval = defaults.object(forKey: "pollingInterval") as? Int
     }
     @IBAction func prefWindowAlerts_Action(_ sender: NSButton) {
@@ -113,15 +137,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
 //        }
         prefs.hideUntilStatusChange = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideUntilStatusChange, forKey: "hideUntilStatusChange")
+        defaults.synchronize()
     }
     @IBAction func hideMenubarIcon_Action(_ sender: NSButton) {
         prefs.hideMenubarIcon = (prefWindowIcon_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideMenubarIcon, forKey: "hideMenubarIcon")
+        defaults.synchronize()
     }
     @IBAction func launchAgent_Action(_ sender: NSButton) {
         var isDir: ObjCBool = true
         prefs.launchAgent = (launchAgent_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.launchAgent, forKey: "launchAgent")
+        defaults.synchronize()
         if launchAgent_Button.state.rawValue == 0 {
             if fm.fileExists(atPath: launchAgentPath) {
                 do {
@@ -148,6 +175,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
         }
     }
     
+    @IBAction func serverUrl_Action(_ sender: Any) {
+        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
+        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
+        defaults.synchronize()
+        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+    }
+    @IBAction func username_Action(_ sender: Any) {
+        prefs.username = username_TextField.stringValue
+        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+//        defaults.set(prefs.username, forKey: "username")
+//        defaults.synchronize()
+    }
+    @IBAction func password_Action(_ sender: Any) {
+        prefs.password = password_TextField.stringValue
+        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+//        defaults.set(prefs.password, forKey: "password")
+//        defaults.synchronize()
+    }
+    @IBAction func credentials_Action(_ sender: Any) {
+        
+        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
+        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
+        defaults.synchronize()
+        
+        prefs.username = username_TextField.stringValue
+        
+        prefs.password = password_TextField.stringValue
+        
+        let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+        let serverFqdn = urlRegex.stringByReplacingMatches(in: prefs.jamfServerUrl, options: [], range: NSRange(0..<prefs.jamfServerUrl.utf16.count), withTemplate: "")
+//        print("server: \(serverFqdn), username: \(prefs.username), password: \(prefs.password)")
+        saveCreds(server: serverFqdn, username: prefs.username, password: prefs.password)
+        //        defaults.set(prefs.password, forKey: "password")
+        //        defaults.synchronize()
+    }
+    
     // actions for preferences window - start
     
     @IBAction func back_button(_ sender: Any) {
@@ -157,6 +220,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessi
     @IBAction func forward_button(_ sender: Any) {
         page_WebView.goForward()
         
+    }
+    
+    func saveCreds(server: String, username: String, password: String) {
+        if ( server != "" && username != "" && password != "" ) {
+            Credentials2().save(service: "jamfStatus: \(server)", account: username, data: password)
+        }
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {

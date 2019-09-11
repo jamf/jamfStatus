@@ -14,6 +14,9 @@ class Preferences: NSObject {
     var launchAgent: Bool? = false
     var pollingInterval: Int? = 300
     var baseUrl: String? = "https://status.jamf.com"
+    var jamfServerUrl = ""
+    var username =  ""
+    var password = ""
 }
 
 
