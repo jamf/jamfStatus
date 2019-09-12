@@ -20,6 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Panel: NSPanel!
+    
+    
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
 
@@ -117,6 +119,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         NSApplication.shared.activate(ignoringOtherApps: true)
+        
+        
+        var xPos = 0.0
+        var yPos = 0.0
+        if let screen = NSScreen.main {
+            let currentFrameWidth = Double(screen.frame.width)
+            let currentFrameHeight = Double(screen.frame.height)
+            xPos = currentFrameWidth - 455.0 + Double(screen.frame.origin.x)
+            yPos = currentFrameHeight - 91.0 + Double(screen.frame.origin.y)
+            //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
+        }
+            prefs_Panel.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+            prefs_Panel.makeKeyAndOrderFront(self)
+            prefs_Panel.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+            DispatchQueue.main.async {
+                self.prefs_Panel.setIsVisible(true)
+                //                places window in bottom left corner of screen
+                //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
+            }
+        
         prefs_Panel.setIsVisible(true)
     }
     
