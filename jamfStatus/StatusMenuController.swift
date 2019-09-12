@@ -11,7 +11,7 @@
 
 import AppKit
 import Cocoa
-//import WebKit
+import Foundation
 
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
@@ -143,6 +143,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
                         for alert in notificationAlerts {
                             let alertTitle = alert["type"]! as! String
+                            subTitle = ""
                             switch alertTitle {
                             case "EXCEEDED_LICENSE_COUNT":
                                 displayTitle = "Exceeded License Count"
@@ -170,6 +171,14 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 displayTitle = "DEP Terms And Conditions Are Not Signed"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
                                 subTitle = "\tinstanceName: \(String(describing: paramDict["name"]!))"
+                            case "PUSH_CERT_EXPIRED":
+                                displayTitle = "APNS Push Certificate Has Expired"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                            case "PUSH_CERT_WILL_EXPIRE":
+                                displayTitle = "APNS Push Certificate Will Expire"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
                             case "TOMCAT_SSL_CERT_EXPIRED":
                                 displayTitle = "Tomcat SSL Certificate Has Expired"
                             case "TOMCAT_SSL_CERT_WILL_EXPIRE":
@@ -188,6 +197,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 displayTitle = "GSX Certificate Will Expire"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
                                 subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                            case "COMPUTER_SECURITY_SSL_DISABLED":
+                                displayTitle = "Computer Security is Disabled"
                             default:
                                 displayTitle = ""
                                 subTitle     = ""
@@ -404,6 +415,11 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         } else {
             return .none
         }
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+        print("[StatusMenu] allow self signed ceerts")
     }
     
 }

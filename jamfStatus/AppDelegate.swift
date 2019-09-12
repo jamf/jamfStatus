@@ -13,7 +13,7 @@ import Cocoa
 import WebKit
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate, URLSessionTaskDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet weak var cloudStatus_Toolbar: NSToolbar!
     @IBOutlet weak var cloudStatusWindow: NSWindow!
