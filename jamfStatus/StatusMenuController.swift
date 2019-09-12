@@ -28,31 +28,31 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     @IBOutlet weak var alert_ImageCell: NSImageCell!
     
-    let fileManager = FileManager.default
-    let cloudStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    let statusURL = "https://status.jamf.com"
+    let fileManager      = FileManager.default
+    let cloudStatusItem  = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    let statusURL        = "https://status.jamf.com"
     var statusPageString = ""
-    var dataString = ""
-    var theResult = ""
-    var displayedStatus = ""
-    var iconName = ""
-    var icon = NSImage(named: "cloudStatus-red")
+    var dataString       = ""
+    var theResult        = ""
+    var displayedStatus  = ""
+    var iconName         = ""
+    var icon             = NSImage(named: "cloudStatus-red")
     
     @IBOutlet weak var alertWindowPref_Button: NSButton!
-    var alert_header = ""
+    var alert_header  = ""
     var alert_message = ""
-    var serviceCount = 0
+    var serviceCount  = 0
 
-    var alert_image_green = NSImage(named: "greenCloud")
+    var alert_image_green  = NSImage(named: "greenCloud")
     var alert_image_yellow = NSImage(named: "yellowCloud")
-    var alert_image_red = NSImage(named: "redCloud")
+    var alert_image_red    = NSImage(named: "redCloud")
     var current_alert_pref = "green"
-    var prevState = "cloudStatus-green"
+    var prevState          = "cloudStatus-green"
     
     // Settings vars
-    let myBundlePath = Bundle.main.bundlePath
+    let myBundlePath      = Bundle.main.bundlePath
     let SettingsPlistPath = NSHomeDirectory()+"/Library/Preferences/com.jamf.jamfstatus.plist"
-    var format = PropertyListSerialization.PropertyListFormat.xml //format of the property list file
+    var format            = PropertyListSerialization.PropertyListFormat.xml //format of the property list file
     
     var settingsPlistData:[String:Any] = [:]
     
@@ -129,7 +129,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 UapiCall().get(endpoint: "notifications/alerts") {
                     (notificationAlerts: [Dictionary<String, Any>]) in
                     
-                    print("returned from checking site server")
                     if notificationAlerts.count == 0 {
                         self.notifications_MenuItem.isHidden = true
                     } else {
@@ -173,8 +172,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 subTitle = "\tinstanceName: \(String(describing: paramDict["name"]!))"
                             case "PUSH_CERT_EXPIRED":
                                 displayTitle = "APNS Push Certificate Has Expired"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
                             case "PUSH_CERT_WILL_EXPIRE":
                                 displayTitle = "APNS Push Certificate Will Expire"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
@@ -419,7 +416,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
-        print("[StatusMenu] allow self signed ceerts")
     }
     
 }

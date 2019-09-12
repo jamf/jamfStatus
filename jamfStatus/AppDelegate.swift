@@ -82,71 +82,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var prefWindowIcon_Button: NSButton!
     
     @IBAction func prefs_MenuItem(_ sender: NSMenuItem) {
-        pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
-        
-        if (defaults.bool(forKey: "hideUntilStatusChange")) {
-            prefWindowAlerts_Button.state = NSControl.StateValue.on
-        } else {
-            prefWindowAlerts_Button.state = NSControl.StateValue.off
-        }
-        if (defaults.bool(forKey: "hideMenubarIcon")) {
-            prefWindowIcon_Button.state = NSControl.StateValue.on
-        } else {
-            prefWindowIcon_Button.state = NSControl.StateValue.off
-        }
-        if (defaults.bool(forKey: "launchAgent")) {
-            launchAgent_Button.state = NSControl.StateValue.on
-        } else {
-            launchAgent_Button.state = NSControl.StateValue.off
-        }
-        let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
-        if serverUrl != "" {
-            jamfServerUrl_TextField.stringValue = serverUrl
-            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
-            //        username_TextField.stringValue = "\(String(describing: defaults.object(forKey:"username")!))"
-            //        password_TextField.stringValue = "\(String(describing: defaults.object(forKey:"password")!))"
-            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(serverFqdn)")
-            if credentialsArray.count == 2 {
-                prefs.username = credentialsArray[0]
-                prefs.password = credentialsArray[1]
-                username_TextField.stringValue = credentialsArray[0]
-                password_TextField.stringValue = credentialsArray[1]
-            } else {
-                prefs.username = ""
-                prefs.password = ""
-            }
-        }
-        
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        
-        
-        var xPos = 0.0
-        var yPos = 0.0
-        if let screen = NSScreen.main {
-            let currentFrameWidth = Double(screen.frame.width)
-            let currentFrameHeight = Double(screen.frame.height)
-            xPos = currentFrameWidth - 455.0 + Double(screen.frame.origin.x)
-            yPos = currentFrameHeight - 91.0 + Double(screen.frame.origin.y)
-            //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
-        }
-            prefs_Panel.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
-            prefs_Panel.makeKeyAndOrderFront(self)
-            prefs_Panel.setFrameOrigin(NSPoint(x: xPos, y: yPos))
-            DispatchQueue.main.async {
-                self.prefs_Panel.setIsVisible(true)
-                //                places window in bottom left corner of screen
-                //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
-            }
-        
-        prefs_Panel.setIsVisible(true)
+        showPrefsWindow()
     }
     
     // actions for preferences window - start
     @IBAction func pollInterval_Action(_ sender: NSTextField) {
-        prefs.pollingInterval = Int(pollingInterval_TextField.stringValue)
+        prefs.pollingInterval = Int(pollingInterval_TextField.stringValue) ?? 0
         if prefs.pollingInterval! < 60 {
             prefs.pollingInterval = 300
+            pollingInterval_TextField.stringValue = "300"
         }
         defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
         defaults.synchronize()
@@ -229,8 +173,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let serverFqdn = urlRegex.stringByReplacingMatches(in: prefs.jamfServerUrl, options: [], range: NSRange(0..<prefs.jamfServerUrl.utf16.count), withTemplate: "")
 //        print("server: \(serverFqdn), username: \(prefs.username), password: \(prefs.password)")
         saveCreds(server: serverFqdn, username: prefs.username, password: prefs.password)
-        //        defaults.set(prefs.password, forKey: "password")
-        //        defaults.synchronize()
     }
     
     // actions for preferences window - start
@@ -247,6 +189,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func saveCreds(server: String, username: String, password: String) {
         if ( server != "" && username != "" && password != "" ) {
             Credentials2().save(service: "jamfStatus: \(server)", account: username, data: password)
+        }
+    }
+    
+    func showPrefsWindow() {
+        pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
+//        pollingInterval_TextField.stringValue = "300"
+
+        prefWindowAlerts_Button.state = NSControl.StateValue.on
+
+        if (defaults.bool(forKey: "hideMenubarIcon")) {
+            prefWindowIcon_Button.state = NSControl.StateValue.on
+        } else {
+            prefWindowIcon_Button.state = NSControl.StateValue.off
+        }
+        if (defaults.bool(forKey: "launchAgent")) {
+            launchAgent_Button.state = NSControl.StateValue.on
+        } else {
+            launchAgent_Button.state = NSControl.StateValue.off
+        }
+        let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
+        if serverUrl != "" {
+            jamfServerUrl_TextField.stringValue = serverUrl
+            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
+
+            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(serverFqdn)")
+            if credentialsArray.count == 2 {
+                prefs.username = credentialsArray[0]
+                prefs.password = credentialsArray[1]
+                username_TextField.stringValue = credentialsArray[0]
+                password_TextField.stringValue = credentialsArray[1]
+            } else {
+                prefs.username = ""
+                prefs.password = ""
+            }
+        }
+        
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        
+        var xPos = 0.0
+        var yPos = 0.0
+        if let screen = NSScreen.main {
+            let currentFrameWidth = Double(screen.frame.width)
+            let currentFrameHeight = Double(screen.frame.height)
+            xPos = currentFrameWidth - 410.0 + Double(screen.frame.origin.x)
+            yPos = currentFrameHeight - 360.0 + Double(screen.frame.origin.y)
+            //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
+        }
+        prefs_Panel.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+        prefs_Panel.makeKeyAndOrderFront(self)
+        prefs_Panel.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+        DispatchQueue.main.async {
+            self.prefs_Panel.setIsVisible(true)
+            //                places window in bottom left corner of screen
+            //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
         }
     }
     

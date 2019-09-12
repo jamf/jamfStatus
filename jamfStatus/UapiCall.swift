@@ -141,7 +141,6 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
-        print("[UapiCall] allow self signed ceerts")
     }
     
 }
