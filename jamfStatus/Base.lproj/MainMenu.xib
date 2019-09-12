@@ -435,14 +435,14 @@
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="70" y="561" width="610" height="308"/>
+            <rect key="contentRect" x="70" y="561" width="610" height="530"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <view key="contentView" id="1XC-At-TYn">
-                <rect key="frame" x="0.0" y="0.0" width="610" height="308"/>
+                <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <wkWebView wantsLayer="YES" canDrawConcurrently="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
-                        <rect key="frame" x="0.0" y="0.0" width="610" height="308"/>
+                        <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <wkWebViewConfiguration key="configuration">
                             <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -451,7 +451,7 @@
                     </wkWebView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="616" y="560"/>
+            <point key="canvasLocation" x="616" y="671"/>
         </window>
     </objects>
     <resources>

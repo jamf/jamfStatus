@@ -9,6 +9,7 @@
 import Foundation
 import Security
 
+let kSecAttrAccountString          = NSString(format: kSecAttrAccount)
 let kSecValueDataString            = NSString(format: kSecValueData)
 let kSecClassGenericPasswordString = NSString(format: kSecClassGenericPassword)
 
@@ -17,30 +18,34 @@ class Credentials2 {
     func save(service: String, account: String, data: String) {
         
         if let password = data.data(using: String.Encoding.utf8) {
-            let keychainQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+            var keychainQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                                 kSecAttrService as String: service,
                                                 kSecAttrAccount as String: account,
                                                 kSecValueData as String: password]
             
-            // try to add new credentials, if account exists we'll try updating it
-            let addStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
-            if (addStatus != errSecSuccess) {
-                if let addErr = SecCopyErrorMessageString(addStatus, nil) {
-                    print("[addStatus] Write failed: \(addErr)")
-                    
-                    // try to update an existing account password
-                    let updateStatus = SecItemUpdate(keychainQuery as CFDictionary, [kSecValueDataString:password] as CFDictionary)
-                    print("status: \(updateStatus)")
-                    print("errSecSuccess: \(errSecSuccess)")
-                    
-                    if (updateStatus != errSecSuccess) {
-                        if let updateErr = SecCopyErrorMessageString(updateStatus, nil) {
-                            print("[updateStatus] Read failed: \(updateErr)")
-                        }
+            // see if credentials already exist for server
+            let accountCheck = retrieve(service: service)
+            if accountCheck.count == 0 {
+                // try to add new credentials, if account exists we'll try updating it
+                let addStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
+                if (addStatus != errSecSuccess) {
+                    if let addErr = SecCopyErrorMessageString(addStatus, nil) {
+                        print("[addStatus] Write failed for new credentials: \(addErr)")
                     }
-                }   // if let addErr - end
-            }   // if (addStatus != errSecSuccess) - end
-            
+                }
+            } else {
+                // credentials already exist, try to update
+                keychainQuery = [kSecClass as String: kSecClassGenericPasswordString,
+                                 kSecAttrService as String: service,
+                                 kSecMatchLimit as String: kSecMatchLimitOne,
+                                 kSecReturnAttributes as String: true]
+                let updateStatus = SecItemUpdate(keychainQuery as CFDictionary, [kSecAttrAccountString:account,kSecValueDataString:password] as CFDictionary)
+                if (updateStatus != errSecSuccess) {
+                    if let updateErr = SecCopyErrorMessageString(updateStatus, nil) {
+                        print("[updateStatus] Update failed for existing credentials: \(updateErr)")
+                    }
+                }
+            }
         }
     }   // func save - end
     
