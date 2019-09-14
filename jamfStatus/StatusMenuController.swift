@@ -318,6 +318,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
 //        print("apiStatusUrl: \(apiStatusUrl)")
         //        let apiStatusUrl = "https://test.server/cloudstatus/components.json"
         
+        URLCache.shared.removeAllCachedResponses()
         let encodedURL = NSURL(string: apiStatusUrl)
         let request = NSMutableURLRequest(url: encodedURL! as URL)
         request.httpMethod = "GET"

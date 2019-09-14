@@ -40,7 +40,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let defaults = UserDefaults()
     
     let fm = FileManager()
-    let SMC = StatusMenuController()
     var pollingInterval: Int = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
@@ -57,10 +56,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
         
-        NSApplication.shared.activate(ignoringOtherApps: true)
+        //        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
+//        about_NSWindow.setIsVisible(true)
+        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "window")
         
-//        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
-        about_NSWindow.setIsVisible(true)
     }
     
     @IBAction func viewStatus(_ sender: Any) {
@@ -194,7 +193,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func showPrefsWindow() {
         pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
-//        pollingInterval_TextField.stringValue = "300"
 
         prefWindowAlerts_Button.state = NSControl.StateValue.on
 
@@ -226,25 +224,52 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
-        NSApplication.shared.activate(ignoringOtherApps: true)
+        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "panel")
+
+    }
+    
+    func showOnActiveScreen(windowName: NSWindow, panelName: NSPanel, type: String) {
         
         var xPos = 0.0
         var yPos = 0.0
-        if let screen = NSScreen.main {
-            let currentFrameWidth = Double(screen.frame.width)
-            let currentFrameHeight = Double(screen.frame.height)
-            xPos = currentFrameWidth - 410.0 + Double(screen.frame.origin.x)
-            yPos = currentFrameHeight - 360.0 + Double(screen.frame.origin.y)
-            //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
+        
+        switch type {
+        case "window":
+            if let screen = NSScreen.main {
+                let currentFrameWidth = Double(screen.frame.width)
+                let currentFrameHeight = Double(screen.frame.height)
+                let windowWidth = Double(windowName.frame.width)
+                let windowHeight = Double(windowName.frame.height)
+                xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
+                yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
+            }
+            windowName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+            windowName.makeKeyAndOrderFront(self)
+            windowName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+            DispatchQueue.main.async {
+                windowName.setIsVisible(true)
+                //                places window in bottom left corner of screen
+                //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
+            }
+        default:
+            if let screen = NSScreen.main {
+                let currentFrameWidth = Double(screen.frame.width)
+                let currentFrameHeight = Double(screen.frame.height)
+                //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
+                let windowWidth = Double(prefs_Panel.frame.width)
+                let windowHeight = Double(prefs_Panel.frame.height)
+                xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
+                yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
+            }
+            panelName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+            panelName.makeKeyAndOrderFront(self)
+            panelName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+            DispatchQueue.main.async {
+                panelName.setIsVisible(true)
+            }
         }
-        prefs_Panel.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
-        prefs_Panel.makeKeyAndOrderFront(self)
-        prefs_Panel.setFrameOrigin(NSPoint(x: xPos, y: yPos))
-        DispatchQueue.main.async {
-            self.prefs_Panel.setIsVisible(true)
-            //                places window in bottom left corner of screen
-            //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
-        }
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {

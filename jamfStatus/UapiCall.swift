@@ -56,9 +56,10 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
             workingUrlString     = workingUrlString.replacingOccurrences(of: "//uapi", with: "/uapi")
             
             self.theUapiQ.maxConcurrentOperationCount = 1
-            let semaphore = DispatchSemaphore(value: 0)
+//            let semaphore = DispatchSemaphore(value: 0)
             
             self.theUapiQ.addOperation {
+                URLCache.shared.removeAllCachedResponses()
                 
                 let encodedURL = NSURL(string: workingUrlString)
                 let request = NSMutableURLRequest(url: encodedURL! as URL)
@@ -90,7 +91,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                     }
                 })
                 task.resume()
-                semaphore.wait()
+//                semaphore.wait()
             }   // theUapiQ.addOperation - end
         }
         
