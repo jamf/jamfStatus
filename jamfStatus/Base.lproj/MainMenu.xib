@@ -28,6 +28,7 @@
                 <outlet property="prefWindowAlerts_Button" destination="SLI-gn-Ejs" id="ckP-0i-7tD"/>
                 <outlet property="prefWindowIcon_Button" destination="qeJ-Bb-E0c" id="nQs-Cu-bqO"/>
                 <outlet property="prefs_Panel" destination="WEB-hD-Ngs" id="Pcq-WQ-pN4"/>
+                <outlet property="siteConnectionStatus_ImageView" destination="qwn-kK-uEc" id="jSQ-c5-gEe"/>
                 <outlet property="username_TextField" destination="zDZ-oy-eFu" id="m8Z-hy-yxJ"/>
             </connections>
         </customObject>
@@ -369,7 +370,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fOo-lq-uF5">
-                        <rect key="frame" x="52" y="88" width="34" height="17"/>
+                        <rect key="frame" x="52" y="90" width="34" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="URL:" id="71u-zH-Nzb">
                             <font key="font" metaFont="system"/>
@@ -434,6 +435,11 @@
                             <action selector="credentials_Action:" target="Voe-Tx-rLC" id="5Tz-i4-Z8l"/>
                         </connections>
                     </secureTextField>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qwn-kK-uEc">
+                        <rect key="frame" x="40" y="93" width="10" height="10"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="red-dot" id="tM3-0Y-tC9"/>
+                    </imageView>
                 </subviews>
             </view>
             <point key="canvasLocation" x="66.5" y="550.5"/>
@@ -461,6 +467,7 @@
         </window>
     </objects>
     <resources>
+        <image name="red-dot" width="66" height="66"/>
         <image name="yellowCloud" width="130" height="79"/>
     </resources>
 </document>

@@ -30,6 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var username_TextField: NSTextField!
     @IBOutlet weak var password_TextField: NSSecureTextField!
     
+    @IBOutlet weak var siteConnectionStatus_ImageView: NSImageView!
+    let statusImage:[NSImage] = [NSImage(named: "red-dot")!,
+                                 NSImage(named: "green-dot")!]
+    
     //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
     
     
@@ -158,24 +162,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    @IBAction func serverUrl_Action(_ sender: Any) {
-        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
-        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
-        defaults.synchronize()
-        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-    }
-    @IBAction func username_Action(_ sender: Any) {
-        prefs.username = username_TextField.stringValue
-        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-//        defaults.set(prefs.username, forKey: "username")
+//    @IBAction func serverUrl_Action(_ sender: Any) {
+//        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
+//        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
 //        defaults.synchronize()
-    }
-    @IBAction func password_Action(_ sender: Any) {
-        prefs.password = password_TextField.stringValue
-        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-//        defaults.set(prefs.password, forKey: "password")
-//        defaults.synchronize()
-    }
+//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+//    }
+//    @IBAction func username_Action(_ sender: Any) {
+//        prefs.username = username_TextField.stringValue
+//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+////        defaults.set(prefs.username, forKey: "username")
+////        defaults.synchronize()
+//    }
+//    @IBAction func password_Action(_ sender: Any) {
+//        prefs.password = password_TextField.stringValue
+//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+////        defaults.set(prefs.password, forKey: "password")
+////        defaults.synchronize()
+//    }
+    
     @IBAction func credentials_Action(_ sender: Any) {
         
         prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
@@ -186,10 +191,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         prefs.password = password_TextField.stringValue
         
-        let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-        let serverFqdn = urlRegex.stringByReplacingMatches(in: prefs.jamfServerUrl, options: [], range: NSRange(0..<prefs.jamfServerUrl.utf16.count), withTemplate: "")
+//        let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+//        let serverFqdn = urlRegex.stringByReplacingMatches(in: prefs.jamfServerUrl, options: [], range: NSRange(0..<prefs.jamfServerUrl.utf16.count), withTemplate: "")
 //        print("server: \(serverFqdn), username: \(prefs.username), password: \(prefs.password)")
-        saveCreds(server: serverFqdn, username: prefs.username, password: prefs.password)
+        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
     }
     
     // actions for preferences window - start
@@ -228,7 +233,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func saveCreds(server: String, username: String, password: String) {
         if ( server != "" && username != "" && password != "" ) {
-            Credentials2().save(service: "jamfStatus: \(server)", account: username, data: password)
+            
+            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+            let serverFqdn = urlRegex.stringByReplacingMatches(in: server, options: [], range: NSRange(0..<server.utf16.count), withTemplate: "")
+            
+            let b64creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
+            
+            UapiCall().token(serverUrl: server, creds: b64creds) {
+                (returnedToken: String) in
+                if returnedToken != "" {
+                    print("authentication verified")
+                    DispatchQueue.main.async {
+                        self.siteConnectionStatus_ImageView.image = self.statusImage[1]
+                    }
+                } else {
+                    print("authentication failed")
+                    DispatchQueue.main.async {
+                        self.siteConnectionStatus_ImageView.image = self.statusImage[0]
+                    }
+                }
+            } // UapiCall().token - end
+            
+            Credentials2().save(service: "jamfStatus: \(serverFqdn)", account: username, data: password)
         }
     }
     
@@ -265,6 +291,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
+        saveCreds(server: serverUrl, username: prefs.username, password: prefs.password)
         showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "panel")
 
     }

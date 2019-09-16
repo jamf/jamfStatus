@@ -56,7 +56,6 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
             workingUrlString     = workingUrlString.replacingOccurrences(of: "//uapi", with: "/uapi")
             
             self.theUapiQ.maxConcurrentOperationCount = 1
-//            let semaphore = DispatchSemaphore(value: 0)
             
             self.theUapiQ.addOperation {
                 URLCache.shared.removeAllCachedResponses()
@@ -69,6 +68,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                 
                 configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(returnedToken)", "Content-Type" : "application/json", "Accept" : "application/json"]
                 let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
+                
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
                     if let httpResponse = response as? HTTPURLResponse {
@@ -88,10 +88,12 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                             return
                         }
                         
+                    } else {
+                        print("\n HTTP error \n")
                     }
                 })
                 task.resume()
-//                semaphore.wait()
+                
             }   // theUapiQ.addOperation - end
         }
         
@@ -132,7 +134,10 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                     completion("")
                     return
                 }
-                
+            } else {
+                print("token response error.  Verify url and port.")
+                completion("")
+                return
             }
         })
         task.resume()
