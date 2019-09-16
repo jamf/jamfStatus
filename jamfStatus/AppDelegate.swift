@@ -162,25 +162,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-//    @IBAction func serverUrl_Action(_ sender: Any) {
-//        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
-//        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
-//        defaults.synchronize()
-//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-//    }
-//    @IBAction func username_Action(_ sender: Any) {
-//        prefs.username = username_TextField.stringValue
-//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-////        defaults.set(prefs.username, forKey: "username")
-////        defaults.synchronize()
-//    }
-//    @IBAction func password_Action(_ sender: Any) {
-//        prefs.password = password_TextField.stringValue
-//        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
-////        defaults.set(prefs.password, forKey: "password")
-////        defaults.synchronize()
-//    }
-    
     @IBAction func credentials_Action(_ sender: Any) {
         
         prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
@@ -239,6 +220,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             let b64creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             
+            // update the connection indicator for the site server
             UapiCall().token(serverUrl: server, creds: b64creds) {
                 (returnedToken: String) in
                 if returnedToken != "" {
@@ -246,6 +228,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
+                    Credentials2().save(service: "jamfStatus: \(serverFqdn)", account: username, data: password)
                 } else {
                     print("authentication failed")
                     DispatchQueue.main.async {
@@ -253,8 +236,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                 }
             } // UapiCall().token - end
-            
-            Credentials2().save(service: "jamfStatus: \(serverFqdn)", account: username, data: password)
         }
     }
     
