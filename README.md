@@ -11,6 +11,8 @@ In addition, enter your Jamf Server URL and credentials into Preferences to rece
 
 <img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/prefs.png" alt="notifications" width="800" />
 
+Notifications, if any, will appear after the next polling cycle once the information has been entered.
+
 <img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
 Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
