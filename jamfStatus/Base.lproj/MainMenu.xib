@@ -52,6 +52,12 @@
                         <action selector="showAbout_MenuItem:" target="Voe-Tx-rLC" id="InN-Yu-E54"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Check for Update..." id="jc8-2N-4o5">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="uP1-tb-qVX"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="View" id="bjz-jV-QMW" userLabel="View">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -82,7 +88,7 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="290" y="-264"/>
+            <point key="canvasLocation" x="236" y="-338"/>
         </menu>
         <window title="Jamf Cloud Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titleVisibility="hidden" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>

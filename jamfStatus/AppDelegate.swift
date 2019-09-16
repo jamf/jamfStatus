@@ -62,6 +62,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    @IBAction func checkForUpdates(_ sender: AnyObject) {
+        let verCheck = VersionCheck()
+        
+        let appInfo = Bundle.main.infoDictionary!
+        let version = appInfo["CFBundleShortVersionString"] as! String
+        
+        verCheck.versionCheck() {
+            (result: Bool) in
+            if result {
+                self.alert_dialog(header: "Running jamfStatus: \(version)", message: "A new versions is available.", updateAvail: result)
+            } else {
+                self.alert_dialog(header: "Running jamfStatus: \(version)", message: "No updates are currently available.", updateAvail: result)
+            }
+        }
+    }
+    
     @IBAction func viewStatus(_ sender: Any) {
 
         DispatchQueue.main.async {
@@ -72,8 +88,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             }
             self.cloudStatusWindow.titleVisibility = .hidden
-            NSApplication.shared.activate(ignoringOtherApps: true)
-            self.cloudStatusWindow.setIsVisible(true)
+            
+            self.showOnActiveScreen(windowName: self.cloudStatusWindow, panelName: self.prefs_Panel, type: "window")
+//            NSApplication.shared.activate(ignoringOtherApps: true)
+//            self.cloudStatusWindow.setIsVisible(true)
         }
     }
     
@@ -185,6 +203,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    func alert_dialog(header: String, message: String, updateAvail: Bool) {
+        let dialog: NSAlert = NSAlert()
+        dialog.messageText = header
+        dialog.informativeText = message
+        dialog.alertStyle = NSAlert.Style.informational
+        if updateAvail {
+            dialog.addButton(withTitle: "View")
+            dialog.addButton(withTitle: "Ignore")
+        } else {
+            dialog.addButton(withTitle: "OK")
+        }
+        
+        let clicked:NSApplication.ModalResponse = dialog.runModal()
+        
+        if clicked.rawValue == 1000 && updateAvail {
+            if let url = URL(string: "https://github.com/jamf/jamfStatus/releases") {
+                NSWorkspace.shared.open(url)
+            }
+        }
+        
+        //return true
+    }   // func alert_dialog - end
+    
     func saveCreds(server: String, username: String, password: String) {
         if ( server != "" && username != "" && password != "" ) {
             Credentials2().save(service: "jamfStatus: \(server)", account: username, data: password)
@@ -233,6 +274,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var xPos = 0.0
         var yPos = 0.0
         
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        
         switch type {
         case "window":
             if let screen = NSScreen.main {
@@ -268,7 +311,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 panelName.setIsVisible(true)
             }
         }
-        NSApplication.shared.activate(ignoringOtherApps: true)
         
     }
     

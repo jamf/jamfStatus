@@ -18,6 +18,7 @@
 		B5AC20351F37858800C16EAA /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20341F37858800C16EAA /* index.html */; };
 		B5AC20371F37859F00C16EAA /* images in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20361F37859F00C16EAA /* images */; };
 		B5BD6AD723297762001D244A /* Credentials2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD623297762001D244A /* Credentials2.swift */; };
+		B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD8232F108A001D244A /* VersionCheck.swift */; };
 		B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F31231CAB640012FF5A /* UapiCall.swift */; };
 		B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		B5AC20341F37858800C16EAA /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B5AC20361F37859F00C16EAA /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		B5BD6AD623297762001D244A /* Credentials2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials2.swift; sourceTree = "<group>"; };
+		B5BD6AD8232F108A001D244A /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
 		B5E62F31231CAB640012FF5A /* UapiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UapiCall.swift; sourceTree = "<group>"; };
 		B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -81,6 +83,7 @@
 				B5A46CCC226F9B0700C2A88D /* Preferences.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
+				B5BD6AD8232F108A001D244A /* VersionCheck.swift */,
 				B5013BC81E95817C0099300A /* Assets.xcassets */,
 				B515969E1E95BB2200ED3CA3 /* Images.xcassets */,
 				B5013BCA1E95817C0099300A /* MainMenu.xib */,
@@ -198,6 +201,7 @@
 				B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */,
 				B5BD6AD723297762001D244A /* Credentials2.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
+				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
 				B5A46CCD226F9B0700C2A88D /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
