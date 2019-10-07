@@ -169,7 +169,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                             case "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED":
                                 displayTitle = "DEP Terms And Conditions Are Not Signed"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tinstanceName: \(String(describing: paramDict["name"]!))"
+                                subTitle = "\tinstanceName: \(String(describing: paramDict["instanceName"]!))"
                             case "PUSH_CERT_EXPIRED":
                                 displayTitle = "APNS Push Certificate Has Expired"
                             case "PUSH_CERT_WILL_EXPIRE":
