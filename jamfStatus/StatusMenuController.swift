@@ -170,6 +170,10 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 displayTitle = "DEP Terms And Conditions Are Not Signed"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
                                 subTitle = "\tinstanceName: \(String(describing: paramDict["instanceName"]!))"
+                            case "JIM_ERROR":
+                                displayTitle = "Infrastructure Manager instance has not checked in"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tinstanceName: \(String(describing: paramDict["jsamName"]!))"
                             case "PUSH_CERT_EXPIRED":
                                 displayTitle = "APNS Push Certificate Has Expired"
                             case "PUSH_CERT_WILL_EXPIRE":
