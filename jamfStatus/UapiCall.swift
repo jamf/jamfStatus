@@ -120,7 +120,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 {
                     let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                    if let endpointJSON = json! as? Dictionary<String, Any> {
+                    if let endpointJSON = json! as? Dictionary<String, Any>, let _ = endpointJSON["token"] {
                         token = endpointJSON["token"] as! String
                         completion(token)
                         return
