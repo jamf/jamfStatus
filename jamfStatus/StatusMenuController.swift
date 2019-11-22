@@ -200,6 +200,14 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
                             case "COMPUTER_SECURITY_SSL_DISABLED":
                                 displayTitle = "Computer Security is Disabled"
+                            case "LDAP_CONNECTION_CHECK_THROUGH_JIM_FAILED":
+                                displayTitle = "Verification Status for LDAP Proxy Server Connection: Failed"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
+                            case "LDAP_CONNECTION_CHECK_THROUGH_JIM_SUCCESSFUL":
+                                displayTitle = "Verification Status for LDAP Proxy Server Connection: Successful"
+                                let paramDict = alert["params"] as! Dictionary<String, Any>
+                                subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
                             default:
                                 displayTitle = ""
                                 subTitle     = ""
