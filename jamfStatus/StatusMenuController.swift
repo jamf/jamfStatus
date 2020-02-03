@@ -208,8 +208,10 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 displayTitle = "Verification Status for LDAP Proxy Server Connection: Successful"
                                 let paramDict = alert["params"] as! Dictionary<String, Any>
                                 subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
+                            case "MII_INVENTORY_UPLOAD_FAILED_NOTIFICATION":
+                                displayTitle = "Unable to send inventory information to Microsoft Intune"
                             default:
-                                displayTitle = ""
+                                displayTitle = "\(alertTitle)"
                                 subTitle     = ""
                             }
                             print("alert: \(alert)")

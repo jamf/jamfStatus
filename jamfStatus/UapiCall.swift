@@ -15,9 +15,6 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     
     let defaults = UserDefaults.standard
     var theUapiQ = OperationQueue() // create operation queue for API calls
-//    let jps      = Preferences().jamfServerUrl
-//    let b64user  = Preferences().username.data(using: .utf8)?.base64EncodedString() ?? ""
-//    let b64pass  = Preferences().password.data(using: .utf8)?.base64EncodedString() ?? ""
     
     
     func get(endpoint: String, completion: @escaping (_ notificationAlerts: [Dictionary<String,Any>]) -> Void) {
