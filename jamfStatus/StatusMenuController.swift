@@ -214,8 +214,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                 displayTitle = "\(alertTitle)"
                                 subTitle     = ""
                             }
-                            print("alert: \(alert)")
-                            print("alertTitle: \(alertTitle)")
+//                            print("alert: \(alert)")
+//                            print("alertTitle: \(alertTitle)")
                             subMenu.addItem(NSMenuItem(title: "\(displayTitle)", action: nil, keyEquivalent: ""))
                             if subTitle != "" {
                                 subMenu.addItem(NSMenuItem(title: "\(subTitle)", action: nil, keyEquivalent: ""))
@@ -330,7 +330,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         //        JSON parsing - start
         let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
 //        print("apiStatusUrl: \(apiStatusUrl)")
-        //        let apiStatusUrl = "https://test.server/cloudstatus/components.json"
+//        let apiStatusUrl = "http://test.server/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
         let encodedURL = NSURL(string: apiStatusUrl)
@@ -345,7 +345,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             if (response as? HTTPURLResponse) != nil {
                 do {
                     if let data = data,
-                        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
                         let cloudServices = json["components"] as? [[String: Any]] {
 //                        print("cloudServices: \(cloudServices)")
                         for cloudService in cloudServices {
@@ -396,6 +396,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             } else if operationalArray.count > 0 {
                 self.alert_header = "Notice"
                 localResult = "cloudStatus-green"
+//                localResult = "cloudMajor-18"
                 self.affectedServices = ""
                 self.alert_ImageView.image = self.alert_image_green
                 self.alert_message = "\nJamf Cloud: All systems go."
