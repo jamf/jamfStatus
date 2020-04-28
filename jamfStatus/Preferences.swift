@@ -6,17 +6,18 @@
 //  Copyright © 2019 Leslie Helou. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 
-class Preferences: NSObject {
-    var hideMenubarIcon: Bool?       = false
-    var hideUntilStatusChange: Bool? = true
-    var launchAgent: Bool?           = false
-    var pollingInterval: Int?        = 300
-    var baseUrl: String?             = "https://status.jamf.com"
-    var jamfServerUrl                = ""
-    var username                     = ""
-    var password                     = ""
+struct Preferences {
+    static var hideMenubarIcon: Bool?       = false
+    static var hideUntilStatusChange: Bool? = true
+    static var launchAgent: Bool?           = false
+    static var pollingInterval: Int?        = 300
+    static var baseUrl: String?             = "https://status.jamf.com"
+    static var jamfServerUrl                = ""
+    static var username                     = ""
+    static var password                     = ""
+    static var menuIconStyle                = "color"
 }
 
 

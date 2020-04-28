@@ -16,7 +16,7 @@ import Foundation
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
     let defaults = UserDefaults.standard
-    let prefs = Preferences()
+    let prefs = Preferences.self
     
     @IBOutlet weak var alert_window: NSPanel!
     @IBOutlet weak var cloudStatusMenu: NSMenu!
@@ -100,6 +100,9 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         } else {
             prefs.baseUrl = defaults.string(forKey:"baseUrl")
         }
+        
+        // set menu icon style
+        prefs.menuIconStyle = defaults.string(forKey: "menuIconStyle") ?? prefs.menuIconStyle
         
         if (defaults.object(forKey:"jamfServerUrl") as? String == nil) {
             defaults.set("", forKey: "jamfServerUrl")
@@ -328,9 +331,9 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         URLCache.shared.removeAllCachedResponses()
         
         //        JSON parsing - start
-        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
+//        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
 //        print("apiStatusUrl: \(apiStatusUrl)")
-//        let apiStatusUrl = "http://test.server/jamfStatus/components.json"
+        let apiStatusUrl = "http://jamfpro-test.helou.private/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
         let encodedURL = NSURL(string: apiStatusUrl)
@@ -411,7 +414,16 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             if (localResult != "cloudStatus-green") && (localResult != "cloudStatus-yellow") && (localResult != "cloudStatus-red") {
                 self.iconName = "minimizedIcon"
             } else {
-                self.iconName =  localResult
+                if (self.prefs.menuIconStyle == "color") || (localResult == "cloudStatus-green") {
+                    // display icon with color
+                    print("color icon")
+                    self.iconName = localResult
+                } else {
+                    // display icon with slash
+                    print("slash iocn")
+                    self.iconName = (localResult == "cloudStatus-yellow") ? "cloudStatus-yellow1":"cloudStatus-red1"
+                    localResult = self.iconName
+                }
             }
             
             completion(localResult)

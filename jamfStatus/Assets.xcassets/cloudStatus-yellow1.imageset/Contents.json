@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "cloudMinor-18.png",
+      "filename" : "cloudStatus-yellow1.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "cloudMinor-36.png",
+      "filename" : "cloudStatus-yellow2.png",
       "scale" : "2x"
     },
     {

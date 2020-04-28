@@ -24,6 +24,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
+    @IBOutlet weak var iconStyle_Button: NSPopUpButton!
+    
 
     // site specific settings
     @IBOutlet weak var jamfServerUrl_TextField: NSTextField!
@@ -36,11 +38,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
     
-    
     @IBOutlet weak var about_NSWindow: NSWindow!
     @IBOutlet weak var about_WebView: WKWebView!
     
-    let prefs = Preferences()
+    let prefs = Preferences.self
     let defaults = UserDefaults()
     
     let fm = FileManager()
@@ -49,6 +50,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
     
     //    let popover = NSPopover()
+    
+    @IBAction func iconStyle_Action(_ sender: Any) {
+        if iconStyle_Button.indexOfSelectedItem == 0 {
+            prefs.menuIconStyle = "color"
+        } else {
+            prefs.menuIconStyle = "slash"
+        }
+        defaults.set(prefs.menuIconStyle, forKey: "menuIconStyle")
+    }
+    
     
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
         
@@ -224,7 +235,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             UapiCall().token(serverUrl: server, creds: b64creds) {
                 (returnedToken: String) in
                 if returnedToken != "" {
-                    print("authentication verified")
+//                    print("authentication verified")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
@@ -254,6 +265,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             launchAgent_Button.state = NSControl.StateValue.off
         }
+        
+        let menuIcon = defaults.string(forKey: "menuIconStyle") ?? prefs.menuIconStyle
+        if menuIcon == "color" {
+            iconStyle_Button.selectItem(at: 0)
+        } else {
+            iconStyle_Button.selectItem(at: 1)
+        }
+        
         let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
         if serverUrl != "" {
             jamfServerUrl_TextField.stringValue = serverUrl
