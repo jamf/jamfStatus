@@ -32,6 +32,17 @@ a:hover
 {
    color: #0000FF;
    text-decoration: underline;
+}table {
+  border-collapse: collapse;
+}
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 10px;
+}
+th {
+   text-align: right;
 }
 #wb_Heading1
 {
@@ -165,12 +176,15 @@ a:hover
 <div>
     <br>
     <div>An alert window will be displayed as the cloud status changes.&nbsp; You can configure how the alert window display refreshes, either at every status check or only when the status changes.</div>
+    <br>For minor Jamf Cloud issues something similar to the following be displayed.
+
+    <img src="images/alert.png" id="Image2" alt="">
     <br>
-<!--    <div id="Image2" style="width:358px;height:130px;">-->
-<img src="images/alert.png" id="Image2" alt="">
-    <br>
+    <br>For major Jamf Cloud issues something similar to the following be displayed.
+
+    <img src="images/major.png" id="Image2" alt=""><br>
         <div style="font-family:Arial;font-size:13px;line-height:15px;color:#000000;width:570px;text-align: left">
-<div>Access Preferences from the menubar icon.&nbsp; Here you'll be able to set the following:</div>
+<div>Access Preferences from the menu bar icon.&nbsp; Here you'll be able to set the following:</div>
             <div style="font-family:Arial;font-size:13px;line-height:15px;color:#000000;width:570px;">
 <div>- Polling interval.</div>
 <div>- Whether the alert window is displayed at every polling interval or only when the status changes.</div>
@@ -182,6 +196,24 @@ a:hover
 
             <img src="images/prefs.png" id="Image3" alt="">
             <br>
+            There are two different menu bar icon styles to choose from.  One uses colors to indicate the status and the other uses slashes.<br><br>
+            <div style="margin-left: 55px;">
+               <table>
+                  <tr>
+                    <th>Status</th>
+                    <td>minor</td>
+                    <td>major</td>
+                    <td>minor</td>
+                    <td>major</td>
+                  </tr>
+                  <tr>
+                    <th>Icon</th>
+                    <td><img src="images/minor1.png" id="Image2" alt=""></th>
+                     <td><img src="images/major1.png" id="Image2" alt=""></th>
+                        <td><img src="images/minor2.png" id="Image2" alt=""></th>
+                           <td><img src="images/major2.png" id="Image2" alt=""></th>
+                  </tr>
+                </table></div><br>
             <div>By entering the information for your Jamf Cloud instance you'll be able to see the alerts present on the server, if any exist.</div>
             
     <br>

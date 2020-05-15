@@ -1,19 +1,49 @@
 # jamfStatus
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
-<img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/menubar.png" alt="menu bar" width="200" />
+<img src="./jamfStatus/images/menubar.png" alt="menu bar" width="200" />
 <p>
-You'll also get on screen notifications when the status changes.
+An alert window will be displayed as the cloud status changes.  You can configure how the alert window display refreshes, either at every status check or only when the status changes.
 
-<img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/alert.png" alt="alert" width="700" />
+For minor Jamf Cloud issues something similar to the following be displayed.
 
-In addition, enter your Jamf Server URL and credentials into Preferences to receive the status of any notifications.
+<img src="./jamfStatus/images/alert.png" alt="alert" width="700" />
 
-<img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/prefs.png" alt="notifications" width="800" />
+For major Jamf Cloud issues something similar to the following be displayed. 
+
+<img src="./jamfStatus/images/major.png" alt="alert" width="700" />
+
+Access Preferences from the menu bar icon.  Here you'll be able to set the following:<br>
+- Polling interval.<br>
+- Whether the alert window is displayed at every polling interval or only when the status changes.<br>
+- How the menubar icon is displayed.  Minimizing will place a thin transparent icon in the menubar.<br>
+- Use of a LaunchAgent, to automatically start the app when logging in.*<br>
+- Information for your specific Jamf Cloud instance. If your cloud server does not utilize the HTTPS port 443 be sure to include the port you use in the URL.<br>
+
+<img src="./jamfStatus/images/prefs.png" alt="notifications" width="800" /><br>
+
+There are two different menu bar icon styles to choose from.  One uses colors to indicate the status and the other uses slashes.<br><br>
+            <div style="margin-left: 55px;">
+               <table>
+                  <tr>
+                    <th>Status</th>
+                    <td>minor</td>
+                    <td>major</td>
+                    <td>minor</td>
+                    <td>major</td>
+                  </tr>
+                  <tr>
+                    <th>Icon</th>
+                    <td><img src="./jamfStatus/images/minor1.png" id="Image2" alt=""></th>
+                     <td><img src="./jamfStatus/images/major1.png" id="Image2" alt=""></th>
+                        <td><img src="./jamfStatus/images/minor2.png" id="Image2" alt=""></th>
+                           <td><img src="./jamfStatus/images/major2.png" id="Image2" alt=""></th>
+                  </tr>
+                </table></div><br>
 
 Notifications, if any, will appear after the next polling cycle once the information has been entered.
 
-<img src="https://raw.githubusercontent.com/jamfprofessionalservices/jamfStatus/master/jamfStatus/images/notifications.png" alt="Preferences" width="600" />
+<img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
 Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
 

@@ -331,9 +331,9 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         URLCache.shared.removeAllCachedResponses()
         
         //        JSON parsing - start
-//        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
+        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
 //        print("apiStatusUrl: \(apiStatusUrl)")
-        let apiStatusUrl = "http://jamfpro-test.helou.private/jamfStatus/components.json"
+//        let apiStatusUrl = "http://jamfpro-test.site.private/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
         let encodedURL = NSURL(string: apiStatusUrl)
@@ -416,11 +416,9 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             } else {
                 if (self.prefs.menuIconStyle == "color") || (localResult == "cloudStatus-green") {
                     // display icon with color
-                    print("color icon")
                     self.iconName = localResult
                 } else {
                     // display icon with slash
-                    print("slash iocn")
                     self.iconName = (localResult == "cloudStatus-yellow") ? "cloudStatus-yellow1":"cloudStatus-red1"
                     localResult = self.iconName
                 }

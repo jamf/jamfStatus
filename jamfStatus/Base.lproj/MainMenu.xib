@@ -333,8 +333,8 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="qeJ-Bb-E0c">
-                        <rect key="frame" x="33" y="236" width="162" height="18"/>
-                        <buttonCell key="cell" type="check" title="Minimize Menubar Icon" bezelStyle="regularSquare" imagePosition="left" inset="2" id="POb-4P-M6t">
+                        <rect key="frame" x="33" y="236" width="166" height="18"/>
+                        <buttonCell key="cell" type="check" title="Minimize menu bar icon" bezelStyle="regularSquare" imagePosition="left" inset="2" id="POb-4P-M6t">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -343,8 +343,8 @@
                         </connections>
                     </button>
                     <button toolTip="jamfStatus.app must exist in /Applications" translatesAutoresizingMaskIntoConstraints="NO" id="149-0X-OJo">
-                        <rect key="frame" x="33" y="209" width="147" height="18"/>
-                        <buttonCell key="cell" type="check" title="Enable LaunchAgent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Y9P-dU-rHL">
+                        <rect key="frame" x="33" y="209" width="141" height="18"/>
+                        <buttonCell key="cell" type="check" title="Enable launchagent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Y9P-dU-rHL">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -440,24 +440,24 @@
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="red-dot" id="tM3-0Y-tC9"/>
                     </imageView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZZO-Ku-Imu">
-                        <rect key="frame" x="32" y="160" width="105" height="16"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Menu Icon Style:" id="BEJ-vU-vHi">
+                        <rect key="frame" x="32" y="160" width="127" height="16"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Menu bar icon style:" id="BEJ-vU-vHi">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nrH-GF-BH2">
-                        <rect key="frame" x="140" y="150" width="56" height="25"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="uod-dG-SB9" id="1d1-eT-Oux">
+                        <rect key="frame" x="158" y="150" width="56" height="25"/>
+                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" imagePosition="overlaps" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" userInterfaceLayoutDirection="rightToLeft" imageScaling="proportionallyDown" inset="2" selectedItem="uod-dG-SB9" id="1d1-eT-Oux">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <menu key="menu" id="bdy-Pl-qSH">
+                            <menu key="menu" userInterfaceLayoutDirection="rightToLeft" id="bdy-Pl-qSH">
                                 <items>
-                                    <menuItem state="on" image="cloudStatus-yellow" id="uod-dG-SB9">
+                                    <menuItem image="cloudStatus-yellow" id="uod-dG-SB9">
                                         <accessibility description="color" identifier="color"/>
                                     </menuItem>
-                                    <menuItem image="cloudStatus-yellow1" identifier="slash" id="0K9-mP-bQt">
+                                    <menuItem image="cloudStatus-yellow1" id="0K9-mP-bQt">
                                         <accessibility description="slash"/>
                                     </menuItem>
                                 </items>
@@ -473,12 +473,12 @@
                     <constraint firstItem="iJJ-5w-6g2" firstAttribute="leading" secondItem="ClO-hJ-ypG" secondAttribute="trailing" constant="6" id="0lg-n8-9zh"/>
                     <constraint firstAttribute="trailing" secondItem="d8B-9U-oQy" secondAttribute="trailing" constant="53" id="1L1-bi-1tN"/>
                     <constraint firstItem="8Gl-Xf-gmr" firstAttribute="top" secondItem="qwn-kK-uEc" secondAttribute="bottom" constant="11" id="1qm-Ow-1ka"/>
+                    <constraint firstItem="ZZO-Ku-Imu" firstAttribute="leading" secondItem="hgl-Mf-6ZA" secondAttribute="leading" constant="34" id="1y0-Ye-Hwf"/>
                     <constraint firstItem="1XS-oh-UqB" firstAttribute="top" secondItem="qeJ-Bb-E0c" secondAttribute="bottom" constant="25" id="26K-NH-hYL"/>
                     <constraint firstAttribute="trailing" secondItem="TnH-F4-dIr" secondAttribute="trailing" constant="161" id="2fU-5k-kvc"/>
                     <constraint firstItem="SLI-gn-Ejs" firstAttribute="top" secondItem="Jdp-eV-GL9" secondAttribute="bottom" constant="13" id="2y3-af-hrY"/>
-                    <constraint firstItem="ZZO-Ku-Imu" firstAttribute="leading" secondItem="hgl-Mf-6ZA" secondAttribute="leading" constant="34" id="3WW-9S-aQK"/>
                     <constraint firstItem="Jdp-eV-GL9" firstAttribute="baseline" secondItem="Hdp-Rt-TNE" secondAttribute="firstBaseline" id="3pK-6p-RIH"/>
-                    <constraint firstAttribute="trailing" secondItem="nrH-GF-BH2" secondAttribute="trailing" constant="194" id="473-v2-Ccz"/>
+                    <constraint firstAttribute="trailing" secondItem="nrH-GF-BH2" secondAttribute="trailing" constant="176" id="473-v2-Ccz"/>
                     <constraint firstItem="d8B-9U-oQy" firstAttribute="leading" secondItem="Jdp-eV-GL9" secondAttribute="trailing" constant="4" id="5dE-p5-Oxq"/>
                     <constraint firstItem="iJJ-5w-6g2" firstAttribute="leading" secondItem="zDZ-oy-eFu" secondAttribute="leading" id="8jl-oC-7er"/>
                     <constraint firstItem="eDi-xB-sCt" firstAttribute="top" secondItem="ZZO-Ku-Imu" secondAttribute="bottom" constant="51" id="8tJ-eA-CCH"/>
@@ -502,7 +502,7 @@
                     <constraint firstItem="Jdp-eV-GL9" firstAttribute="leading" secondItem="Hdp-Rt-TNE" secondAttribute="trailing" constant="4" id="gXi-DE-ml7"/>
                     <constraint firstItem="Hdp-Rt-TNE" firstAttribute="baseline" secondItem="d8B-9U-oQy" secondAttribute="baseline" id="jH7-X1-geG"/>
                     <constraint firstItem="1XS-oh-UqB" firstAttribute="leading" secondItem="hgl-Mf-6ZA" secondAttribute="leading" constant="53" id="jfW-gx-dEJ"/>
-                    <constraint firstItem="nrH-GF-BH2" firstAttribute="leading" secondItem="ZZO-Ku-Imu" secondAttribute="trailing" constant="7" id="ms1-au-cvP"/>
+                    <constraint firstItem="nrH-GF-BH2" firstAttribute="leading" secondItem="ZZO-Ku-Imu" secondAttribute="trailing" constant="3" id="ms1-au-cvP"/>
                     <constraint firstItem="fOo-lq-uF5" firstAttribute="leading" secondItem="qwn-kK-uEc" secondAttribute="trailing" constant="4" id="muf-Z8-DYz"/>
                     <constraint firstItem="8Gl-Xf-gmr" firstAttribute="top" secondItem="qwn-kK-uEc" secondAttribute="bottom" constant="11" id="oo6-0D-ITM"/>
                     <constraint firstItem="TnH-F4-dIr" firstAttribute="top" secondItem="1XS-oh-UqB" secondAttribute="bottom" constant="56" id="qyF-fc-1sY"/>
@@ -526,21 +526,30 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="70" y="561" width="610" height="530"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <view key="contentView" id="1XC-At-TYn">
-                <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
+            <view key="contentView" misplaced="YES" id="1XC-At-TYn">
+                <rect key="frame" x="0.0" y="0.0" width="631" height="570"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <wkWebView wantsLayer="YES" canDrawConcurrently="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
-                        <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <wkWebView wantsLayer="YES" canDrawConcurrently="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
+                        <rect key="frame" x="1" y="1" width="630" height="569"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="530" id="3oN-MB-jgR"/>
+                            <constraint firstAttribute="width" constant="610" id="RCh-7e-0xk"/>
+                        </constraints>
                         <wkWebViewConfiguration key="configuration">
                             <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                             <wkPreferences key="preferences" javaScriptEnabled="NO"/>
                         </wkWebViewConfiguration>
                     </wkWebView>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="uZV-lt-phl" secondAttribute="trailing" id="cdr-XT-h5j"/>
+                    <constraint firstAttribute="bottom" secondItem="uZV-lt-phl" secondAttribute="bottom" id="l7E-PT-9L3"/>
+                    <constraint firstItem="uZV-lt-phl" firstAttribute="leading" secondItem="1XC-At-TYn" secondAttribute="leading" id="tQY-xl-pIu"/>
+                    <constraint firstItem="uZV-lt-phl" firstAttribute="top" secondItem="1XC-At-TYn" secondAttribute="top" id="vqC-B1-wye"/>
+                </constraints>
             </view>
-            <point key="canvasLocation" x="616" y="671"/>
+            <point key="canvasLocation" x="615.5" y="671"/>
         </window>
     </objects>
     <resources>
