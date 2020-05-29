@@ -1,4 +1,7 @@
 # jamfStatus
+
+Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
+
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
 <img src="./jamfStatus/images/menubar.png" alt="menu bar" width="200" />
