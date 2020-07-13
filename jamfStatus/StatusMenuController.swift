@@ -30,7 +30,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     let fileManager      = FileManager.default
     let cloudStatusItem  = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    let statusURL        = "https://status.jamf.com"
+//    let statusURL        = "https://status.jamf.com"
     var statusPageString = ""
     var dataString       = ""
     var theResult        = ""
@@ -309,6 +309,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     func refreshAlert() {
         self.alert_window.title = "\(alert_header)"
         self.alert_TextFieldCell.stringValue = self.alert_message
+        WriteToLog().message(stringOfText: [alert_header, self.alert_message])
         if self.alert_window.isVisible {
             self.alert_window.setIsVisible(false)
             sleep(1)
@@ -332,7 +333,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         
         //        JSON parsing - start
         let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
-//        print("apiStatusUrl: \(apiStatusUrl)")
+//        url to test app
 //        let apiStatusUrl = "http://jamfpro-test.site.private/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
