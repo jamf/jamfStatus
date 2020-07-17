@@ -1,4 +1,6 @@
 # jamfStatus
+Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
+
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
 <img src="./jamfStatus/images/menubar.png" alt="menu bar" width="200" />
@@ -45,5 +47,4 @@ Notifications, if any, will appear after the next polling cycle once the informa
 
 <img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
-Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
 
