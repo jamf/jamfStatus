@@ -167,7 +167,7 @@ th {
 </head>
 <body>
 <div id="wb_Heading1" style="position:absolute;left:234px;top:26px;width:159px;height:42px;z-index:0;">
-    <h1 id="Heading1">jamfStatus</h1><div style="font-family:Arial;font-size:13px;text-align: center;">v2.1.0</div></div>
+    <h1 id="Heading1">jamfStatus</h1><div style="font-family:Arial;font-size:13px;text-align: center;">v2.2.0</div></div>
 <div id="wb_Text1" style="position:absolute;left:15px;top:99px;width:594px;height:34px;z-index:1;">
 <div style="font-family:Arial;font-size:13px;line-height:15px;color:#000000;">
 <div>Keep an eye on the status of the Jamf Cloud environment with jamfStatus.app.&nbsp; The application will place an icon in your menu bar to reflect the current cloud status.</div>
@@ -218,13 +218,14 @@ th {
             
     <br>
     <img src="images/notifications.png" id="Image2" alt="">
-            <br>
-        * The LaunchAgent must be moved from ~/Library/Containers/com.jamf.pse.jamfStatus/Data/Library/LaunchAgents/ to ~/Library/LaunchAgents/ for it to function.   
-            <br>
-            <br>
+    <br>
+<!--    * The LaunchAgent must be moved from ~/Library/Containers/com.jamf.pse.jamfStatus/Data/Library/LaunchAgents/ to ~/Library/LaunchAgents/ for it to function.   -->
+    * Status changes are written to ~/Library/Logs/jamfStatus/jamfStatus.log
+    <br>
+    <br>
 <hr id="Line1" style="left:0px;top:800px;width:603px;height:2px;z-index:8;">
-            <br>
-            <div>Author: Leslie N. Helou</div>
+    <br>
+    <div>Author: Leslie N. Helou</div>
 <div><br></div>
 <div>License: Copyright 2017 Jamf Professional Services</div>
 <div><br></div>
