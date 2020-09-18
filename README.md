@@ -1,5 +1,4 @@
 # jamfStatus
-
 Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
 
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
@@ -12,7 +11,7 @@ For minor Jamf Cloud issues something similar to the following be displayed.
 
 <img src="./jamfStatus/images/alert.png" alt="alert" width="700" />
 
-For major Jamf Cloud issues something similar to the following be displayed. 
+For major Jamf Cloud issues something similar to the following be displayed.
 
 <img src="./jamfStatus/images/major.png" alt="alert" width="700" />
 
@@ -64,4 +63,3 @@ Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
 Thu Sep 17 20:27:30 Notice
 Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 ```
-
