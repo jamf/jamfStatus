@@ -48,5 +48,20 @@ Notifications, if any, will appear after the next polling cycle once the informa
 
 <img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
-Download: [jamfStatus](https://github.com/jamfprofessionalservices/jamfStatus/releases/download/current/jamfStatus.zip)
+Status changes are logged to ~/Library/Logs/jamfStatus/jamfStatus.log.  Once the log exceeds 5MB it will be zipped and a new log will be created.  A maximum of 10 zipped log files are retained.  Sample log data:
+
+```
+Thu Sep 17 20:24:30 Jamf Cloud Critical Issue Alert
+Thu Sep 17 20:24:30 Please be aware there is a major issue that may affect your Jamf Cloud instance.
+Thu Sep 17 20:24:30    eu-central-1: JCDS: Major Outage
+Thu Sep 17 20:24:30    Jamf Cloud Distribution Service (JCDS): Major Outage
+
+Thu Sep 17 20:25:30 Jamf Cloud Minor Issue Alert
+Thu Sep 17 20:25:30 Please be aware there is a minor issue that may affect your Jamf Cloud instance.
+Thu Sep 17 20:25:30    Compute Services - US: Degraded Performance
+Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
+
+Thu Sep 17 20:27:30 Notice
+Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
+```
 

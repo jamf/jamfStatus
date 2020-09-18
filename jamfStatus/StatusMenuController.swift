@@ -147,75 +147,95 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                             let alertTitle = alert["type"]! as! String
                             subTitle = ""
                             switch alertTitle {
-                            case "EXCEEDED_LICENSE_COUNT":
-                                displayTitle = "Exceeded License Count"
-                            case "VPP_ACCOUNT_EXPIRED":
-                                displayTitle = "VPP Account Has Expired"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
-                            case "VPP_ACCOUNT_WILL_EXPIRE":
-                                displayTitle = "VPP Account Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
-                            case "VPP_ACCOUNT_REVOKED":
-                                displayTitle = "VPP Token Has Been Revoked"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
-                            case "DEP_INSTANCE_EXPIRED":
-                                displayTitle = "DEP Instance Has Expired"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!))"
-                            case "DEP_INSTANCE_WILL_EXPIRE":
-                                displayTitle = "DEP Instance Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
-                            case "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED":
-                                displayTitle = "DEP Terms And Conditions Are Not Signed"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tinstanceName: \(String(describing: paramDict["instanceName"]!))"
-                            case "JIM_ERROR":
-                                displayTitle = "Infrastructure Manager instance has not checked in"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tinstanceName: \(String(describing: paramDict["jsamName"]!))"
-                            case "PUSH_CERT_EXPIRED":
-                                displayTitle = "APNS Push Certificate Has Expired"
-                            case "PUSH_CERT_WILL_EXPIRE":
-                                displayTitle = "APNS Push Certificate Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
-                            case "TOMCAT_SSL_CERT_EXPIRED":
-                                displayTitle = "Tomcat SSL Certificate Has Expired"
-                            case "TOMCAT_SSL_CERT_WILL_EXPIRE":
-                                displayTitle = "Tomcat SSL Certificate Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
-                            case "SSO_CERT_EXPIRED":
-                                displayTitle = "SSO Certificate Has Expired"
-                            case "SSO_CERT_WILL_EXPIRE":
-                                displayTitle = "SSO Certificate Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
-                            case "GSX_CERT_EXPIRED":
-                                displayTitle = "GSX Certificate Has Expired"
-                            case "GSX_CERT_WILL_EXPIRE":
-                                displayTitle = "GSX Certificate Will Expire"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
-                            case "COMPUTER_SECURITY_SSL_DISABLED":
-                                displayTitle = "Computer Security is Disabled"
-                            case "LDAP_CONNECTION_CHECK_THROUGH_JIM_FAILED":
-                                displayTitle = "Verification Status for LDAP Proxy Server Connection: Failed"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
-                            case "LDAP_CONNECTION_CHECK_THROUGH_JIM_SUCCESSFUL":
-                                displayTitle = "Verification Status for LDAP Proxy Server Connection: Successful"
-                                let paramDict = alert["params"] as! Dictionary<String, Any>
-                                subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
-                            case "MII_INVENTORY_UPLOAD_FAILED_NOTIFICATION":
-                                displayTitle = "Unable to send inventory information to Microsoft Intune"
-                            default:
-                                displayTitle = "\(alertTitle)"
-                                subTitle     = ""
+                                case "APPLE_SCHOOL_MANAGER_T_C_NOT_SIGNED":
+                                    displayTitle = "Apple School Manager Terms And Conditions Are Not Signed"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tinstanceName: \(String(describing: paramDict["instanceName"]!))"
+                                case "COMPUTER_SECURITY_SSL_DISABLED":
+                                    displayTitle = "Computer Security is Disabled"
+                                case "DEP_INSTANCE_EXPIRED":
+                                    displayTitle = "DEP Instance Has Expired"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                                case "DEP_INSTANCE_WILL_EXPIRE":
+                                    displayTitle = "DEP Instance Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
+                                case "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED":
+                                    displayTitle = "DEP Terms And Conditions Are Not Signed"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tinstanceName: \(String(describing: paramDict["instanceName"]!))"
+                                case "EXCEEDED_LICENSE_COUNT":
+                                    displayTitle = "Exceeded License Count"
+                                case "GSX_CERT_EXPIRED":
+                                    displayTitle = "GSX Certificate Has Expired"
+                                case "GSX_CERT_WILL_EXPIRE":
+                                    displayTitle = "GSX Certificate Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                                case "HCL_ERROR":
+                                    displayTitle = "Health Care Listener error"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tinstanceName: \(String(describing: paramDict["hclName"]!))"
+                                case "HCL_BIND_ERROR":
+                                    displayTitle = "Health Care Listener was unable to enroll"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tinstanceName: \(String(describing: paramDict["hclName"]!))"
+                                case "INSECURE_LDAP":
+                                    displayTitle = "LDAP is not using SSL"
+                                case "JIM_ERROR":
+                                    displayTitle = "Infrastructure Manager instance has not checked in"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tinstanceName: \(String(describing: paramDict["jsamName"]!))"
+                                case "LDAP_CONNECTION_CHECK_THROUGH_JIM_FAILED":
+                                    displayTitle = "Verification Status for LDAP Proxy Server Connection: Failed"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
+                                case "LDAP_CONNECTION_CHECK_THROUGH_JIM_SUCCESSFUL":
+                                    displayTitle = "Verification Status for LDAP Proxy Server Connection: Successful"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tServer: \(String(describing: paramDict["serverName"]!))"
+                                case "MII_INVENTORY_UPLOAD_FAILED_NOTIFICATION":
+                                    displayTitle = "Unable to send inventory information to Microsoft Intune"
+                                case "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_MULTIPLE":
+                                    displayTitle = "Multiple policies have a management account password configuration that is not recommended"
+                                case "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_SIMGLE":
+                                    displayTitle = "A policy has a management account password configuration that is not recommended"
+                                case "PUSH_CERT_EXPIRED":
+                                    displayTitle = "APNS Push Certificate Has Expired"
+                                case "PUSH_CERT_WILL_EXPIRE":
+                                    displayTitle = "APNS Push Certificate Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                                case "SSO_CERT_EXPIRED":
+                                    displayTitle = "SSO Certificate Has Expired"
+                                case "SSO_CERT_WILL_EXPIRE":
+                                    displayTitle = "SSO Certificate Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                                case "TOMCAT_SSL_CERT_EXPIRED":
+                                    displayTitle = "Tomcat SSL Certificate Has Expired"
+                                case "TOMCAT_SSL_CERT_WILL_EXPIRE":
+                                    displayTitle = "Tomcat SSL Certificate Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tdays to expire: \(String(describing: paramDict["days"]!))"
+                                case "USER_INITIATED_ENROLLMENT_MANAGEMENT_ACCOUNT_SECURITY_ISSUE":
+                                    displayTitle = "A configured management account feature (in User-Initiated Enrollment) is not recommended"
+                                case "VPP_ACCOUNT_EXPIRED":
+                                    displayTitle = "VPP Account Has Expired"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                                case "VPP_ACCOUNT_WILL_EXPIRE":
+                                    displayTitle = "VPP Account Will Expire"
+                                    let paramDict = alert["params"] as! Dictionary<String, Any>
+                                    subTitle = "\tname: \(String(describing: paramDict["name"]!)) - days to expire: \(String(describing: paramDict["days"]!))"
+                                case "VPP_ACCOUNT_REVOKED":
+                                        displayTitle = "VPP Token Has Been Revoked"
+                                        let paramDict = alert["params"] as! Dictionary<String, Any>
+                                        subTitle = "\tname: \(String(describing: paramDict["name"]!))"
+                                default:
+                                    displayTitle = "\(alertTitle)"
+                                    subTitle     = ""
                             }
 //                            print("alert: \(alert)")
 //                            print("alertTitle: \(alertTitle)")
@@ -333,8 +353,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         
         //        JSON parsing - start
         let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
-//        url to test app
-//        let apiStatusUrl = "http://jamfpro-test.site.private/jamfStatus/components.json"
+//        url to test app - need to set up your own
+//        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
         let encodedURL = NSURL(string: apiStatusUrl)
