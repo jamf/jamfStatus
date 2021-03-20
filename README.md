@@ -20,7 +20,7 @@ Access Preferences from the menu bar icon.  Here you'll be able to set the follo
 - Whether the alert window is displayed at every polling interval or only when the status changes.<br>
 - How the menubar icon is displayed.  Minimizing will place a thin transparent icon in the menubar.<br>
 - Use of a LaunchAgent, to automatically start the app when logging in.*<br>
-- Information for your specific Jamf Cloud instance. If your cloud server does not utilize the HTTPS port 443 be sure to include the port you use in the URL.<br>
+- Information for your specific Jamf Cloud instance. The account used only needs to be able to authenticate, no need to assign permissions. If your cloud server does not utilize the HTTPS port 443 be sure to include the port you use in the URL.<br>
 
 <img src="./jamfStatus/images/prefs.png" alt="notifications" width="600" /><br>
 
