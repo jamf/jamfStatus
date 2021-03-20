@@ -49,8 +49,8 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
             
             URLCache.shared.removeAllCachedResponses()
             
-            var workingUrlString = "\(jps)/uapi/\(endpoint)"
-            workingUrlString     = workingUrlString.replacingOccurrences(of: "//uapi", with: "/uapi")
+            var workingUrlString = "\(jps)/api/\(endpoint)"
+            workingUrlString     = workingUrlString.replacingOccurrences(of: "//api", with: "/api")
             
             self.theUapiQ.maxConcurrentOperationCount = 1
             
