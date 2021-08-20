@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="17156"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -76,6 +76,12 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Logs..." id="f7n-eM-oGu">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showLogs_Action:" target="J6O-sa-pS3" id="AXf-fo-Fsx"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Preferences..." id="EJZ-Ga-8AU" userLabel="Preferences">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -96,7 +102,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="573" height="436"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="573" height="436"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -118,7 +124,7 @@
             </view>
             <toolbar key="toolbar" implicitIdentifier="8D0CFC97-0C69-401C-87F3-B35AB476439A" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="CNq-wK-nx1">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="2D45BD56-E254-49E3-9FD5-F9DDC7B9B08F" label="Custom View" paletteLabel="Custom View" id="1nZ-yX-Sz2" userLabel="back">
+                    <toolbarItem implicitItemIdentifier="2D45BD56-E254-49E3-9FD5-F9DDC7B9B08F" label="Custom View" paletteLabel="Custom View" title="&lt;" id="1nZ-yX-Sz2" userLabel="back">
                         <nil key="toolTip"/>
                         <size key="minSize" width="25" height="25"/>
                         <size key="maxSize" width="25" height="25"/>
@@ -135,7 +141,7 @@
                             </connections>
                         </button>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="AA56209D-CA20-4D65-BE8F-4CF1E4412505" label="Custom View" paletteLabel="Custom View" id="IBG-r2-iX0" userLabel="forward">
+                    <toolbarItem implicitItemIdentifier="AA56209D-CA20-4D65-BE8F-4CF1E4412505" label="Custom View" paletteLabel="Custom View" title="&gt;" id="IBG-r2-iX0" userLabel="forward">
                         <nil key="toolTip"/>
                         <size key="minSize" width="25" height="25"/>
                         <size key="maxSize" width="25" height="25"/>
@@ -236,7 +242,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="70" y="748" width="398" height="99"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" id="1wr-TU-Bu1">
                 <rect key="frame" x="0.0" y="0.0" width="398" height="99"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -284,13 +290,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="100" y="712" width="387" height="330"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" id="hgl-Mf-6ZA">
-                <rect key="frame" x="0.0" y="0.0" width="387" height="330"/>
+                <rect key="frame" x="0.0" y="0.0" width="387" height="333"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hdp-Rt-TNE">
-                        <rect key="frame" x="32" y="293" width="97" height="17"/>
+                        <rect key="frame" x="32" y="296" width="97" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="93" id="T8n-cC-kue"/>
                         </constraints>
@@ -301,7 +307,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d8B-9U-oQy">
-                        <rect key="frame" x="193" y="293" width="143" height="17"/>
+                        <rect key="frame" x="193" y="296" width="143" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds (minimum 60)" id="dQn-Wc-zar">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -309,7 +315,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jdp-eV-GL9">
-                        <rect key="frame" x="131" y="291" width="60" height="22"/>
+                        <rect key="frame" x="131" y="294" width="60" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="60" id="y6F-By-QfS"/>
                         </constraints>
@@ -323,7 +329,7 @@
                         </connections>
                     </textField>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="SLI-gn-Ejs">
-                        <rect key="frame" x="33" y="262" width="330" height="18"/>
+                        <rect key="frame" x="33" y="264" width="328" height="18"/>
                         <buttonCell key="cell" type="check" title="Do not redisplay status alert until there is a change" bezelStyle="regularSquare" imagePosition="left" inset="2" id="tFc-fI-cXw">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -333,7 +339,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="qeJ-Bb-E0c">
-                        <rect key="frame" x="33" y="236" width="166" height="18"/>
+                        <rect key="frame" x="33" y="236" width="170" height="18"/>
                         <buttonCell key="cell" type="check" title="Minimize menu bar icon" bezelStyle="regularSquare" imagePosition="left" inset="2" id="POb-4P-M6t">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -343,7 +349,7 @@
                         </connections>
                     </button>
                     <button toolTip="jamfStatus.app must exist in /Applications" translatesAutoresizingMaskIntoConstraints="NO" id="149-0X-OJo">
-                        <rect key="frame" x="33" y="209" width="141" height="18"/>
+                        <rect key="frame" x="33" y="210" width="145" height="15"/>
                         <buttonCell key="cell" type="check" title="Enable launchagent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Y9P-dU-rHL">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -353,7 +359,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1XS-oh-UqB">
-                        <rect key="frame" x="51" y="196" width="267" height="17"/>
+                        <rect key="frame" x="51" y="196" width="267" height="16"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="(jamfStatus.app must exist in /Applications)" id="GgS-AB-Nrq">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -448,7 +454,7 @@
                         </textFieldCell>
                     </textField>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nrH-GF-BH2">
-                        <rect key="frame" x="158" y="150" width="56" height="25"/>
+                        <rect key="frame" x="156" y="149" width="58" height="25"/>
                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" imagePosition="overlaps" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" userInterfaceLayoutDirection="rightToLeft" imageScaling="proportionallyDown" inset="2" selectedItem="uod-dG-SB9" id="1d1-eT-Oux">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
@@ -525,7 +531,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="70" y="561" width="610" height="530"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" id="1XC-At-TYn">
                 <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
                 <autoresizingMask key="autoresizingMask"/>

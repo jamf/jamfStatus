@@ -326,6 +326,13 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         }   // DispatchQueue.main.async - end
     }
     
+    @IBAction func showLogs_Action(_ sender: Any) {
+        if fileManager.fileExists(atPath: Log.path!) {
+            NSWorkspace.shared.openFile(Log.path!)
+        }
+    }
+    
+    
     func refreshAlert() {
         self.alert_window.title = "\(alert_header)"
         self.alert_TextFieldCell.stringValue = self.alert_message
