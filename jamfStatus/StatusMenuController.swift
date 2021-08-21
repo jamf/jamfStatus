@@ -327,8 +327,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     @IBAction func showLogs_Action(_ sender: Any) {
-        if fileManager.fileExists(atPath: Log.path!) {
-            NSWorkspace.shared.openFile(Log.path!)
+        if fileManager.fileExists(atPath: Log.path! + Log.file) {
+            NSWorkspace.shared.openFile(Log.path! + Log.file)
         }
     }
     

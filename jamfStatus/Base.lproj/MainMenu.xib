@@ -60,10 +60,16 @@
                         <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="uP1-tb-qVX"/>
                     </connections>
                 </menuItem>
-                <menuItem title="View" id="bjz-jV-QMW" userLabel="View">
+                <menuItem title="View Status Page" id="bjz-jV-QMW">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="viewStatus:" target="Voe-Tx-rLC" id="Hig-tb-gbk"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="View Log" id="f7n-eM-oGu">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showLogs_Action:" target="J6O-sa-pS3" id="AXf-fo-Fsx"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Notifications" id="9Lr-kF-tbc">
@@ -75,12 +81,6 @@
                             </menuItem>
                         </items>
                     </menu>
-                </menuItem>
-                <menuItem title="Logs..." id="f7n-eM-oGu">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="showLogs_Action:" target="J6O-sa-pS3" id="AXf-fo-Fsx"/>
-                    </connections>
                 </menuItem>
                 <menuItem title="Preferences..." id="EJZ-Ga-8AU" userLabel="Preferences">
                     <modifierMask key="keyEquivalentModifierMask"/>
