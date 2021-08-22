@@ -20,6 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Panel: NSPanel!
+    @IBOutlet weak var aboutVersion_TextField: NSTextField!
+    @IBOutlet weak var aboutHomeUrl_Button: NSButton!
     
     
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
@@ -63,27 +65,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
         
-        let filePath = Bundle.main.path(forResource: "index", ofType: "html")
-        let folderPath = Bundle.main.resourcePath
-        
-        let fileUrl = NSURL(fileURLWithPath: filePath!)
-        let baseUrl = NSURL(fileURLWithPath: folderPath!, isDirectory: true)
-        
-        about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
-        
-        //        cloudStatusWindow.titleVisibility = NSWindow.TitleVisibility.hidden
-//        about_NSWindow.setIsVisible(true)
-        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "window")
-        
-    }
-    
-    @IBAction func checkForUpdates(_ sender: AnyObject) {
-        let verCheck = VersionCheck()
         
         let appInfo = Bundle.main.infoDictionary!
         let version = appInfo["CFBundleShortVersionString"] as! String
         
-        verCheck.versionCheck() {
+        let filePath = Bundle.main.path(forResource: "index", ofType: "html")
+        let folderPath = Bundle.main.resourcePath
+//        
+        let fileUrl = NSURL(fileURLWithPath: filePath!)
+        let baseUrl = NSURL(fileURLWithPath: folderPath!, isDirectory: true)
+        
+        about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
+
+        aboutVersion_TextField.stringValue = "Version: \(version)"
+        
+        let stringAttributes: [NSAttributedString.Key: Any] = [.underlineStyle: NSUnderlineStyle.single.rawValue, .foregroundColor: NSColor.systemBlue]
+        let attributedTitle = NSAttributedString(string: "Home", attributes: stringAttributes)
+        aboutHomeUrl_Button.attributedTitle = attributedTitle
+        aboutHomeUrl_Button.toolTip = "https://github.com/jamf/jamfStatus"
+        
+        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "window")
+        
+    }
+    @IBAction func aboutHomeUrl_Button(_ sender: NSButton) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/jamf/jamfStatus")!)
+    }
+    
+    @IBAction func checkForUpdates(_ sender: AnyObject) {
+//        let verCheck = VersionCheck()
+        
+        let appInfo = Bundle.main.infoDictionary!
+        let version = appInfo["CFBundleShortVersionString"] as! String
+        
+        VersionCheck().versionCheck() {
             (result: Bool) in
             if result {
                 self.alert_dialog(header: "Running jamfStatus: \(version)", message: "A new versions is available.", updateAvail: result)

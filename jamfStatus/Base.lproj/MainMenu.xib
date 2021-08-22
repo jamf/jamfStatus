@@ -16,6 +16,8 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="jamfStatus" customModuleProvider="target">
             <connections>
+                <outlet property="aboutHomeUrl_Button" destination="9xA-oN-meV" id="SR3-Nn-liS"/>
+                <outlet property="aboutVersion_TextField" destination="ayB-Oe-4se" id="IbH-kP-xgj"/>
                 <outlet property="about_NSWindow" destination="LmC-DW-plF" id="30K-WG-mBo"/>
                 <outlet property="about_WebView" destination="uZV-lt-phl" id="Ld0-TX-0J8"/>
                 <outlet property="cloudStatusWindow" destination="QvC-M9-y7g" id="ayO-aD-vDf"/>
@@ -536,26 +538,56 @@
                 <rect key="frame" x="0.0" y="0.0" width="610" height="530"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <wkWebView wantsLayer="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
-                        <rect key="frame" x="1" y="-39" width="630" height="569"/>
+                    <wkWebView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uZV-lt-phl">
+                        <rect key="frame" x="1" y="20" width="609" height="510"/>
                         <constraints>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="530" id="3oN-MB-jgR"/>
-                            <constraint firstAttribute="width" constant="610" id="RCh-7e-0xk"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="510" id="3oN-MB-jgR"/>
+                            <constraint firstAttribute="width" constant="609" id="RCh-7e-0xk"/>
                         </constraints>
                         <wkWebViewConfiguration key="configuration">
                             <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                             <wkPreferences key="preferences" javaScriptEnabled="NO"/>
                         </wkWebViewConfiguration>
                     </wkWebView>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ayB-Oe-4se">
+                        <rect key="frame" x="1" y="1" width="180" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="176" id="ima-v8-Noe"/>
+                            <constraint firstAttribute="height" constant="16" id="rZ1-O9-kxQ"/>
+                        </constraints>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" id="UoW-BR-dYg">
+                            <font key="font" metaFont="system" size="11"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9xA-oN-meV">
+                        <rect key="frame" x="574" y="-3" width="36" height="27"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="36" id="ETb-vE-xGb"/>
+                            <constraint firstAttribute="height" constant="27" id="fzC-7v-H4F"/>
+                        </constraints>
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="left" imageScaling="proportionallyDown" inset="2" id="Bgo-pa-eL9">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system" size="11"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="aboutHomeUrl_Button:" target="Voe-Tx-rLC" id="HBc-bF-aeV"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="trailing" secondItem="9xA-oN-meV" secondAttribute="trailing" id="XsH-EV-flL"/>
                     <constraint firstAttribute="trailing" secondItem="uZV-lt-phl" secondAttribute="trailing" id="cdr-XT-h5j"/>
-                    <constraint firstAttribute="bottom" secondItem="uZV-lt-phl" secondAttribute="bottom" id="l7E-PT-9L3"/>
-                    <constraint firstItem="uZV-lt-phl" firstAttribute="leading" secondItem="1XC-At-TYn" secondAttribute="leading" id="tQY-xl-pIu"/>
+                    <constraint firstItem="ayB-Oe-4se" firstAttribute="leading" secondItem="1XC-At-TYn" secondAttribute="leading" constant="3" id="d2e-5q-jSR"/>
+                    <constraint firstItem="9xA-oN-meV" firstAttribute="top" secondItem="1XC-At-TYn" secondAttribute="top" constant="506" id="dOQ-Ns-kzY"/>
+                    <constraint firstAttribute="bottom" secondItem="uZV-lt-phl" secondAttribute="bottom" constant="20" id="l7E-PT-9L3"/>
+                    <constraint firstItem="uZV-lt-phl" firstAttribute="leading" secondItem="1XC-At-TYn" secondAttribute="leading" constant="1" id="tQY-xl-pIu"/>
                     <constraint firstItem="uZV-lt-phl" firstAttribute="top" secondItem="1XC-At-TYn" secondAttribute="top" id="vqC-B1-wye"/>
+                    <constraint firstItem="ayB-Oe-4se" firstAttribute="top" secondItem="uZV-lt-phl" secondAttribute="bottom" constant="3" id="ycJ-fC-pnc"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="615.5" y="671"/>
+            <point key="canvasLocation" x="615" y="671"/>
         </window>
     </objects>
     <resources>
