@@ -135,12 +135,14 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     if notificationAlerts.count == 0 {
                         self.notifications_MenuItem.isHidden = true
                     } else {
+                        self.notifications_MenuItem.title = "Notiifications (\(notificationAlerts.count))"
                         self.notifications_MenuItem.isHidden = false
                         let subMenu      = NSMenu()
                         var displayTitle = ""
                         var subTitle     = ""
                         // alert types found here:
                         // .../tomcat/webapps/ROOT/ui/notifications/notification-alert.model.js
+                        // .../tomcat/webapps/ROOT/ui/lang/en.jason -> json dictionary for notifications
                         // to-do: add preferences to allow selection of alerts to show
                         self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
                         for alert in notificationAlerts {
