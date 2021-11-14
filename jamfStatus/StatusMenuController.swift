@@ -201,7 +201,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                                     displayTitle = "Unable to send inventory information to Microsoft Intune"
                                 case "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_MULTIPLE":
                                     displayTitle = "Multiple policies have a management account password configuration that is not recommended"
-                                case "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_SIMGLE":
+                                case "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_SINGLE":
                                     displayTitle = "A policy has a management account password configuration that is not recommended"
                                 case "PUSH_CERT_EXPIRED":
                                     displayTitle = "APNS Push Certificate Has Expired"
