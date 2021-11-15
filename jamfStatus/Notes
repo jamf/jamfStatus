@@ -1,0 +1,7 @@
+
+// alert types found here:
+// .../tomcat/webapps/ROOT/ui/notifications/notification-alert.model.js
+// .../tomcat/webapps/ROOT/ui/lang/en.jason -> json dictionary for notifications
+// to-do: add preferences to allow selection of alerts to show
+
+Function for menu item (#selector) must be in AppDelegate

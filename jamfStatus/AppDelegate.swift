@@ -53,6 +53,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     //    let popover = NSPopover()
     
+    
+    @objc func notificationsAction(_ sender: NSMenuItem) {
+//        print("\(sender.identifier!.rawValue)")
+//        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
+    }
+    
     @IBAction func iconStyle_Action(_ sender: Any) {
         if iconStyle_Button.indexOfSelectedItem == 0 {
             prefs.menuIconStyle = "color"
