@@ -63,3 +63,60 @@ Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
 Thu Sep 17 20:27:30 Notice
 Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 ```
+<br>
+## Notifications for the following will be displayed:
+
+* &lt;certType&gt; Certificate Expired
+* Cloud Identity Provider Certificate Expired
+* &lt;certType&gt; Certificate Expiring in &lt;days&gt; days
+* Cloud Identity Provider Certificate Expiring in &lt;validDays&gt; Days
+* Scripts contain invalid references to /usr/sbin/jamf
+* Extension attributes contain invalid references to /usr/sbin/jamf
+* Policies contain invalid references to /usr/sbin/jamf
+* Multiple policies have a management account password configuration that is not recommended
+* A policy has a management account password configuration that is not recommended
+* A configured management account feature is not recommended
+* Volume Purchasing Location &lt;name&gt; Expiring In &lt;days&gt; days
+* Volume Purchasing Location &lt;name&gt; Expired
+* Volume Purchasing Server Token Revoked for the location &lt;name&gt;
+* Automated Device Enrollment Instance &lt;name&gt; Expiring In &lt;days&gt; days
+* Automated Device Enrollment Instance &lt;name&gt; Expired
+* PreStage imaging and Autorun imaging requires a Jamf Pro user account with the Use PreStage Imaging and Autorun Imaging privilege.
+* &lt;name&gt; updates inventory on all computers at recurring check-in. This may cause stability issues.
+* &lt;softwareTitleName&gt; v&lt;latestVersion&gt; is available
+* &lt;softwareTitleName&gt; has an extension attribute requiring attention
+* Device Enrollment instance out of date with Apple’s Terms and Conditions.
+* Sync failed. The associated Automated Device Enrollment instance is out of date with Apple’s Terms and Conditions. The updated agreement must be accepted to sync information. See your Apple School Manager instance to accept the updated agreement.
+* &lt;appName&gt; is no longer available for device-assigned managed distribution and any device assignments have been disabled for this app.
+* There was an error configuring &lt;hclName&gt; Healthcare Listener on &lt;jsamName&gt;
+* Port number of &lt;hclName&gt; Healthcare Listener is invalid on &lt;jsamName&gt;
+* Verification of SSL certificates is disabled
+* &lt;jsamName&gt; Infrastructure Manager instance has not checked in with Jamf Pro.
+* Device Count Exceeded
+* Unable to send inventory information to Microsoft Intune
+* Unable to connect to Microsoft Intune
+* Integration disabled
+* Third-Party Signing Certificate Expired
+* Third-Party Signing Certificate Expiring in &lt;days&gt; Days
+* Third-Party Signing Certificate Expiring Today
+* LDAP Server Configuration Error
+* Verification status for the &lt;serverName&gt; LDAP Proxy Server Connection
+* Verification Status for the &lt;serverName&gt; LDAP Proxy Server Connection
+* &lt;userName&gt;'s Managed Apple ID does not match the Managed Apple ID reported in Apple School Manager.
+* The &lt;maid&gt; Managed Apple ID is used by multiple users.
+* The Jamf Pro JSS Built-in Certificate Authority is set to expire soon.
+* The Jamf Pro JSS Built-in Certificate Authority is expired.
+* The Jamf Pro JSS Built-in Certificate Authority has been successfully renewed.
+* The Jamf Pro JSS Built-in Certificate Authority renewal process failed.
+* Unable to connect to APNs because the push certificate was revoked. Navigate to Global Management &gt; Push Certificates and renew the certificate or generate a new one.
+* Connection to the APN Service Failed. Could not connect to the APNs server. The server is down or network is unreachable.
+* Jamf Protect &lt;latestVersion&gt; Now Available
+* Jamf Connect &lt;latestVersion&gt; Now Available
+* Major Update for Jamf Connect Now Available (Jamf Connect &lt;latestVersion&gt;)
+* Device Compliance Connection Interrupted
+* Conditional Access Connection Interrupted
+
+
+## Change log
+
+2021-10-15: v2.3.0.  Updated notifications display.
