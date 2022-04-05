@@ -1,4 +1,4 @@
-//StatusMenuController.swift
+//AppDelegate.swift
 //Author: Leslie Helou
 //Copyright 2017 Jamf Professional Services
 //
@@ -13,7 +13,7 @@ import Cocoa
 import WebKit
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     @IBOutlet weak var cloudStatus_Toolbar: NSToolbar!
     @IBOutlet weak var cloudStatusWindow: NSWindow!
@@ -195,6 +195,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func credentials_Action(_ sender: Any) {
         
+        if let textField = sender as? NSTextField {
+            print("textField: \(textField.identifier!.rawValue)")
+            getJamfProVersion(jpURL: jamfServerUrl_TextField.stringValue) {
+                (result: [Int]) in
+                print("jamfProVersion: \(result[0]).\(result[1]).\(result[2])")
+            }
+        }
+        
         prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
         defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
         defaults.synchronize()
@@ -242,6 +250,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         //return true
     }   // func alert_dialog - end
+    
+    func getJamfProVersion(jpURL: String, completion: @escaping (_ jpversion: [Int]) -> Void) {
+        var versionString  = ""
+        var versionArray   = [Int]()
+        let semaphore      = DispatchSemaphore(value: 0)
+        
+        OperationQueue().addOperation {
+            let encodedURL     = NSURL(string: "\(jpURL)/JSSCheckConnection")
+            let request        = NSMutableURLRequest(url: encodedURL! as URL)
+            request.httpMethod = "GET"
+            let configuration  = URLSessionConfiguration.default
+            let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+            let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                (data, response, error) -> Void in
+//                if let httpResponse = response as? HTTPURLResponse {
+                    versionString = String(data: data!, encoding: .utf8) ?? ""
+//                    print("httpResponse: \(httpResponse)")
+//                    print("raw versionString: \(versionString)")
+                    if versionString != "" {
+                        let tmpArray = versionString.components(separatedBy: ".")
+                        if tmpArray.count > 2 {
+                            for i in 0...2 {
+                                switch i {
+                                case 2:
+                                    let tmp = tmpArray[i].components(separatedBy: "-")
+                                    versionArray.append(Int(tmp[0]) ?? 0)
+                                default:
+                                    versionArray.append(Int(tmpArray[i]) ?? 0)
+                                }
+                            }
+                        }
+                    }
+//                }
+                completion(versionArray)
+            })  // let task = session - end
+            task.resume()
+            semaphore.wait()
+        }
+    }
     
     func saveCreds(server: String, username: String, password: String) {
         if ( server != "" && username != "" && password != "" ) {

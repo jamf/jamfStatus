@@ -142,12 +142,19 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         var displayTitle = ""
                         self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
                         for alert in notificationAlerts {
-//                            print("notification alert: \(alert)")
+                            print("notification alert: \(alert)")
                             let alertTitle = alert["type"]! as! String
                             displayTitleKey = JamfNotification.key[alertTitle] ?? "Unknown"
                             displayTitle = JamfNotification.displayTitle[displayTitleKey] ?? "Unknown"
+                            switch displayTitleKey {
+                            case "CERT_WILL_EXPIRE", "CERT_EXPIRED":
+                                displayTitle = displayTitle.replacingOccurrences(of: "{{certType}}", with: "\(String(describing: JamfNotification.humanReadable[alertTitle]!))")
+                            default:
+                                break
+                            }
                             let paramDict = alert["params"] as! [String: Any]
                             for (key,value) in paramDict {
+                                print("key: \(key)     value: \(value)")
                                 displayTitle = displayTitle.replacingOccurrences(of: "{{\(key)}}", with: "\(value)")
                             }
                             subMenu.addItem(NSMenuItem(title: "\(displayTitle)", action: #selector(AppDelegate.notificationsAction(_:)), keyEquivalent: ""))
