@@ -37,15 +37,15 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
             return
         }
         
-        let b64creds = ("\(b64user):\(b64pass)".data(using: .utf8)?.base64EncodedString())!
+//        let b64creds = ("\(b64user):\(b64pass)".data(using: .utf8)?.base64EncodedString())!
         
-        token(serverUrl: jps, creds: b64creds) {
-            (returnedToken: String) in
-            if returnedToken == "" {
-                print("unable to get token")
-                completion([])
-                return
-            }
+//        token(serverUrl: jps, creds: b64creds) {
+//            (returnedToken: String) in
+//            if returnedToken == "" {
+//                print("unable to get token")
+//                completion([])
+//                return
+//            }
             
             URLCache.shared.removeAllCachedResponses()
             
@@ -63,7 +63,8 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                 let configuration  = URLSessionConfiguration.default
                 request.httpMethod = "GET"
                 
-                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(returnedToken)", "Content-Type" : "application/json", "Accept" : "application/json"]
+                configuration.httpAdditionalHeaders = ["Authorization" : "\(JamfProServer.authType) \(JamfProServer.authCreds)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : appInfo.userAgentHeader]
+//                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(returnedToken)", "Content-Type" : "application/json", "Accept" : "application/json"]
                 let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
                 
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
@@ -92,10 +93,11 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                 task.resume()
                 
             }   // theUapiQ.addOperation - end
-        }
+//        }
         
     }   // func get - end
     
+    /*
     func token(serverUrl: String, creds: String, completion: @escaping (_ returnedToken: String) -> Void) {
         
         URLCache.shared.removeAllCachedResponses()
@@ -110,7 +112,8 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
         var request        = URLRequest(url: tokenUrl!)
         request.httpMethod = "POST"
         
-        configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(creds)", "Content-Type" : "application/json", "Accept" : "application/json"]
+        configuration.httpAdditionalHeaders = ["Authorization" : "\(JamfProServer.authType) \(JamfProServer.authCreds)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : appInfo.userAgentHeader]
+//        configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(creds)", "Content-Type" : "application/json", "Accept" : "application/json"]
         let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
         let task = session.dataTask(with: request as URLRequest, completionHandler: {
             (data, response, error) -> Void in
@@ -140,7 +143,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
         task.resume()
         
     }   // func token - end
-    
+    */
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))

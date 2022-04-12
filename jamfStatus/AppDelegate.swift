@@ -196,7 +196,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBAction func credentials_Action(_ sender: Any) {
         
         if let textField = sender as? NSTextField {
-            print("textField: \(textField.identifier!.rawValue)")
+//            print("textField: \(textField.identifier!.rawValue)")
             getJamfProVersion(jpURL: jamfServerUrl_TextField.stringValue) {
                 (result: [Int]) in
                 print("jamfProVersion: \(result[0]).\(result[1]).\(result[2])")
@@ -296,12 +296,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
             let serverFqdn = urlRegex.stringByReplacingMatches(in: server, options: [], range: NSRange(0..<server.utf16.count), withTemplate: "")
             
-            let b64creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
+            JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             
             // update the connection indicator for the site server
-            UapiCall().token(serverUrl: server, creds: b64creds) {
+            JamfPro().getToken(serverUrl: server, whichServer: "source", base64creds: JamfProServer.base64Creds) {
+//            UapiCall().token(serverUrl: server, creds: b64creds) {
                 (returnedToken: String) in
-                if returnedToken != "" {
+                if returnedToken == "success" {
+//                if returnedToken != "" {
 //                    print("authentication verified")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]

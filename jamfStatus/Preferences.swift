@@ -5,7 +5,7 @@
 //  Created by Leslie Helou on 4/21/19.
 //  Copyright © 2019 Leslie Helou. All rights reserved.
 //
-
+/*
 import Foundation
 
 struct Preferences {
@@ -19,5 +19,5 @@ struct Preferences {
     static var password                     = ""
     static var menuIconStyle                = "color"
 }
-
+*/
 

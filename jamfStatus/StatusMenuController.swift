@@ -109,7 +109,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             prefs.jamfServerUrl = ""
         } else {
             prefs.jamfServerUrl = defaults.string(forKey:"jamfServerUrl")!
-            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(prefs.jamfServerUrl)")
+            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(prefs.jamfServerUrl.fqdnFromUrl)")
             if credentialsArray.count == 2 {
                 prefs.username = credentialsArray[0]
                 prefs.password = credentialsArray[1]
@@ -125,6 +125,18 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
 //        icon?.isTemplate = true // best for dark mode?
         cloudStatusItem.image = icon
         cloudStatusItem.menu = cloudStatusMenu
+        
+        JamfProServer.base64Creds = ("\(prefs.username):\(prefs.password)".data(using: .utf8)?.base64EncodedString())!
+        JamfPro().getVersion(jpURL: Preferences.jamfServerUrl, base64Creds: JamfProServer.base64Creds) { [self]
+            (result: String) in
+            // move UapiCall fn to JamfPro
+            // don't check notifications if creds/server are not valid
+            monitor()
+        }
+        
+    }
+    
+    func monitor() {
         DispatchQueue.global(qos: .background).async {
             while true {
                 
@@ -142,7 +154,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         var displayTitle = ""
                         self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
                         for alert in notificationAlerts {
-                            print("notification alert: \(alert)")
+//                            print("notification alert: \(alert)")
                             let alertTitle = alert["type"]! as! String
                             displayTitleKey = JamfNotification.key[alertTitle] ?? "Unknown"
                             displayTitle = JamfNotification.displayTitle[displayTitleKey] ?? "Unknown"
@@ -154,7 +166,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                             }
                             let paramDict = alert["params"] as! [String: Any]
                             for (key,value) in paramDict {
-                                print("key: \(key)     value: \(value)")
+//                                print("key: \(key)     value: \(value)")
                                 displayTitle = displayTitle.replacingOccurrences(of: "{{\(key)}}", with: "\(value)")
                             }
                             subMenu.addItem(NSMenuItem(title: "\(displayTitle)", action: #selector(AppDelegate.notificationsAction(_:)), keyEquivalent: ""))
@@ -275,6 +287,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         //        JSON parsing - start
         let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
 //        url to test app - need to set up your own
+//        need to create the folder /jamfStatus and populate the page: components.json
 //        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
         
         URLCache.shared.removeAllCachedResponses()
@@ -386,4 +399,23 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
     
+}
+
+extension String {
+    var fqdnFromUrl: String {
+        get {
+            var fqdn = ""
+            let nameArray = self.components(separatedBy: "/")
+            if nameArray.count > 1 {
+                fqdn = nameArray[2]
+            } else {
+                fqdn =  self
+            }
+            if fqdn.contains(":") {
+                let fqdnArray = fqdn.components(separatedBy: ":")
+                fqdn = fqdnArray[0]
+            }
+            return fqdn
+        }
+    }
 }
