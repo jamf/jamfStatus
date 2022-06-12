@@ -63,7 +63,11 @@ Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
 Thu Sep 17 20:27:30 Notice
 Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 ```
+<<<<<<< Updated upstream
 
+=======
+<br>
+>>>>>>> Stashed changes
 ## Notifications for the following will be displayed:
 
 * &lt;certType&gt; Certificate Expired
@@ -118,5 +122,7 @@ Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 
 
 ## Change log
+
+2022-06-12: v2.3.1.  Clean up notificatations not displaying properly.
 
 2021-10-15: v2.3.0.  Updated notifications display.
