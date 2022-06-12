@@ -63,7 +63,7 @@ Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
 Thu Sep 17 20:27:30 Notice
 Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 ```
-<br>
+
 ## Notifications for the following will be displayed:
 
 * &lt;certType&gt; Certificate Expired
