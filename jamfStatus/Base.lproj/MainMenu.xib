@@ -294,7 +294,7 @@
             <rect key="contentRect" x="100" y="712" width="387" height="330"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" misplaced="YES" id="hgl-Mf-6ZA">
-                <rect key="frame" x="0.0" y="0.0" width="387" height="333"/>
+                <rect key="frame" x="0.0" y="0.0" width="387" height="330"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Hdp-Rt-TNE">
@@ -317,7 +317,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jdp-eV-GL9">
-                        <rect key="frame" x="131" y="294" width="60" height="22"/>
+                        <rect key="frame" x="131" y="291" width="60" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="60" id="y6F-By-QfS"/>
                         </constraints>

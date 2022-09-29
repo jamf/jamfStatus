@@ -148,7 +148,7 @@ struct JamfProServer {
 
 struct Log {
     static var path: String? = (NSHomeDirectory() + "/Library/Logs/jamfStatus/")
-    static var file  = "jamfStatus.log"
+    static var file     = "jamfStatus.log"
     static var maxFiles = 10
     static var maxSize  = 500000 // 5MB
 }
@@ -170,4 +170,6 @@ struct token {
     static var refreshInterval:UInt32 = 10*60  // 10 minutes
     static var sourceServer  = ""
     static var sourceExpires = ""
+    static var startTime     = Date()
+    static var isValid       = false
 }

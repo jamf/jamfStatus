@@ -15,7 +15,6 @@
 		B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542A1F024BA902C00EE33C8 /* Globals.swift */; };
 		B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542A1F224BA90A900EE33C8 /* WriteToLog.swift */; };
 		B59970D327FCBB4C005175E2 /* JamfPro.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59970D227FCBB4C005175E2 /* JamfPro.swift */; };
-		B5A46CCD226F9B0700C2A88D /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A46CCC226F9B0700C2A88D /* Preferences.swift */; };
 		B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A470AF2271CE7200C2A88D /* WebKit.framework */; };
 		B5AC20321F36479A00C16EAA /* com.jamf.cloudmonitor.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */; };
 		B5AC20351F37858800C16EAA /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20341F37858800C16EAA /* index.html */; };
@@ -38,7 +37,6 @@
 		B542A1F024BA902C00EE33C8 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		B542A1F224BA90A900EE33C8 /* WriteToLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteToLog.swift; sourceTree = "<group>"; };
 		B59970D227FCBB4C005175E2 /* JamfPro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JamfPro.swift; sourceTree = "<group>"; };
-		B5A46CCC226F9B0700C2A88D /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = jamfStatus.entitlements; sourceTree = "<group>"; };
 		B5A470AF2271CE7200C2A88D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.jamf.cloudmonitor.plist; sourceTree = "<group>"; };
@@ -90,7 +88,6 @@
 				B542A1F024BA902C00EE33C8 /* Globals.swift */,
 				B59970D227FCBB4C005175E2 /* JamfPro.swift */,
 				B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */,
-				B5A46CCC226F9B0700C2A88D /* Preferences.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
 				B5BD6AD8232F108A001D244A /* VersionCheck.swift */,
@@ -217,7 +214,6 @@
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
 				B59970D327FCBB4C005175E2 /* JamfPro.swift in Sources */,
 				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
-				B5A46CCD226F9B0700C2A88D /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,7 +360,7 @@
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -393,7 +389,7 @@
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

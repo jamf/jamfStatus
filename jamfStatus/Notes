@@ -1,3 +1,12 @@
+History.endTime = Date()
+
+let components = Calendar.current.dateComponents([.second, .nanosecond], from: History.startTime, to: History.endTime)
+                                    
+let timeDifference = Int(components.second!)
+
+//let timeDifference = Double(components.second!) + Double(components.nanosecond!)/1000000000
+
+
 
 // alert types found here:
 // .../tomcat/webapps/ROOT/ui/notifications/notification-alert.model.js

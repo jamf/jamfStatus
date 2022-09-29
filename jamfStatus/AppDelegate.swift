@@ -2,12 +2,6 @@
 //Author: Leslie Helou
 //Copyright 2017 Jamf Professional Services
 //
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//
-//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
 import Cocoa
 import WebKit
@@ -196,11 +190,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     @IBAction func credentials_Action(_ sender: Any) {
         
-        if let textField = sender as? NSTextField {
+        if let _ = sender as? NSTextField {
 //            print("textField: \(textField.identifier!.rawValue)")
             getJamfProVersion(jpURL: jamfServerUrl_TextField.stringValue) {
                 (result: [Int]) in
-                print("jamfProVersion: \(result[0]).\(result[1]).\(result[2])")
+//                print("jamfProVersion: \(result[0]).\(result[1]).\(result[2])")
             }
         }
         
@@ -298,13 +292,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             let serverFqdn = urlRegex.stringByReplacingMatches(in: server, options: [], range: NSRange(0..<server.utf16.count), withTemplate: "")
             
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
-            
+            token.isValid = false
             // update the connection indicator for the site server
             JamfPro().getToken(serverUrl: server, whichServer: "source", base64creds: JamfProServer.base64Creds) {
-//            UapiCall().token(serverUrl: server, creds: b64creds) {
                 (returnedToken: String) in
-                if returnedToken == "success" {
-//                if returnedToken != "" {
+                if returnedToken != "failed" {
 //                    print("authentication verified")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
@@ -316,11 +308,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[0]
                     }
                 }
-            } // UapiCall().token - end
+                self.siteConnectionStatus_ImageView.isHidden = false
+            } // JamfPro().getToken(serverUrl - end
         }
     }
     
     func showPrefsWindow() {
+        self.siteConnectionStatus_ImageView.isHidden = true
         pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
 
         prefWindowAlerts_Button.state = NSControl.StateValue.on
