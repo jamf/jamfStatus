@@ -1,10 +1,7 @@
-History.endTime = Date()
+Multiple policies have a management account password configuration that is not recommended - requires read/update
+Device count exceeded - np (no permissions)
+A configured management account feature is not recommended - np
 
-let components = Calendar.current.dateComponents([.second, .nanosecond], from: History.startTime, to: History.endTime)
-                                    
-let timeDifference = Int(components.second!)
-
-//let timeDifference = Double(components.second!) + Double(components.nanosecond!)/1000000000
 
 
 
