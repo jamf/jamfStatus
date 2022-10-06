@@ -153,7 +153,7 @@ class JamfPro: NSObject, URLSessionDelegate {
             })
             task.resume()
         } else {
-            WriteToLog().message(stringOfText: ["existing token is \(timeDifference) minutes old, use existing"])
+//            WriteToLog().message(stringOfText: ["existing token is \(timeDifference) minutes old, use existing"])
             completion("use existing token")
         }
     }
