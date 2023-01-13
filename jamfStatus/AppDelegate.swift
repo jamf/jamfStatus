@@ -206,9 +206,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         
         prefs.password = password_TextField.stringValue
         
-//        let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-//        let serverFqdn = urlRegex.stringByReplacingMatches(in: prefs.jamfServerUrl, options: [], range: NSRange(0..<prefs.jamfServerUrl.utf16.count), withTemplate: "")
-//        print("server: \(serverFqdn), username: \(prefs.username), password: \(prefs.password)")
         saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
     }
     
@@ -247,6 +244,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }   // func alert_dialog - end
     
     func getJamfProVersion(jpURL: String, completion: @escaping (_ jpversion: [Int]) -> Void) {
+        WriteToLog().message(stringOfText: ["getting Jamf Pro Version for \(jpURL)"])
         var versionString  = ""
         var versionArray   = [Int]()
         let semaphore      = DispatchSemaphore(value: 0)
@@ -259,10 +257,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
             let task = session.dataTask(with: request as URLRequest, completionHandler: {
                 (data, response, error) -> Void in
-//                if let httpResponse = response as? HTTPURLResponse {
+                if let httpResponse = response as? HTTPURLResponse {
+//                                        print("httpResponse: \(httpResponse)")
+//                                        print("raw versionString: \(versionString)")
                     versionString = String(data: data!, encoding: .utf8) ?? ""
-//                    print("httpResponse: \(httpResponse)")
-//                    print("raw versionString: \(versionString)")
+                
                     if versionString != "" {
                         let tmpArray = versionString.components(separatedBy: ".")
                         if tmpArray.count > 2 {
@@ -277,7 +276,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                             }
                         }
                     }
-//                }
+                } else {
+                    versionArray = []
+                    var theError = error?.localizedDescription
+                    if theError == nil { theError = "unknown" }
+                    WriteToLog().message(stringOfText: ["error: \(theError!)"])
+                }
                 completion(versionArray)
             })  // let task = session - end
             task.resume()

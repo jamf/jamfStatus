@@ -112,6 +112,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 prefs.password = ""
             }
         }
+//        defaults.set("https://lhelou.jamfclou2.com", forKey: "jamfServerUrl")
+        defaults.synchronize()
         
         defaults.synchronize()
         

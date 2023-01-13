@@ -91,7 +91,6 @@ class JamfPro: NSObject, URLSessionDelegate {
         let components = Calendar.current.dateComponents([.minute], from: token.startTime, to: Date())
         let timeDifference = Int(components.minute!)
         if !token.isValid || (timeDifference > 20) {
-    //        print("\(serverUrl.prefix(4))")
             if serverUrl.prefix(4) != "http" {
                 completion("skipped")
                 return
@@ -108,11 +107,6 @@ class JamfPro: NSObject, URLSessionDelegate {
             request.httpMethod = "POST"
             
             WriteToLog().message(stringOfText: ["Attempting to retrieve token from \(String(describing: tokenUrl!))"])
-    //        var decodedString = ""
-    //        if let decodedData = Data(base64Encoded: base64creds) {
-    //            decodedString = String(data: decodedData, encoding: .utf8)!
-    //        }
-    //        print("base64creds: \(decodedString)")
             
             configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(base64creds)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : appInfo.userAgentHeader]
             let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
@@ -121,19 +115,27 @@ class JamfPro: NSObject, URLSessionDelegate {
                 if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 {
                         let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                        if let endpointJSON = json! as? [String: Any], let _ = endpointJSON["token"], let _ = endpointJSON["expires"] {
-                            JamfProServer.authCreds = endpointJSON["token"] as! String
-                            token.sourceExpires     = "\(endpointJSON["expires"] ?? "")"
-                            token.startTime         = Date()
-                            token.isValid           = true
-                            
-    //                      print("[JamfPro] result of token request: \(endpointJSON)")
-    //                      print("[JamfPro] Bearer type: \(JamfProServer.authType)")
-                            WriteToLog().message(stringOfText: ["New token created"])
-                            completion("success")
-                            return
-                        } else {    // if let endpointJSON error
-                            WriteToLog().message(stringOfText: ["JSON error.\n\(String(describing: json))"])
+                        if json != nil {
+                            if let endpointJSON = json! as? [String: Any], let _ = endpointJSON["token"], let _ = endpointJSON["expires"] {
+                                JamfProServer.authCreds = endpointJSON["token"] as! String
+                                token.sourceExpires     = "\(endpointJSON["expires"] ?? "")"
+                                token.startTime         = Date()
+                                token.isValid           = true
+                                
+    //                          print("[JamfPro] result of token request: \(endpointJSON)")
+    //                          print("[JamfPro] Bearer type: \(JamfProServer.authType)")
+                                WriteToLog().message(stringOfText: ["New token created"])
+                                completion("success")
+                                return
+                            } else {    // if let endpointJSON error
+                                WriteToLog().message(stringOfText: ["JSON error.\n\(String(describing: json))"])
+                                token.isValid = false
+                                completion("failed")
+                                return
+                            }
+                        } else {
+                            let responseData = String(data: data!, encoding: .utf8)!
+                            WriteToLog().message(stringOfText: ["did not get expected json response from \(tokenUrlString)"])
                             token.isValid = false
                             completion("failed")
                             return

@@ -18,27 +18,12 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     
     func get(endpoint: String, completion: @escaping (_ notificationAlerts: [Dictionary<String,Any>]) -> Void) {
         
-//        var b64user = ""
-//        var b64pass = ""
-        
         let jps = defaults.string(forKey:"jamfServerUrl") ?? ""
         
         JamfPro().getToken(serverUrl: jps, whichServer: "source", base64creds: JamfProServer.base64Creds) {
             (returnedToken: String) in
+                        
             if returnedToken != "failed" {
-        //        let urlRegex   = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-        //        let serverFqdn = urlRegex.stringByReplacingMatches(in: jps, options: [], range: NSRange(0..<jps.utf16.count), withTemplate: "")
-                
-                // search the keychain for credentials
-        //        let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(serverFqdn)")
-        //        if credentialsArray.count == 2 {
-        //            b64user = credentialsArray[0]
-        //            b64pass = credentialsArray[1]
-        //        } else {
-        //            print("credentials not found")
-        //            completion([])
-        //            return
-        //        }
                     
                 URLCache.shared.removeAllCachedResponses()
                 
