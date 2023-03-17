@@ -119,7 +119,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
-        cloudStatusItem.image = icon
+//        cloudStatusItem.image = icon
+        cloudStatusItem.button?.image = icon
         cloudStatusItem.menu = cloudStatusMenu
         
         JamfProServer.base64Creds = ("\(prefs.username):\(prefs.password)".data(using: .utf8)?.base64EncodedString())!
