@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 class WriteToLog {
     
@@ -175,3 +176,11 @@ class WriteToLog {
     }
 
 }
+
+extension Logger {
+    private static var subsystem = Bundle.main.bundleIdentifier!
+
+    //Categories
+    static let network = Logger(subsystem: subsystem, category: "jamfstatus")
+}
+
