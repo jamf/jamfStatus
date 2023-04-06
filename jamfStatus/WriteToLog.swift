@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class WriteToLog {
     
     let logFileW    = FileHandle(forUpdatingAtPath: Log.path! + Log.file)
@@ -21,6 +22,22 @@ class WriteToLog {
     
     // func logCleanup - start
     func logCleanup(completionHandler: @escaping (_ result: String) -> Void) {
+        
+        
+        // zip current log if it's over 5MB
+        do {
+            let fileAttributes = try fm.attributesOfItem(atPath: Log.path! + Log.file)
+            let logSize = fileAttributes[.size] as? Int
+            if Int("\(logSize ?? 0)") ?? 0 < Log.maxSize {
+                completionHandler("")
+                return
+            }
+        } catch {
+            print("no history")
+            completionHandler("")
+            return
+        }
+        
             var logArray: [String] = []
             var logCount: Int = 0
             do {
@@ -34,24 +51,23 @@ class WriteToLog {
                 }
                 logArray.sort()
                 logCount = logArray.count
+                                
                 // remove old log files
                 if logCount > Log.maxFiles {
                     for i in (0..<logCount-Log.maxFiles) {
-                        WriteToLog().message(stringOfText: ["Deleting log file: " + logArray[i] + "\n"])
+//                        WriteToLog().message(stringOfText: ["Deleting log file: " + logArray[i] + "\n"])
                         
                         do {
                             try fm.removeItem(atPath: logArray[i])
                         }
                         catch let error as NSError {
-                            WriteToLog().message(stringOfText: ["Error deleting log file:\n    " + logArray[i] + "\n    \(error)\n"])
+//                            WriteToLog().message(stringOfText: ["Error deleting log file:\n    " + logArray[i] + "\n    \(error)\n"])
                         }
                     }
                 }
                 // zip current log if it's over 5MB
-                do {
-                    let fileAttributes = try fm.attributesOfItem(atPath: Log.path! + Log.file)
-                    let logSize = fileAttributes[.size] as? Int
-                    if Int("\(logSize ?? 0)")! > Log.maxSize {
+
+//                    if Int("\(logSize ?? 0)")! > Log.maxSize {
                         let dateTmpArray = getCurrentTime().split(separator: "_")
                         let dateStamp    = dateTmpArray[0]
                         zipIt(args: "/usr/bin/zip -rm -jj -o \(Log.path!)jamfStatus_\(dateStamp) \(Log.path!)\(Log.file)") {
@@ -61,13 +77,12 @@ class WriteToLog {
                             completionHandler(result)
                             return
                         }
-                    }
-                }
+//                    }
             } catch {
-                print("no history")
                 completionHandler("")
                 return
             }
+        
             completionHandler("")
     }
     // func logCleanup - end
