@@ -16,11 +16,11 @@ class WriteToLog {
     let fm          = FileManager()
     
     func createLogFile(completionHandler: @escaping (_ result: String) -> Void) {
-        if !self.fm.fileExists(atPath: Log.path!) {
-            self.fm.createFile(atPath: Log.path!, contents: nil, attributes: nil)
+        if !fm.fileExists(atPath: Log.path!) {
+            fm.createFile(atPath: Log.path!, contents: nil, attributes: nil)
         }
-        if !self.fm.fileExists(atPath: Log.path! + Log.file) {
-            self.fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
+        if !fm.fileExists(atPath: Log.path! + Log.file) {
+            fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
         }
         completionHandler("created")
     }
