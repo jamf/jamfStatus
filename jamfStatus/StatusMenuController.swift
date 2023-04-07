@@ -134,23 +134,23 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     func monitor() {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [self] in
             while true {
                 
                 // check site server - start
                 WriteToLog().message(stringOfText: ["checking server: \(Preferences.jamfServerUrl)"])
-                UapiCall().get(endpoint: "notifications/alerts") {
+                UapiCall().get(endpoint: "notifications/alerts") { [self]
                     (notificationAlerts: [Dictionary<String, Any>]) in
                     
                     if notificationAlerts.count == 0 {
-                        self.notifications_MenuItem.isHidden = true
+                        notifications_MenuItem.isHidden = true
                     } else {
-                        self.notifications_MenuItem.title = "Notifications (\(notificationAlerts.count))"
-                        self.notifications_MenuItem.isHidden = false
+                        notifications_MenuItem.title = "Notifications (\(notificationAlerts.count))"
+                        notifications_MenuItem.isHidden = false
                         let subMenu      = NSMenu()
                         var displayTitleKey = ""
                         var displayTitle = ""
-                        self.cloudStatusMenu.setSubmenu(subMenu, for: self.notifications_MenuItem)
+                        cloudStatusMenu.setSubmenu(subMenu, for: notifications_MenuItem)
                         for alert in notificationAlerts {
 //                            print("notification alert: \(alert)")
                             let alertTitle = alert["type"]! as! String
@@ -176,22 +176,23 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 // check site server - end
 
                 //                print("checking status")
-                self.prefs.pollingInterval = self.defaults.integer(forKey: "pollingInterval")
-                self.prefs.hideMenubarIcon = self.defaults.bool(forKey: "hideMenubarIcon")
-                self.getStatus2() {
+                prefs.pollingInterval = defaults.integer(forKey: "pollingInterval")
+                prefs.hideMenubarIcon = defaults.bool(forKey: "hideMenubarIcon")
+                getStatus2() {
                     (result: String) in
                     
-                    DispatchQueue.main.async {
-                        self.iconName = result
-                        //                        AppDlg.hideIcon ? (self.icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(self.icon = NSImage.init(named: NSImage.Name(rawValue: self.iconName)))
+                    DispatchQueue.main.async { [self] in
+                        iconName = result
+                        //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
                         //                        print("iconName: \(result)")
-                        //                        print("hidemenubar is \(self.prefs.hideMenubarIcon!)")
-                        self.prefs.hideMenubarIcon! ? (self.icon = NSImage.init(named: "minimizedIcon")):(self.icon = NSImage.init(named: self.iconName))
+                        //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
+                        prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
                         
-                        self.cloudStatusItem.image = self.icon
+//                        cloudStatusItem.image = icon
+                        cloudStatusItem.button?.image = icon
                     }
                 }
-                sleep(UInt32(Int(self.prefs.pollingInterval!)))
+                sleep(UInt32(Int(prefs.pollingInterval!)))
             }
         }
     }
@@ -210,7 +211,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         DispatchQueue.main.async {
             // adjust font size so that alert message fits in text box.
             alertHeight = 99
-            //            print("count: \(self.alert_message.count)")
+            //            print("count: \(alert_message.count)")
             let alertLines = self.alert_message.split(separator: "\n")
             //            print("alerts: \(alertLines)")
             for i in 1..<alertLines.count {
@@ -252,7 +253,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     @IBAction func showLogs_Action(_ sender: Any) {
         if fileManager.fileExists(atPath: Log.path! + Log.file) {
-            NSWorkspace.shared.openFile(Log.path! + Log.file)
+//            NSWorkspace.shared.openFile(Log.path! + Log.file)
+            NSWorkspace.shared.open(URL(fileURLWithPath: "\(Log.path!)\(Log.file)"))
         }
     }
     
