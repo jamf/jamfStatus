@@ -12,14 +12,31 @@ import os.log
 class WriteToLog {
     
     let logFileW    = FileHandle(forUpdatingAtPath: Log.path! + Log.file)
-//    var writeToLogQ = DispatchQueue(label: "com.jamf.writeToLogQ", qos: DispatchQoS.utility)
     let fm          = FileManager()
+    
+    func createLogFolder(completionHandler: @escaping (_ result: String) -> Void) {
+        DispatchQueue.main.async { [self] in
+            var attributes = [FileAttributeKey: Any]()
+            attributes[.posixPermissions] = 0o700
+            do {
+                try fm.createDirectory(atPath: Log.path!, withIntermediateDirectories: true, attributes: attributes)
+                completionHandler("log folder created")
+            } catch {
+                completionHandler("log folder not created")
+            }
+        }
+    }
     
     func createLogFile(completionHandler: @escaping (_ result: String) -> Void) {
         if !fm.fileExists(atPath: Log.path!) {
-            fm.createFile(atPath: Log.path!, contents: nil, attributes: nil)
-        }
-        if !fm.fileExists(atPath: Log.path! + Log.file) {
+            createLogFolder() { [self]
+                (result: String) in
+                print(result)
+
+                fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
+            }
+            
+        } else if !fm.fileExists(atPath: Log.path! + Log.file) {
             fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
         }
         completionHandler("created")
@@ -102,7 +119,6 @@ class WriteToLog {
             (result: String) in
             logCleanup() {
                 (result: String) in
-                //            self.writeToLogQ.sync {
                 for theString in stringOfText {
                     var logString = "\(self.logDate()) \(theString)\n"
                     logString = logString.replacingOccurrences(of: "\n    ", with: "\n\(self.logDate())    ")
@@ -114,7 +130,6 @@ class WriteToLog {
                     let logText = (logString as NSString).data(using: String.Encoding.utf8.rawValue)
                     self.logFileW?.write(logText!)
                 }
-//            }
             }
         }
     }

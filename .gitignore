@@ -2,3 +2,5 @@
 **/Notes/
 **/.DS_Store
 localOnly/
+*.xcuserstate
+*.xcbkptlist
