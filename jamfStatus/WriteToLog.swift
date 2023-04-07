@@ -12,20 +12,23 @@ import os.log
 class WriteToLog {
     
     let logFileW    = FileHandle(forUpdatingAtPath: Log.path! + Log.file)
-    var writeToLogQ = DispatchQueue(label: "com.jamf.writeToLogQ", qos: DispatchQoS.utility)
+//    var writeToLogQ = DispatchQueue(label: "com.jamf.writeToLogQ", qos: DispatchQoS.utility)
     let fm          = FileManager()
     
-    func createLogFile() {
+    func createLogFile(completionHandler: @escaping (_ result: String) -> Void) {
+        if !self.fm.fileExists(atPath: Log.path!) {
+            self.fm.createFile(atPath: Log.path!, contents: nil, attributes: nil)
+        }
         if !self.fm.fileExists(atPath: Log.path! + Log.file) {
             self.fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
         }
+        completionHandler("created")
     }
     
     // func logCleanup - start
     func logCleanup(completionHandler: @escaping (_ result: String) -> Void) {
         
-        
-        // zip current log if it's over 5MB
+        // check if log is over 5MB
         do {
             let fileAttributes = try fm.attributesOfItem(atPath: Log.path! + Log.file)
             let logSize = fileAttributes[.size] as? Int
@@ -39,52 +42,51 @@ class WriteToLog {
             return
         }
         
-            var logArray: [String] = []
-            var logCount: Int = 0
-            do {
-                let logFiles = try fm.contentsOfDirectory(atPath: Log.path!)
-                
-                for logFile in logFiles {
-                    if logFile.contains(".zip") {
-                        let filePath: String = Log.path! + logFile
-                        logArray.append(filePath)
-                    }
+        var logArray: [String] = []
+        var logCount: Int = 0
+        do {
+            let logFiles = try fm.contentsOfDirectory(atPath: Log.path!)
+            
+            for logFile in logFiles {
+                if logFile.contains(".zip") {
+                    let filePath: String = Log.path! + logFile
+                    logArray.append(filePath)
                 }
-                logArray.sort()
-                logCount = logArray.count
-                                
-                // remove old log files
-                if logCount > Log.maxFiles {
-                    for i in (0..<logCount-Log.maxFiles) {
-//                        WriteToLog().message(stringOfText: ["Deleting log file: " + logArray[i] + "\n"])
-                        
-                        do {
-                            try fm.removeItem(atPath: logArray[i])
-                        }
-                        catch let error as NSError {
-//                            WriteToLog().message(stringOfText: ["Error deleting log file:\n    " + logArray[i] + "\n    \(error)\n"])
-                        }
-                    }
-                }
-                // zip current log if it's over 5MB
-
-//                    if Int("\(logSize ?? 0)")! > Log.maxSize {
-                        let dateTmpArray = getCurrentTime().split(separator: "_")
-                        let dateStamp    = dateTmpArray[0]
-                        zipIt(args: "/usr/bin/zip -rm -jj -o \(Log.path!)jamfStatus_\(dateStamp) \(Log.path!)\(Log.file)") {
-                            (result: String) in
-                            print("zipIt result: \(result)")
-                            self.createLogFile()
-                            completionHandler(result)
-                            return
-                        }
-//                    }
-            } catch {
-                completionHandler("")
-                return
             }
-        
+            logArray.sort()
+            logCount = logArray.count
+                            
+            // remove old log files
+            if logCount > Log.maxFiles {
+                for i in (0..<logCount-Log.maxFiles) {
+                    Logger.jamfstatus.info("Deleting log file: \(logArray[i], privacy: .public)")
+                    
+                    do {
+                        try fm.removeItem(atPath: logArray[i])
+                    }
+                    catch let error as NSError {
+                        Logger.jamfstatus.info("Error deleting log file: \(logArray[i], privacy: .public) \n\(error, privacy: .public)")
+                    }
+                }
+            }
+            // zip current log if it's over 5MB
+            let dateTmpArray = getCurrentTime().split(separator: "_")
+            let dateStamp    = dateTmpArray[0]
+            zipIt(args: "/usr/bin/zip -rm -jj -o \(Log.path!)jamfStatus_\(dateStamp) \(Log.path!)\(Log.file)") { [self]
+                (result: String) in
+                print("zipIt result: \(result)")
+                logCleanup() {
+                    (result: String) in
+                    completionHandler(result)
+                    return
+                }
+            }
+        } catch {
             completionHandler("")
+            return
+        }
+    
+        completionHandler("")
     }
     // func logCleanup - end
 
@@ -96,10 +98,11 @@ class WriteToLog {
                 
             }
         }
-        createLogFile()
-        logCleanup() {
+        createLogFile() { [self]
             (result: String) in
-            self.writeToLogQ.sync {
+            logCleanup() {
+                (result: String) in
+                //            self.writeToLogQ.sync {
                 for theString in stringOfText {
                     var logString = "\(self.logDate()) \(theString)\n"
                     logString = logString.replacingOccurrences(of: "\n    ", with: "\n\(self.logDate())    ")
@@ -111,7 +114,7 @@ class WriteToLog {
                     let logText = (logString as NSString).data(using: String.Encoding.utf8.rawValue)
                     self.logFileW?.write(logText!)
                 }
-//                self.logFileW?.closeFile()
+//            }
             }
         }
     }
@@ -181,6 +184,6 @@ extension Logger {
     private static var subsystem = Bundle.main.bundleIdentifier!
 
     //Categories
-    static let network = Logger(subsystem: subsystem, category: "jamfstatus")
+    static let jamfstatus = Logger(subsystem: subsystem, category: "jamfstatus")
 }
 
