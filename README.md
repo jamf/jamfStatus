@@ -1,5 +1,3 @@
-### Due to changes in the API of Jamf Pro v11.x jamfStatus is not able to gather notifications from individual servers.
-
 # jamfStatus
 Download: [jamfStatus](https://github.com/jamf/jamfStatus/releases/latest/download/jamfStatus.zip)
 
