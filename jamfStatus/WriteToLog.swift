@@ -9,6 +9,8 @@
 import Foundation
 import os.log
 
+let writeToLog = WriteToLog()
+
 class WriteToLog {
     
     let logFileW    = FileHandle(forUpdatingAtPath: Log.path! + Log.file)

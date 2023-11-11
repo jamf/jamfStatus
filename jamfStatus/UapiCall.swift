@@ -6,7 +6,8 @@
 //  Copyright © 2019 Leslie Helou. All rights reserved.
 //
 
-// get notifications from https://jamf.pro.server/uapi/notifications/alerts
+// get notifications from https://jamf.pro.server/uapi/notifications/alerts - old
+// get notifications from https://jamf.pro.server/api/v1/notifications
 
 
 import Foundation
@@ -20,10 +21,10 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
         
         let jps = defaults.string(forKey:"jamfServerUrl") ?? ""
         
-        JamfPro().getToken(serverUrl: jps, whichServer: "source", base64creds: JamfProServer.base64Creds) {
-            (returnedToken: String) in
+        TokenDelegate().getToken(serverUrl: jps, base64creds: JamfProServer.base64Creds) {
+            (authResult: (Int,String)) in
                         
-            if returnedToken != "failed" {
+            if authResult.1 == "success" {
                     
                 URLCache.shared.removeAllCachedResponses()
                 
@@ -41,7 +42,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                     let configuration  = URLSessionConfiguration.default
                     request.httpMethod = "GET"
                     
-                    configuration.httpAdditionalHeaders = ["Authorization" : "\(JamfProServer.authType) \(JamfProServer.authCreds)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : appInfo.userAgentHeader]
+                    configuration.httpAdditionalHeaders = ["Authorization" : "\(JamfProServer.authType) \(JamfProServer.accessToken)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
 
                     let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
                     
@@ -50,7 +51,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                         if let httpResponse = response as? HTTPURLResponse {
                             if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 {
                                 let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                                if let notificationsDictArray = json! as? [Dictionary<String, Any>] {
+                                if let notificationsDictArray = json! as? [[String: Any]] {
                                     completion(notificationsDictArray)
                                     return
                                 } else {    // if let endpointJSON error
@@ -59,7 +60,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                                     return
                                 }
                             } else {    // if httpResponse.statusCode <200 or >299
-                                print("[UapiCall] get response error: \(httpResponse.statusCode)")
+                                print("[UapiCall] \(endpoint) - get response error: \(httpResponse.statusCode)")
                                 completion([])
                                 return
                             }

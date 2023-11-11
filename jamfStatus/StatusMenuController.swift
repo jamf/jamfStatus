@@ -60,6 +60,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     override func awakeFromNib() {
         
+        useApiClient = defaults.integer(forKey: "useApiClient")
+       
         if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
             defaults.set(300, forKey: "pollingInterval")
             prefs.pollingInterval = 300
@@ -100,22 +102,21 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         
         if (defaults.object(forKey:"jamfServerUrl") as? String == nil) {
             defaults.set("", forKey: "jamfServerUrl")
-            prefs.jamfServerUrl = ""
+            JamfProServer.url = ""
         } else {
-            prefs.jamfServerUrl = defaults.string(forKey:"jamfServerUrl")!
-            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(prefs.jamfServerUrl.fqdnFromUrl)")
+            JamfProServer.url = defaults.string(forKey:"jamfServerUrl")!
+            let credentialsArray = Credentials().itemLookup(service: JamfProServer.url.fqdnFromUrl)
             if credentialsArray.count == 2 {
-                prefs.username = credentialsArray[0]
-                prefs.password = credentialsArray[1]
+                JamfProServer.username = credentialsArray[0]
+                JamfProServer.password = credentialsArray[1]
             } else {
-                prefs.username = ""
-                prefs.password = ""
+                JamfProServer.password = ""
             }
         }
-//        defaults.set("https://lhelou.jamfclou2.com", forKey: "jamfServerUrl")
-        defaults.synchronize()
-        
-        defaults.synchronize()
+//
+//        defaults.synchronize()
+//        
+//        defaults.synchronize()
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
@@ -123,13 +124,13 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         cloudStatusItem.button?.image = icon
         cloudStatusItem.menu = cloudStatusMenu
         
-        JamfProServer.base64Creds = ("\(prefs.username):\(prefs.password)".data(using: .utf8)?.base64EncodedString())!
-        JamfPro().getVersion(jpURL: Preferences.jamfServerUrl, base64Creds: JamfProServer.base64Creds) { [self]
-            (result: String) in
+        JamfProServer.base64Creds = ("\(JamfProServer.username):\(JamfProServer.password)".data(using: .utf8)?.base64EncodedString())!
+//        JamfPro().getVersion(jpURL: Preferences.jamfServerUrl, base64Creds: JamfProServer.base64Creds) { [self]
+//            (result: String) in
             // move UapiCall fn to JamfPro
             // don't check notifications if creds/server are not valid
             monitor()
-        }
+//        }
         
     }
     
@@ -139,8 +140,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 
                 // check site server - start
                 WriteToLog().message(stringOfText: ["checking server: \(Preferences.jamfServerUrl)"])
-                UapiCall().get(endpoint: "notifications/alerts") { [self]
-                    (notificationAlerts: [Dictionary<String, Any>]) in
+                UapiCall().get(endpoint: "v1/notifications") { [self]
+                    (notificationAlerts: [[String: Any]]) in
                     
                     if notificationAlerts.count == 0 {
                         notifications_MenuItem.isHidden = true
@@ -400,23 +401,4 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
     
-}
-
-extension String {
-    var fqdnFromUrl: String {
-        get {
-            var fqdn = ""
-            let nameArray = self.components(separatedBy: "/")
-            if nameArray.count > 1 {
-                fqdn = nameArray[2]
-            } else {
-                fqdn =  self
-            }
-            if fqdn.contains(":") {
-                let fqdnArray = fqdn.components(separatedBy: ":")
-                fqdn = fqdnArray[0]
-            }
-            return fqdn
-        }
-    }
 }

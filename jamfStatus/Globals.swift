@@ -8,13 +8,17 @@
 
 import Foundation
 
-struct appInfo {
+let httpSuccess     = 200...299
+let refreshInterval: UInt32 = 25*60 // 25 minutes
+var useApiClient    = 0
+
+struct AppInfo {
     static let dict    = Bundle.main.infoDictionary!
     static let version = dict["CFBundleShortVersionString"] as! String
     static let build   = dict["CFBundleVersion"] as! String
     static let name    = dict["CFBundleExecutable"] as! String
 
-    static let userAgentHeader = "\(String(describing: name.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!))/\(appInfo.version)"
+    static let userAgentHeader = "\(String(describing: name.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!))/\(AppInfo.version)"
         
     static var bundlePath = Bundle.main.bundleURL
     static var iconFile   = bundlePath.appendingPathComponent("/Resources/AppIcon.icns")
@@ -136,14 +140,23 @@ struct JamfNotification {
 }
 
 struct JamfProServer {
+    static var accessToken  = ""
+    static var authCreds    = ""
+    static var authExpires  = 30.0
+    static var authType     = "Basic"
+    static var base64Creds  = ""
+    static var build        = ""
+    static var currentCred  = ""
     static let maxThreads   = 2
     static var majorVersion = 0
     static var minorVersion = 0
+    static var password     = ""
     static var patchVersion = 0
-    static var build        = ""
-    static var authType     = "Basic"
-    static var authCreds    = ""
-    static var base64Creds  = ""
+    static var tokenCreated = Date()
+    static var url          = ""
+    static var username     = ""
+    static var validToken   = false
+    static var version      = ""
 }
 
 struct Log {
@@ -172,4 +185,42 @@ struct token {
     static var sourceExpires = ""
     static var startTime     = Date()
     static var isValid       = false
+}
+
+public func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
+    let endTime = Date()
+//                    let components = Calendar.current.dateComponents([.second, .nanosecond], from: startTime, to: endTime)
+//                    let timeDifference = Double(components.second!) + Double(components.nanosecond!)/1000000000
+//                    WriteToLog().message(stringOfText: "[ViewController.download] time difference: \(timeDifference) seconds")
+    let components = Calendar.current.dateComponents([
+        .hour, .minute, .second, .nanosecond], from: startTime, to: endTime)
+    var diffInSeconds = Double(components.hour!)*3600 + Double(components.minute!)*60 + Double(components.second!) + Double(components.nanosecond!)/1000000000
+    diffInSeconds = Double(round(diffInSeconds * 1000) / 1000)
+//    let timeDifference = Int(components.second!) //+ Double(components.nanosecond!)/1000000000
+//    let (h,r) = timeDifference.quotientAndRemainder(dividingBy: 3600)
+//    let (m,s) = r.quotientAndRemainder(dividingBy: 60)
+//    WriteToLog().message(stringOfText: "[ViewController.download] download time: \(h):\(m):\(s) (h:m:s)")
+    return (Int(components.hour!), Int(components.minute!), Int(components.second!), diffInSeconds)
+//    return (h, m, s)
+}
+
+extension String {
+    var fqdnFromUrl: String {
+        get {
+            var fqdn = ""
+            let nameArray = self.components(separatedBy: "/")
+            if nameArray.count > 2 {
+                fqdn = nameArray[2]
+            } else {
+                fqdn =  self
+            }
+            if fqdn.contains(":") {
+                let fqdnArray = fqdn.components(separatedBy: ":")
+                fqdn = fqdnArray[0]
+            }
+            let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
+            fqdn = urlRegex.stringByReplacingMatches(in: fqdn, options: [], range: NSRange(0..<fqdn.utf16.count), withTemplate: "")
+            return fqdn
+        }
+    }
 }

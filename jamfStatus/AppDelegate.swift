@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var cloudStatusWindow: NSWindow!
     
     @IBOutlet var page_WebView: WKWebView!
-    @IBOutlet weak var prefs_Panel: NSPanel!
+    @IBOutlet weak var prefs_Window: NSWindow!
     @IBOutlet weak var aboutVersion_TextField: NSTextField!
     @IBOutlet weak var aboutHomeUrl_Button: NSButton!
     
@@ -25,8 +25,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 
     // site specific settings
     @IBOutlet weak var jamfServerUrl_TextField: NSTextField!
+    @IBOutlet weak var username_Label: NSTextField!
+    @IBOutlet weak var password_Label: NSTextField!
     @IBOutlet weak var username_TextField: NSTextField!
     @IBOutlet weak var password_TextField: NSSecureTextField!
+    @IBOutlet weak var useApiClient_button: NSButton!
+    @IBAction func useApiClient_action(_ sender: NSButton) {
+        setLabels()
+        useApiClient = useApiClient_button.state.rawValue
+        defaults.set(useApiClient_button.state.rawValue, forKey: "useApiClient")
+        fetchPassword()
+    }
     
     @IBOutlet weak var siteConnectionStatus_ImageView: NSImageView!
     let statusImage:[NSImage] = [NSImage(named: "red-dot")!,
@@ -44,9 +53,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     var pollingInterval: Int = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
-    
-    //    let popover = NSPopover()
-    
     
     @objc func notificationsAction(_ sender: NSMenuItem) {
 //        print("\(sender.identifier!.rawValue)")
@@ -66,7 +72,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
         
-        
         let appInfo = Bundle.main.infoDictionary!
         let version = appInfo["CFBundleShortVersionString"] as! String
         
@@ -85,7 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         aboutHomeUrl_Button.attributedTitle = attributedTitle
         aboutHomeUrl_Button.toolTip = "https://github.com/jamf/jamfStatus"
         
-        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "window")
+        showOnActiveScreen(windowName: about_NSWindow)
         
     }
     @IBAction func aboutHomeUrl_Button(_ sender: NSButton) {
@@ -93,7 +98,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     @IBAction func checkForUpdates(_ sender: AnyObject) {
-//        let verCheck = VersionCheck()
         
         let appInfo = Bundle.main.infoDictionary!
         let version = appInfo["CFBundleShortVersionString"] as! String
@@ -119,9 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             }
             self.cloudStatusWindow.titleVisibility = .hidden
             
-            self.showOnActiveScreen(windowName: self.cloudStatusWindow, panelName: self.prefs_Panel, type: "window")
-//            NSApplication.shared.activate(ignoringOtherApps: true)
-//            self.cloudStatusWindow.setIsVisible(true)
+            self.showOnActiveScreen(windowName: self.cloudStatusWindow)
         }
     }
     
@@ -140,7 +142,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             pollingInterval_TextField.stringValue = "300"
         }
         defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
-        defaults.synchronize()
+//        defaults.synchronize()
         prefs.pollingInterval = defaults.object(forKey: "pollingInterval") as? Int
     }
     @IBAction func prefWindowAlerts_Action(_ sender: NSButton) {
@@ -150,18 +152,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 //        }
         prefs.hideUntilStatusChange = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideUntilStatusChange, forKey: "hideUntilStatusChange")
-        defaults.synchronize()
+//        defaults.synchronize()
     }
     @IBAction func hideMenubarIcon_Action(_ sender: NSButton) {
         prefs.hideMenubarIcon = (prefWindowIcon_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideMenubarIcon, forKey: "hideMenubarIcon")
-        defaults.synchronize()
+//        defaults.synchronize()
     }
     @IBAction func launchAgent_Action(_ sender: NSButton) {
         var isDir: ObjCBool = true
         prefs.launchAgent = (launchAgent_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.launchAgent, forKey: "launchAgent")
-        defaults.synchronize()
+//        defaults.synchronize()
         if launchAgent_Button.state.rawValue == 0 {
             if fm.fileExists(atPath: launchAgentPath) {
                 do {
@@ -189,27 +191,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     @IBAction func credentials_Action(_ sender: Any) {
+        JamfProServer.url = jamfServerUrl_TextField.stringValue
         
-        if let _ = sender as? NSTextField {
-//            print("textField: \(textField.identifier!.rawValue)")
-            getJamfProVersion(jpURL: jamfServerUrl_TextField.stringValue) {
-                (result: [Int]) in
-//                print("jamfProVersion: \(result[0]).\(result[1]).\(result[2])")
-            }
-        }
+        let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
+        JamfProServer.url = urlRegex.stringByReplacingMatches(in: JamfProServer.url, options: [], range: NSRange(0..<JamfProServer.url.utf16.count), withTemplate: "")
         
-        prefs.jamfServerUrl = jamfServerUrl_TextField.stringValue
-        defaults.set(prefs.jamfServerUrl, forKey: "jamfServerUrl")
-        defaults.synchronize()
+        defaults.set(JamfProServer.url, forKey: "jamfServerUrl")
+//        defaults.synchronize()
         
-        prefs.username = username_TextField.stringValue
+        JamfProServer.username = username_TextField.stringValue
+        JamfProServer.password = password_TextField.stringValue
         
-        prefs.password = password_TextField.stringValue
-        
-        saveCreds(server: prefs.jamfServerUrl, username: prefs.username, password: prefs.password)
+        saveCreds(server: JamfProServer.url, username: JamfProServer.username, password: JamfProServer.password)
     }
     
     // actions for preferences window - start
+    
+    func fetchPassword() {
+        let credentialsArray = Credentials().itemLookup(service: jamfServerUrl_TextField.stringValue.fqdnFromUrl)
+        if credentialsArray.count == 2 {
+            username_TextField.stringValue = credentialsArray[0]
+            password_TextField.stringValue = credentialsArray[1]
+        } else {
+            password_TextField.stringValue = ""
+        }
+    }
+    
+    func setLabels() {
+        useApiClient = useApiClient_button.state.rawValue
+        if useApiClient == 0 {
+            username_Label.stringValue = "Username:"
+            password_Label.stringValue = "Password:"
+        } else {
+            username_Label.stringValue = "Client ID:"
+            password_Label.stringValue = "Secret:"
+        }
+    }
     
     @IBAction func back_button(_ sender: Any) {
         page_WebView.goBack()
@@ -242,53 +259,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         
         //return true
     }   // func alert_dialog - end
-    
-    func getJamfProVersion(jpURL: String, completion: @escaping (_ jpversion: [Int]) -> Void) {
-        WriteToLog().message(stringOfText: ["getting Jamf Pro Version for \(jpURL)"])
-        var versionString  = ""
-        var versionArray   = [Int]()
-        let semaphore      = DispatchSemaphore(value: 0)
-        
-        OperationQueue().addOperation {
-            let encodedURL     = NSURL(string: "\(jpURL)/JSSCheckConnection")
-            let request        = NSMutableURLRequest(url: encodedURL! as URL)
-            request.httpMethod = "GET"
-            let configuration  = URLSessionConfiguration.default
-            let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-            let task = session.dataTask(with: request as URLRequest, completionHandler: {
-                (data, response, error) -> Void in
-                if let httpResponse = response as? HTTPURLResponse {
-//                                        print("httpResponse: \(httpResponse)")
-//                                        print("raw versionString: \(versionString)")
-                    versionString = String(data: data!, encoding: .utf8) ?? ""
-                
-                    if versionString != "" {
-                        let tmpArray = versionString.components(separatedBy: ".")
-                        if tmpArray.count > 2 {
-                            for i in 0...2 {
-                                switch i {
-                                case 2:
-                                    let tmp = tmpArray[i].components(separatedBy: "-")
-                                    versionArray.append(Int(tmp[0]) ?? 0)
-                                default:
-                                    versionArray.append(Int(tmpArray[i]) ?? 0)
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    versionArray = []
-                    var theError = error?.localizedDescription
-                    if theError == nil { theError = "unknown" }
-                    WriteToLog().message(stringOfText: ["error: \(theError!)"])
-                }
-                completion(versionArray)
-            })  // let task = session - end
-            task.resume()
-            semaphore.wait()
-        }
-    }
-    
+
     func saveCreds(server: String, username: String, password: String) {
         if ( server != "" && username != "" && password != "" ) {
             
@@ -298,14 +269,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             token.isValid = false
             // update the connection indicator for the site server
-            JamfPro().getToken(serverUrl: server, whichServer: "source", base64creds: JamfProServer.base64Creds) {
-                (returnedToken: String) in
-                if returnedToken != "failed" {
+            TokenDelegate().getToken(serverUrl: server, base64creds: JamfProServer.base64Creds) {
+                (authResult: (Int,String)) in
+                            
+                if authResult.1 == "success" {
 //                    print("authentication verified")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
-                    Credentials2().save(service: "jamfStatus: \(serverFqdn)", account: username, data: password)
+                    Credentials().save(service: server.fqdnFromUrl, account: username, data: password)
                 } else {
                     print("authentication failed")
                     DispatchQueue.main.async {
@@ -322,6 +294,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         pollingInterval_TextField.stringValue = "\(String(describing: defaults.object(forKey:"pollingInterval")!))"
 
         prefWindowAlerts_Button.state = NSControl.StateValue.on
+        
+        useApiClient_button.state =  NSControl.StateValue(rawValue: useApiClient)
 
         if (defaults.bool(forKey: "hideMenubarIcon")) {
             prefWindowIcon_Button.state = NSControl.StateValue.on
@@ -344,69 +318,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
         if serverUrl != "" {
             jamfServerUrl_TextField.stringValue = serverUrl
-            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
+//            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
+//            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
 
-            let credentialsArray = Credentials2().retrieve(service: "jamfStatus: \(serverFqdn)")
+            let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdnFromUrl)
             if credentialsArray.count == 2 {
-                prefs.username = credentialsArray[0]
-                prefs.password = credentialsArray[1]
+                JamfProServer.username = credentialsArray[0]
+                JamfProServer.password = credentialsArray[1]
                 username_TextField.stringValue = credentialsArray[0]
                 password_TextField.stringValue = credentialsArray[1]
             } else {
-                prefs.username = ""
-                prefs.password = ""
+                JamfProServer.username = ""
+                JamfProServer.password = ""
             }
         }
         
-        saveCreds(server: serverUrl, username: prefs.username, password: prefs.password)
-        showOnActiveScreen(windowName: about_NSWindow, panelName: prefs_Panel, type: "panel")
+        saveCreds(server: serverUrl, username: JamfProServer.username, password: JamfProServer.password)
+        showOnActiveScreen(windowName: prefs_Window)
 
     }
     
-    func showOnActiveScreen(windowName: NSWindow, panelName: NSPanel, type: String) {
+    func showOnActiveScreen(windowName: NSWindow) {
         
         var xPos = 0.0
         var yPos = 0.0
-        
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        
-        switch type {
-        case "window":
-            if let screen = NSScreen.main {
-                let currentFrameWidth = Double(screen.frame.width)
-                let currentFrameHeight = Double(screen.frame.height)
-                let windowWidth = Double(windowName.frame.width)
-                let windowHeight = Double(windowName.frame.height)
-                xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
-                yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
-            }
-            windowName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
-            windowName.makeKeyAndOrderFront(self)
-            windowName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
-            DispatchQueue.main.async {
-                windowName.setIsVisible(true)
-                //                places window in bottom left corner of screen
-                //                self.notifier_window.setFrameOrigin(NSPoint(x: 0, y: 0))
-            }
-        default:
-            if let screen = NSScreen.main {
-                let currentFrameWidth = Double(screen.frame.width)
-                let currentFrameHeight = Double(screen.frame.height)
-                //            print("dimensions: \(currentFrameWidth) x \(currentFrameHeight)\n")
-                let windowWidth = Double(prefs_Panel.frame.width)
-                let windowHeight = Double(prefs_Panel.frame.height)
-                xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
-                yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
-            }
-            panelName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
-            panelName.makeKeyAndOrderFront(self)
-            panelName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
-            DispatchQueue.main.async {
-                panelName.setIsVisible(true)
-            }
+           
+        if let screen = NSScreen.main {
+            let currentFrameWidth = Double(screen.frame.width)
+            let currentFrameHeight = Double(screen.frame.height)
+            let windowWidth = Double(windowName.frame.width)
+            let windowHeight = Double(windowName.frame.height)
+            xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
+            yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
         }
-        
+//            windowName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+        windowName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
+        windowName.setIsVisible(true)
+                
+        windowName.orderFrontRegardless()
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
