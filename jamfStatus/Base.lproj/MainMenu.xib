@@ -258,6 +258,9 @@
                     <toolbarItem reference="1nZ-yX-Sz2"/>
                     <toolbarItem reference="IBG-r2-iX0"/>
                     <toolbarItem reference="boQ-7e-Sud"/>
+                    <toolbarItem reference="boQ-7e-Sud"/>
+                    <toolbarItem reference="boQ-7e-Sud"/>
+                    <toolbarItem reference="boQ-7e-Sud"/>
                     <toolbarItem reference="Tme-Gz-yAd"/>
                     <toolbarItem reference="boQ-7e-Sud"/>
                     <toolbarItem reference="boQ-7e-Sud"/>
@@ -269,50 +272,59 @@
         <window title="alert" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="c7c-gc-Sf1" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="70" y="748" width="398" height="99"/>
+            <rect key="contentRect" x="70" y="748" width="502" height="99"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" id="1wr-TU-Bu1">
-                <rect key="frame" x="0.0" y="0.0" width="398" height="99"/>
+                <rect key="frame" x="0.0" y="0.0" width="502" height="99"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOd-so-Kt1">
-                        <rect key="frame" x="55" y="3" width="332" height="22"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" title="Do not redisplay status alert until there is a change" drawsBackground="YES" id="8qs-RI-Nlp">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
-                        </textFieldCell>
-                    </textField>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lpu-7F-grg">
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lpu-7F-grg">
                         <rect key="frame" x="15" y="34" width="58" height="58"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="58" id="SQS-yy-WKI"/>
+                            <constraint firstAttribute="width" constant="58" id="gGi-H7-BCF"/>
+                        </constraints>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="yellowCloud" id="CCx-9S-ESS"/>
                     </imageView>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHQ-cA-Kh8">
-                        <rect key="frame" x="79" y="-127" width="312" height="226"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHQ-cA-Kh8">
+                        <rect key="frame" x="83" y="30" width="412" height="58"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="58" id="QQu-cv-7fM"/>
+                            <constraint firstAttribute="width" constant="408" id="sXY-DM-ppl"/>
+                        </constraints>
                         <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" id="A6f-4N-wim">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HJJ-90-lEi">
-                        <rect key="frame" x="35" y="6" width="336" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Obz-eb-Rcv">
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="HJJ-90-lEi">
+                        <rect key="frame" x="83" y="7" width="334" height="16"/>
+                        <buttonCell key="cell" type="check" title="Do not redisplay status alert until there is a change" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Obz-eb-Rcv">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                             <accessibility description="alertWindow"/>
                         </buttonCell>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="14" id="2on-Oc-iYM"/>
+                            <constraint firstAttribute="width" constant="332" id="YWu-D1-oPa"/>
+                        </constraints>
                         <connections>
                             <action selector="prefWindowAlerts_Action:" target="Voe-Tx-rLC" id="dON-9m-jir"/>
                         </connections>
                     </button>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="HJJ-90-lEi" firstAttribute="centerX" secondItem="1wr-TU-Bu1" secondAttribute="centerX" id="2WB-Uc-ALa"/>
+                    <constraint firstItem="RHQ-cA-Kh8" firstAttribute="top" secondItem="1wr-TU-Bu1" secondAttribute="top" constant="11" id="5aR-0M-s05"/>
+                    <constraint firstAttribute="bottom" secondItem="RHQ-cA-Kh8" secondAttribute="bottom" constant="30" id="Dkp-Lz-3O0"/>
+                    <constraint firstItem="Lpu-7F-grg" firstAttribute="top" secondItem="1wr-TU-Bu1" secondAttribute="top" constant="7" id="Gle-hQ-tz6"/>
+                    <constraint firstAttribute="trailing" secondItem="RHQ-cA-Kh8" secondAttribute="trailing" constant="9" id="cbd-mX-0bi"/>
+                    <constraint firstAttribute="bottom" secondItem="HJJ-90-lEi" secondAttribute="bottom" constant="8" id="htA-jM-hZm"/>
+                    <constraint firstItem="Lpu-7F-grg" firstAttribute="leading" secondItem="1wr-TU-Bu1" secondAttribute="leading" constant="15" id="zoD-To-4xy"/>
+                </constraints>
             </view>
-            <point key="canvasLocation" x="-119" y="-337.5"/>
+            <point key="canvasLocation" x="-408" y="-79.5"/>
         </window>
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WEB-hD-Ngs">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
@@ -564,7 +576,7 @@
                     <constraint firstAttribute="trailing" secondItem="SLI-gn-Ejs" secondAttribute="trailing" constant="26" id="zgB-xV-qpa"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="17" y="9"/>
+            <point key="canvasLocation" x="-467" y="228"/>
         </window>
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
@@ -624,7 +636,7 @@
                     <constraint firstItem="ayB-Oe-4se" firstAttribute="top" secondItem="uZV-lt-phl" secondAttribute="bottom" constant="3" id="ycJ-fC-pnc"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="584" y="107"/>
+            <point key="canvasLocation" x="121" y="691"/>
         </window>
     </objects>
     <resources>

@@ -210,6 +210,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     func displayAlert(currentState: String) {
         var alertHeight = 0
         DispatchQueue.main.async {
+            /*
             // adjust font size so that alert message fits in text box.
             alertHeight = 99
             //            print("count: \(alert_message.count)")
@@ -225,8 +226,11 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     alertHeight += 18*(lineLength+1)
                 }
             }
+            */
             //            self.serviceCount > 2 ? (alertHeight = 99 + 18*(self.serviceCount-2)):(alertHeight = 99)
-            self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
+           
+//            self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
+            
             if self.alert_message.count > 55 {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 12.0)
             } else {

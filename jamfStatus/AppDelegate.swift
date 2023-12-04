@@ -31,9 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var password_TextField: NSSecureTextField!
     @IBOutlet weak var useApiClient_button: NSButton!
     @IBAction func useApiClient_action(_ sender: NSButton) {
-        setLabels()
         useApiClient = useApiClient_button.state.rawValue
         defaults.set(useApiClient_button.state.rawValue, forKey: "useApiClient")
+        setLabels()
         fetchPassword()
     }
     
@@ -131,6 +131,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var prefWindowIcon_Button: NSButton!
     
     @IBAction func prefs_MenuItem(_ sender: NSMenuItem) {
+        setLabels()
         showPrefsWindow()
     }
     
@@ -218,7 +219,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     func setLabels() {
-        useApiClient = useApiClient_button.state.rawValue
+        useApiClient = defaults.integer(forKey: "useApiClient")
         if useApiClient == 0 {
             username_Label.stringValue = "Username:"
             password_Label.stringValue = "Password:"
@@ -295,7 +296,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 
         prefWindowAlerts_Button.state = NSControl.StateValue.on
         
-        useApiClient_button.state =  NSControl.StateValue(rawValue: useApiClient)
+        useApiClient_button.state =  NSControl.StateValue(rawValue: defaults.integer(forKey: "useApiClient"))
 
         if (defaults.bool(forKey: "hideMenubarIcon")) {
             prefWindowIcon_Button.state = NSControl.StateValue.on
