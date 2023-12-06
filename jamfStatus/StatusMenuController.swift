@@ -125,12 +125,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         cloudStatusItem.menu = cloudStatusMenu
         
         JamfProServer.base64Creds = ("\(JamfProServer.username):\(JamfProServer.password)".data(using: .utf8)?.base64EncodedString())!
-//        JamfPro().getVersion(jpURL: Preferences.jamfServerUrl, base64Creds: JamfProServer.base64Creds) { [self]
-//            (result: String) in
-            // move UapiCall fn to JamfPro
-            // don't check notifications if creds/server are not valid
             monitor()
-//        }
         
     }
     

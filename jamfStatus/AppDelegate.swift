@@ -40,9 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var siteConnectionStatus_ImageView: NSImageView!
     let statusImage:[NSImage] = [NSImage(named: "red-dot")!,
                                  NSImage(named: "green-dot")!]
-    
-    //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
-    
+        
     @IBOutlet weak var about_NSWindow: NSWindow!
     @IBOutlet weak var about_WebView: WKWebView!
     
@@ -148,9 +146,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     @IBAction func prefWindowAlerts_Action(_ sender: NSButton) {
 //        print("sender: \(String(describing: sender.identifier?.rawValue))")
-//        if ("\(String(describing: sender.identifier?.rawValue))" == "_NS:18") {
-//
-//        }
         prefs.hideUntilStatusChange = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideUntilStatusChange, forKey: "hideUntilStatusChange")
 //        defaults.synchronize()
@@ -257,8 +252,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                 NSWorkspace.shared.open(url)
             }
         }
-        
-        //return true
     }   // func alert_dialog - end
 
     func saveCreds(server: String, username: String, password: String) {
@@ -319,8 +312,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
         if serverUrl != "" {
             jamfServerUrl_TextField.stringValue = serverUrl
-//            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-//            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
 
             let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdnFromUrl)
             if credentialsArray.count == 2 {

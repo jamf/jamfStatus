@@ -120,6 +120,8 @@ Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 
 ## Change log
 
+2023-12-06: v2.4.1 - Minor updates to the alerts display.
+
 2023-11-11: v2.4.0 - Fix issue with notifications not being displayed.  Add ability to use API client.
 
 2023-04-07: v2.3.6 - Update logging to prevent potential looping.  
