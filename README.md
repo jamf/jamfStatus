@@ -20,7 +20,7 @@ Access Preferences from the menu bar icon.  Here you'll be able to set the follo
 - Whether the alert window is displayed at every polling interval or only when the status changes.<br>
 - How the menubar icon is displayed.  Minimizing will place a thin transparent icon in the menubar.<br>
 - Use of a LaunchAgent, to automatically start the app when logging in.<br>
-- Information for your specific Jamf Cloud instance. Use either a local user account or API client.
+- Information for your specific Jamf Cloud instance. Use either a local user account or API client.  Keyboard shortcuts for copy/paste do not function, however you can right-click a field to paste URL, username, API client...<br>
 - Most notification can be viewed using an account with no permissions set in Jamf Pro.  Using an account with ready-only on all objects ensure you'll see all notifications. If your cloud server does not utilize the standard HTTPS port (443) be sure to include the port you use in the URL.
 
 <img src="./jamfStatus/images/prefs.png" alt="notifications" width="600" /><br>
