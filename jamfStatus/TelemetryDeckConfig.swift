@@ -5,7 +5,7 @@
 import TelemetryDeck
 
 struct TelemetryDeckConfig {
-    static let appId = "D766466B-CEA3-4E45-8792-0406D9E44A39"
+    static let appId = "D1FAAD0B-60F6-44F6-94AF-BBF0194B5EFF"
     static var parameters: [String: String] = [:]
 }
 
