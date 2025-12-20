@@ -23,6 +23,8 @@
 		B5BE0F9E2AFEF434000CBEBE /* TokenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */; };
 		B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F31231CAB640012FF5A /* UapiCall.swift */; };
 		B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */; };
+		CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996942EF663F800EDDD1C /* TokenManager.swift */; };
+		CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996962EF6651C00EDDD1C /* TokenInfo.swift */; };
 		CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63462EEC96B4004A58C9 /* TelemetryDeck */; };
 		CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */; };
 /* End PBXBuildFile section */
@@ -48,6 +50,8 @@
 		B5E62F31231CAB640012FF5A /* UapiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UapiCall.swift; sourceTree = "<group>"; };
 		B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
 		B5FD9DAB2742AAC60044C321 /* Misc */ = {isa = PBXFileReference; lastKnownFileType = text; path = Misc; sourceTree = "<group>"; };
+		CEB996942EF663F800EDDD1C /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		CEB996962EF6651C00EDDD1C /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +98,8 @@
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
 				CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */,
 				B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */,
+				CEB996942EF663F800EDDD1C /* TokenManager.swift */,
+				CEB996962EF6651C00EDDD1C /* TokenInfo.swift */,
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
 				B5BD6AD8232F108A001D244A /* VersionCheck.swift */,
 				B542A1F224BA90A900EE33C8 /* WriteToLog.swift */,
@@ -220,8 +226,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */,
 				B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */,
 				B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */,
+				CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */,
 				B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */,
 				B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */,
 				CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */,

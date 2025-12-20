@@ -351,9 +351,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        Task {@MainActor in
-            configureTelemetryDeck()
-        }
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {

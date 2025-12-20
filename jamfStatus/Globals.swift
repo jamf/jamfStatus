@@ -80,7 +80,8 @@ struct JamfNotification {
                       "JAMF_CONNECT_UPDATE":"JAMF_CONNECT_UPDATE_AVAILABLE",
                       "JAMF_CONNECT_MAJOR_UPDATE":"JAMF_CONNECT_MAJOR_UPDATE_AVAILABLE",
                       "DEVICE_COMPLIANCE_CONNECTION_ERROR":"DEVICE_COMPLIANCE_CONNECTION_ERROR_DESCRIPTION",
-                      "CONDITIONAL_ACCESS_CONNECTION_ERROR":"CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION"]
+                      "CONDITIONAL_ACCESS_CONNECTION_ERROR":"CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION",
+                      "USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES":"USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES"]
     
     static let displayTitle = ["CERT_EXPIRED":"{{certType}} Certificate Expired",
                                "CLOUD_LDAP_CERT_EXPIRED_DESCRIPTION":"Cloud Identity Provider Certificate Expired",
@@ -130,7 +131,8 @@ struct JamfNotification {
                                "JAMF_CONNECT_UPDATE_AVAILABLE":"Jamf Connect {{latestVersion}} Now Available",
                                "JAMF_CONNECT_MAJOR_UPDATE_AVAILABLE":"Major Update for Jamf Connect Now Available (Jamf Connect {{latestVersion}})",
                                "DEVICE_COMPLIANCE_CONNECTION_ERROR_DESCRIPTION":"Device Compliance Connection Interrupted",
-                               "CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION":"Conditional Access Connection Interrupted"]
+                               "CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION":"Conditional Access Connection Interrupted",
+                               "USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES":"Users Have Duplicated eMail Addresses"]
     
     static let humanReadable = ["TOMCAT_SSL_CERT_EXPIRED":"Tomcat SSL",
                       "TOMCAT_SSL_CERT_WILL_EXPIRE":"Tomcat SSL",

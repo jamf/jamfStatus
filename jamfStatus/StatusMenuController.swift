@@ -60,6 +60,10 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     override func awakeFromNib() {
         
+        Task {@MainActor in
+            configureTelemetryDeck()
+        }
+        
         useApiClient = defaults.integer(forKey: "useApiClient")
        
         if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
@@ -149,9 +153,12 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         cloudStatusMenu.setSubmenu(subMenu, for: notifications_MenuItem)
                         for alert in notificationAlerts {
 //                            print("notification alert: \(alert)")
-                            let alertTitle = alert["type"]! as! String
+                            let alertTitle = alert["type"] as? String ?? "Unknown"
                             displayTitleKey = JamfNotification.key[alertTitle] ?? "Unknown"
                             displayTitle = JamfNotification.displayTitle[displayTitleKey] ?? "Unknown"
+                            if displayTitle == "Unknown" {
+                                writeToLog.message(stringOfText: ["unknown alert type: \(alertTitle)"])
+                            }
                             switch displayTitleKey {
                             case "CERT_WILL_EXPIRE", "CERT_EXPIRED":
                                 displayTitle = displayTitle.replacingOccurrences(of: "{{certType}}", with: "\(String(describing: JamfNotification.humanReadable[alertTitle]!))")

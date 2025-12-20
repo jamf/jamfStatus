@@ -7,7 +7,6 @@ import Cocoa
 
 class TokenDelegate: NSObject, URLSessionDelegate {
     
-    let userDefaults = UserDefaults.standard
     var components   = DateComponents()
     
     func getToken(serverUrl: String, base64creds: String, completion: @escaping (_ authResult: (Int,String)) -> Void) {
@@ -70,9 +69,9 @@ class TokenDelegate: NSObject, URLSessionDelegate {
 
                                 JamfProServer.base64Creds = base64creds
                                 if apiClient {
-                                    JamfProServer.authExpires = 30 //(endpointJSON["expires_in"] as? String ?? "")!
+                                    JamfProServer.authExpires = 20 //(endpointJSON["expires_in"] as? String ?? "")!
                                 } else {
-                                    JamfProServer.authExpires = (endpointJSON["expires"] as? Double ?? 30)!
+                                    JamfProServer.authExpires = (endpointJSON["expires"] as? Double ?? 20)!
                                 }
                                 JamfProServer.tokenCreated = Date()
                                 JamfProServer.validToken   = true
@@ -246,3 +245,4 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         
     }   // func getVersion - end
 }
+

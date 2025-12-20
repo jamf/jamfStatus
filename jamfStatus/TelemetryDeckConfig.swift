@@ -9,9 +9,8 @@ struct TelemetryDeckConfig {
     static var parameters: [String: String] = [:]
 }
 
-extension AppDelegate {
+extension StatusMenuController {
     @MainActor func configureTelemetryDeck() {
-        
         let config = TelemetryDeck.Config(appID: TelemetryDeckConfig.appId)
         TelemetryDeck.initialize(config: config)
     }
