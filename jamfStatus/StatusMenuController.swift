@@ -169,7 +169,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                             displayTitleKey = JamfNotification.key[alertTitle] ?? "Unknown"
                             displayTitle = JamfNotification.displayTitle[displayTitleKey] ?? "Unknown"
                             if displayTitle == "Unknown" {
-                                writeToLog.message(stringOfText: ["unknown alert type: \(alertTitle)"])
+                                writeToLog.message(stringOfText: ["unknown alert: \(alert.description.replacingOccurrences(of: "\n", with: ""))"])
+                                displayTitle = alertTitle
                             }
                             switch displayTitleKey {
                             case "CERT_WILL_EXPIRE", "CERT_EXPIRED":
