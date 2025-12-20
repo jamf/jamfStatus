@@ -20,7 +20,6 @@
 		B5AC20371F37859F00C16EAA /* images in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20361F37859F00C16EAA /* images */; };
 		B5BD6AD723297762001D244A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD623297762001D244A /* Credentials.swift */; };
 		B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD8232F108A001D244A /* VersionCheck.swift */; };
-		B5BE0F9E2AFEF434000CBEBE /* TokenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */; };
 		B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F31231CAB640012FF5A /* UapiCall.swift */; };
 		B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */; };
 		CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996942EF663F800EDDD1C /* TokenManager.swift */; };
@@ -47,7 +46,6 @@
 		B5AC20361F37859F00C16EAA /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		B5BD6AD623297762001D244A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		B5BD6AD8232F108A001D244A /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
-		B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDelegate.swift; sourceTree = "<group>"; };
 		B5E62F31231CAB640012FF5A /* UapiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UapiCall.swift; sourceTree = "<group>"; };
 		B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
 		B5FD9DAB2742AAC60044C321 /* Misc */ = {isa = PBXFileReference; lastKnownFileType = text; path = Misc; sourceTree = "<group>"; };
@@ -100,7 +98,6 @@
 				B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
 				CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */,
-				B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */,
 				CEB996942EF663F800EDDD1C /* TokenManager.swift */,
 				CEB996962EF6651C00EDDD1C /* TokenInfo.swift */,
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
@@ -240,7 +237,6 @@
 				CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */,
 				B5BD6AD723297762001D244A /* Credentials.swift in Sources */,
 				B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */,
-				B5BE0F9E2AFEF434000CBEBE /* TokenDelegate.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
 				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
 			);

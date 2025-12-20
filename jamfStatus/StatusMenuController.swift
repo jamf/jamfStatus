@@ -414,15 +414,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         }
     }
     
-//    func readSettings() -> NSMutableDictionary? {
-//        if fileManager.fileExists(atPath: SettingsPlistPath) {
-//            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
-//            return dict
-//        } else {
-//            return .none
-//        }
-//    }
-    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }

@@ -147,7 +147,6 @@ struct JamfProServer {
     static var accessToken  = ""
     static var authCreds    = ""
     static var authExpires  = 30.0
-    static var authType     = "Token"
     static var base64Creds  = ""
     static var build        = ""
     static var currentCred  = ""
