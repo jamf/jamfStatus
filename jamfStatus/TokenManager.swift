@@ -23,7 +23,7 @@ actor TokenManager {
         let tokenUrlString = (useApiClient == 0) ? "\(serverUrl)/api/v1/auth/token" : "\(serverUrl)/api/oauth/token"
         
         guard let tokenUrl = URL(string: tokenUrlString) else {
-            WriteToLog.shared.message("Invalid URL: \(tokenUrlString)")
+            writeToLog.message(stringOfText: ["Invalid URL: \(tokenUrlString)"])
             newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: "Invalid URL: \(tokenUrlString)")
             await MainActor.run {
                 self.tokenInfo = newTokenInfo
@@ -53,7 +53,7 @@ actor TokenManager {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                print("[setToken] Failed to authenticate, \(serverUrl). Status code: \(statusCode)")
+                writeToLog.message(stringOfText: ["[setToken] Failed to authenticate, \(serverUrl). Status code: \(statusCode)"])
                 switch statusCode {
                 case 401:
                     authMessage = "\(401): Incorrect credentials"

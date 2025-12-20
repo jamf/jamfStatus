@@ -11,6 +11,7 @@ import Foundation
 let httpSuccess     = 200...299
 let refreshInterval: UInt32 = 25*60 // 25 minutes
 var useApiClient    = 0
+let defaults        = UserDefaults.standard
 
 struct AppInfo {
     static let dict    = Bundle.main.infoDictionary!

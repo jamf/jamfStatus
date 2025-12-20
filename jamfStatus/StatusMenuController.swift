@@ -9,7 +9,6 @@ import Foundation
 
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
-    let defaults = UserDefaults.standard
     let prefs = Preferences.self
     
     @IBOutlet weak var alert_window: NSPanel!
@@ -138,7 +137,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             while true {
                 
                 // check site server - start
-                WriteToLog().message(stringOfText: ["checking server: \(Preferences.jamfServerUrl)"])
+                WriteToLog().message(stringOfText: ["checking server: \(JamfProServer.url)"])
                 UapiCall().get(endpoint: "v1/notifications") { [self]
                     (notificationAlerts: [[String: Any]]) in
                     
@@ -179,8 +178,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 // check site server - end
 
                 //                print("checking status")
-                prefs.pollingInterval = defaults.integer(forKey: "pollingInterval")
-                prefs.hideMenubarIcon = defaults.bool(forKey: "hideMenubarIcon")
+                prefs.pollingInterval = (defaults.integer(forKey: "pollingInterval") < 60 ? 300 : defaults.integer(forKey: "pollingInterval"))
+                prefs.hideMenubarIcon = false // defaults.bool(forKey: "hideMenubarIcon")
                 getStatus2() {
                     (result: String) in
                     
@@ -210,7 +209,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     func displayAlert(currentState: String) {
-        var alertHeight = 0
+//        var alertHeight = 0
+        
         DispatchQueue.main.async {
             /*
             // adjust font size so that alert message fits in text box.
@@ -238,7 +238,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             } else {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 18.0)
             }
-            if (self.defaults.bool(forKey:"hideUntilStatusChange")) {
+            if (defaults.bool(forKey:"hideUntilStatusChange")) {
                 self.alertWindowPref_Button.state = NSControl.StateValue.on
             } else {
                 self.alertWindowPref_Button.state = NSControl.StateValue.off
@@ -248,7 +248,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     self.refreshAlert()
                 }
             } else {
-                if !(self.defaults.bool(forKey:"hideUntilStatusChange")) && self.prevState != "cloudStatus-green" {
+                if !(defaults.bool(forKey:"hideUntilStatusChange")) && self.prevState != "cloudStatus-green" {
                     DispatchQueue.main.async {
                         self.refreshAlert()
                     }
@@ -278,130 +278,137 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     func getStatus2(completion: @escaping (_ result: String) -> Void) {
-        var localResult = ""
-        
-        var operationalArray = [String]()
-        var warningArray     = [String]()
-        var criticalArray    = [String]()
-        
-        // clear current arrays
-        operationalArray.removeAll()
-        warningArray.removeAll()
-        criticalArray.removeAll()
-        affectedServices = ""
-        URLCache.shared.removeAllCachedResponses()
-        
-        WriteToLog().message(stringOfText: ["checking Jamf Cloud"])
-        //        JSON parsing - start
-        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
-//        url to test app - need to set up your own
-//        need to create the folder /jamfStatus and populate the page: components.json
-//        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
-        
-        URLCache.shared.removeAllCachedResponses()
-        let encodedURL = NSURL(string: apiStatusUrl)
-        let request = NSMutableURLRequest(url: encodedURL! as URL)
-        request.httpMethod = "GET"
-        let configuration = URLSessionConfiguration.default
-        
-        configuration.httpAdditionalHeaders = ["Accept" : "application/json"]
-        let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-        let task = session.dataTask(with: request as URLRequest, completionHandler: {
-            (data, response, error) -> Void in
-            if (response as? HTTPURLResponse) != nil {
-                do {
-                    if let data = data,
-                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
-                        let cloudServices = json["components"] as? [[String: Any]] {
-//                        print("cloudServices: \(cloudServices)")
-                        for cloudService in cloudServices {
-                            if let name = cloudService["name"] as? String,
-                                let status = cloudService["status"] as? String {
-                                switch status {
-                                case "degraded_performance", "partial_outage":
-                                    if status == "partial_outage" {
-                                        self.displayedStatus = "Partial Outage"
-                                    } else {
-                                        self.displayedStatus = "Degraded Performance"
+        Task {
+            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+                await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
+            }
+            
+            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+                var localResult = ""
+                
+                var operationalArray = [String]()
+                var warningArray     = [String]()
+                var criticalArray    = [String]()
+                
+                // clear current arrays
+                operationalArray.removeAll()
+                warningArray.removeAll()
+                criticalArray.removeAll()
+                affectedServices = ""
+                URLCache.shared.removeAllCachedResponses()
+                
+                WriteToLog().message(stringOfText: ["checking Jamf Cloud"])
+                //        JSON parsing - start
+                let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
+        //        url to test app - need to set up your own
+        //        need to create the folder /jamfStatus and populate the page: components.json
+        //        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
+                
+                URLCache.shared.removeAllCachedResponses()
+                let encodedURL = NSURL(string: apiStatusUrl)
+                let request = NSMutableURLRequest(url: encodedURL! as URL)
+                request.httpMethod = "GET"
+                let configuration = URLSessionConfiguration.default
+                
+                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json"]
+                let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                    (data, response, error) -> Void in
+                    if (response as? HTTPURLResponse) != nil {
+                        do {
+                            if let data = data,
+                                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
+                                let cloudServices = json["components"] as? [[String: Any]] {
+        //                        print("cloudServices: \(cloudServices)")
+                                for cloudService in cloudServices {
+                                    if let name = cloudService["name"] as? String,
+                                        let status = cloudService["status"] as? String {
+                                        switch status {
+                                        case "degraded_performance", "partial_outage":
+                                            if status == "partial_outage" {
+                                                self.displayedStatus = "Partial Outage"
+                                            } else {
+                                                self.displayedStatus = "Degraded Performance"
+                                            }
+                                            warningArray.append(name + ": " + self.displayedStatus)
+                                        case "major_outage":
+                                            self.displayedStatus = "Major Outage"
+                                            criticalArray.append(name + ": " + self.displayedStatus)
+                                        default:
+                                            self.displayedStatus = "Operational"
+                                            operationalArray.append(name + ": " + self.displayedStatus)
+                                        }
                                     }
-                                    warningArray.append(name + ": " + self.displayedStatus)
-                                case "major_outage":
-                                    self.displayedStatus = "Major Outage"
-                                    criticalArray.append(name + ": " + self.displayedStatus)
-                                default:
-                                    self.displayedStatus = "Operational"
-                                    operationalArray.append(name + ": " + self.displayedStatus)
                                 }
                             }
+                        } catch {
+                            print("Error deserializing JSON: \(error)")
+                        }   // do - end
+                    }   // if let httpResponse - end
+                    if criticalArray.count > 0 {
+                        self.alert_header = "Jamf Cloud Critical Issue Alert"
+                        localResult = "cloudStatus-red"
+                        for service in criticalArray {
+                            self.affectedServices.append("    \(service)\n")
+                        }
+                        self.alert_ImageView.image = self.alert_image_red
+                        self.alert_message = "Please be aware there is a major issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
+                        self.serviceCount = criticalArray.count
+                        self.displayAlert(currentState: localResult)
+                    } else if warningArray.count > 0 {
+                        self.alert_header = "Jamf Cloud Minor Issue Alert"
+                        localResult = "cloudStatus-yellow"
+                        for service in warningArray {
+                            self.affectedServices.append("    \(service)\n")
+                        }
+                        self.alert_ImageView.image = self.alert_image_yellow
+                        self.alert_message = "Please be aware there is a minor issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
+                        self.serviceCount = warningArray.count
+                        self.displayAlert(currentState: localResult)
+                    } else if operationalArray.count > 0 {
+                        self.alert_header = "Notice"
+                        localResult = "cloudStatus-green"
+        //                localResult = "cloudMajor-18"
+                        self.affectedServices = ""
+                        self.alert_ImageView.image = self.alert_image_green
+                        self.alert_message = "\nJamf Cloud: All systems go."
+                        self.serviceCount = 0
+                        self.displayAlert(currentState: localResult)
+                    }
+                    
+                    //            print("operationalArray: \(operationalArray)\n")
+                    //            print("warningArray: \(warningArray)\n")
+                    //            print("criticalArray: \(criticalArray)\n")
+                    
+                    if (localResult != "cloudStatus-green") && (localResult != "cloudStatus-yellow") && (localResult != "cloudStatus-red") {
+                        self.iconName = "minimizedIcon"
+                    } else {
+                        if (self.prefs.menuIconStyle == "color") || (localResult == "cloudStatus-green") {
+                            // display icon with color
+                            self.iconName = localResult
+                        } else {
+                            // display icon with slash
+                            self.iconName = (localResult == "cloudStatus-yellow") ? "cloudStatus-yellow1":"cloudStatus-red1"
+                            localResult = self.iconName
                         }
                     }
-                } catch {
-                    print("Error deserializing JSON: \(error)")
-                }   // do - end
-            }   // if let httpResponse - end
-            if criticalArray.count > 0 {
-                self.alert_header = "Jamf Cloud Critical Issue Alert"
-                localResult = "cloudStatus-red"
-                for service in criticalArray {
-                    self.affectedServices.append("    \(service)\n")
-                }
-                self.alert_ImageView.image = self.alert_image_red
-                self.alert_message = "Please be aware there is a major issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
-                self.serviceCount = criticalArray.count
-                self.displayAlert(currentState: localResult)
-            } else if warningArray.count > 0 {
-                self.alert_header = "Jamf Cloud Minor Issue Alert"
-                localResult = "cloudStatus-yellow"
-                for service in warningArray {
-                    self.affectedServices.append("    \(service)\n")
-                }
-                self.alert_ImageView.image = self.alert_image_yellow
-                self.alert_message = "Please be aware there is a minor issue that may affect your Jamf Cloud instance.\n\(self.affectedServices)"
-                self.serviceCount = warningArray.count
-                self.displayAlert(currentState: localResult)
-            } else if operationalArray.count > 0 {
-                self.alert_header = "Notice"
-                localResult = "cloudStatus-green"
-//                localResult = "cloudMajor-18"
-                self.affectedServices = ""
-                self.alert_ImageView.image = self.alert_image_green
-                self.alert_message = "\nJamf Cloud: All systems go."
-                self.serviceCount = 0
-                self.displayAlert(currentState: localResult)
+                    
+                    completion(localResult)
+                })   // let task - end
+                task.resume()
             }
             
-            //            print("operationalArray: \(operationalArray)\n")
-            //            print("warningArray: \(warningArray)\n")
-            //            print("criticalArray: \(criticalArray)\n")
-            
-            if (localResult != "cloudStatus-green") && (localResult != "cloudStatus-yellow") && (localResult != "cloudStatus-red") {
-                self.iconName = "minimizedIcon"
-            } else {
-                if (self.prefs.menuIconStyle == "color") || (localResult == "cloudStatus-green") {
-                    // display icon with color
-                    self.iconName = localResult
-                } else {
-                    // display icon with slash
-                    self.iconName = (localResult == "cloudStatus-yellow") ? "cloudStatus-yellow1":"cloudStatus-red1"
-                    localResult = self.iconName
-                }
-            }
-            
-            completion(localResult)
-        })   // let task - end
-        task.resume()
-//        print("")
-        //        JSON parsing - end
-    }
-    
-    func readSettings() -> NSMutableDictionary? {
-        if fileManager.fileExists(atPath: SettingsPlistPath) {
-            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
-            return dict
-        } else {
-            return .none
         }
     }
+    
+//    func readSettings() -> NSMutableDictionary? {
+//        if fileManager.fileExists(atPath: SettingsPlistPath) {
+//            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
+//            return dict
+//        } else {
+//            return .none
+//        }
+//    }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))

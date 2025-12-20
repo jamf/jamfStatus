@@ -14,7 +14,6 @@ import Foundation
 
 class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSessionTaskDelegate {
     
-    let defaults = UserDefaults.standard
     var theUapiQ = OperationQueue() // create operation queue for API calls
     
     func get(endpoint: String, completion: @escaping (_ notificationAlerts: [Dictionary<String,Any>]) -> Void) {
@@ -79,3 +78,4 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     }
     
 }
+

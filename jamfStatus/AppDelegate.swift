@@ -45,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var about_WebView: WKWebView!
     
     let prefs = Preferences.self
-    let defaults = UserDefaults()
+//    let defaults = UserDefaults()
     
     let fm = FileManager()
     var pollingInterval: Int = 300
