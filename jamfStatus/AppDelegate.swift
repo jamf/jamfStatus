@@ -263,11 +263,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             token.isValid = false
             // update the connection indicator for the site server
-            TokenDelegate().getToken(serverUrl: server, base64creds: JamfProServer.base64Creds) {
-                (authResult: (Int,String)) in
-                            
-                if authResult.1 == "success" {
-//                    print("authentication verified")
+            Task {
+                if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+                    await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
+                }
+                
+                if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
@@ -278,8 +279,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[0]
                     }
                 }
-                self.siteConnectionStatus_ImageView.isHidden = false
-            } // JamfPro().getToken(serverUrl - end
+                DispatchQueue.main.async {
+                    self.siteConnectionStatus_ImageView.isHidden = false
+                }
+            }
+            
+            
+//            TokenDelegate().getToken(serverUrl: server, base64creds: JamfProServer.base64Creds) {
+//                (authResult: (Int,String)) in
+//                            
+//                if authResult.1 == "success" {
+////                    print("authentication verified")
+//                    DispatchQueue.main.async {
+//                        self.siteConnectionStatus_ImageView.image = self.statusImage[1]
+//                    }
+//                    Credentials().save(service: server.fqdnFromUrl, account: username, data: password)
+//                } else {
+//                    print("authentication failed")
+//                    DispatchQueue.main.async {
+//                        self.siteConnectionStatus_ImageView.image = self.statusImage[0]
+//                    }
+//                }
+//                self.siteConnectionStatus_ImageView.isHidden = false
+//            } // JamfPro().getToken(serverUrl - end
         }
     }
     

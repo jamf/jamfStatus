@@ -14,10 +14,11 @@ var useApiClient    = 0
 let defaults        = UserDefaults.standard
 
 struct AppInfo {
-    static let dict    = Bundle.main.infoDictionary!
-    static let version = dict["CFBundleShortVersionString"] as! String
-    static let build   = dict["CFBundleVersion"] as! String
-    static let name    = dict["CFBundleExecutable"] as! String
+    static let dict        = Bundle.main.infoDictionary!
+    static let version     = dict["CFBundleShortVersionString"] as! String
+    static let build       = dict["CFBundleVersion"] as! String
+    static let name        = dict["CFBundleExecutable"] as! String
+    static let displayname = dict["CFBundleName"] as! String
 
     static let userAgentHeader = "\(String(describing: name.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!))/\(AppInfo.version)"
         
@@ -146,7 +147,7 @@ struct JamfProServer {
     static var accessToken  = ""
     static var authCreds    = ""
     static var authExpires  = 30.0
-    static var authType     = "Basic"
+    static var authType     = "Token"
     static var base64Creds  = ""
     static var build        = ""
     static var currentCred  = ""

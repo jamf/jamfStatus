@@ -6,6 +6,7 @@
 import AppKit
 import Cocoa
 import Foundation
+import OSLog
 
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
@@ -59,17 +60,32 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     override func awakeFromNib() {
         
+        // OS version info
+        let os = ProcessInfo().operatingSystemVersion
+        
+        writeToLog.message(stringOfText: [""])
+        writeToLog.message(stringOfText: ["================================================================"])
+        writeToLog.message(stringOfText: ["    \(AppInfo.displayname) Version: \(AppInfo.version) build: \(AppInfo.build)"])
+        writeToLog.message(stringOfText: ["         macOS Version: \(os.majorVersion).\(os.minorVersion).\(os.patchVersion)"])
+        writeToLog.message(stringOfText: ["================================================================"])
+        writeToLog.message(stringOfText: ["additionsl logging available from Terminal using:"])
+        writeToLog.message(stringOfText: ["log stream --debug --predicate 'subsystem == \"\(Bundle.main.bundleIdentifier!)\"'"])
         Task {@MainActor in
             configureTelemetryDeck()
+            writeToLog.message(stringOfText: ["analytics enabled: \(!TelemetryDeckConfig.OptOut)"])
         }
         
         useApiClient = defaults.integer(forKey: "useApiClient")
        
         if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
-            defaults.set(300, forKey: "pollingInterval")
             prefs.pollingInterval = 300
         } else {
-            prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int
+            prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int ?? 300
+        }
+        
+        if prefs.pollingInterval ?? 0 < 60 {
+            prefs.pollingInterval = 300
+            defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
         }
         
         if (defaults.object(forKey:"hideUntilStatusChange") as? Bool == nil){
@@ -116,10 +132,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 JamfProServer.password = ""
             }
         }
-//
-//        defaults.synchronize()
-//        
-//        defaults.synchronize()
+        
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
@@ -128,7 +141,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         cloudStatusItem.menu = cloudStatusMenu
         
         JamfProServer.base64Creds = ("\(JamfProServer.username):\(JamfProServer.password)".data(using: .utf8)?.base64EncodedString())!
-            monitor()
+        monitor()
         
     }
     
@@ -137,7 +150,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             while true {
                 
                 // check site server - start
-                WriteToLog().message(stringOfText: ["checking server: \(JamfProServer.url)"])
+                Logger.check.info("checking server: \(JamfProServer.url, privacy: .public)")
                 UapiCall().get(endpoint: "v1/notifications") { [self]
                     (notificationAlerts: [[String: Any]]) in
                     
@@ -297,7 +310,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 affectedServices = ""
                 URLCache.shared.removeAllCachedResponses()
                 
-                WriteToLog().message(stringOfText: ["checking Jamf Cloud"])
+                Logger.check.info("checking Jamf Cloud")
                 //        JSON parsing - start
                 let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
         //        url to test app - need to set up your own
@@ -310,7 +323,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 request.httpMethod = "GET"
                 let configuration = URLSessionConfiguration.default
                 
-                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json"]
+                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
                 let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
@@ -415,3 +428,4 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
 }
+

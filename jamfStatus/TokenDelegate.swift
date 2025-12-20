@@ -24,8 +24,8 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         tokenUrlString     = tokenUrlString.replacingOccurrences(of: "//api", with: "/api")
         //        print("[getToken] tokenUrlString: \(tokenUrlString)")
 
-        let tokenUrl       = URL(string: "\(tokenUrlString)")
-        guard let _ = URL(string: "\(tokenUrlString)") else {
+//        let tokenUrl       = URL(string: "\(tokenUrlString)")
+        guard let tokenUrl = URL(string: "\(tokenUrlString)") else {
             print("problem constructing the URL from \(tokenUrlString)")
             writeToLog.message(stringOfText: ["[getToken] problem constructing the URL from \(tokenUrlString)"])
             completion((500, "failed"))
@@ -33,14 +33,14 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         }
         //        print("[getToken] tokenUrl: \(tokenUrl!)")
         let configuration  = URLSessionConfiguration.ephemeral
-        var request        = URLRequest(url: tokenUrl!)
+        var request        = URLRequest(url: tokenUrl)
         request.httpMethod = "POST"
 
         let (_, _, _, tokenAgeInSeconds) = timeDiff(startTime: JamfProServer.tokenCreated)
 
         if !( JamfProServer.validToken && tokenAgeInSeconds < (JamfProServer.authExpires)*60 ) || (JamfProServer.currentCred != base64creds) {
             writeToLog.message(stringOfText: ["[getToken] tokenAgeInSeconds: \(tokenAgeInSeconds)"])
-            writeToLog.message(stringOfText: ["[getToken] Attempting to retrieve token from \(String(describing: tokenUrl))"])
+            writeToLog.message(stringOfText: ["[getToken] Attempting to retrieve token from \(tokenUrlString))"])
             
             if apiClient {
                 let clientId = JamfProServer.username
