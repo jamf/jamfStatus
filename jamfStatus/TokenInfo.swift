@@ -7,7 +7,7 @@
 
 //import Cocoa
 import Foundation
-//import OSLog
+import OSLog
 
 
 final class TokenInfo: Encodable, @unchecked Sendable {
@@ -29,7 +29,8 @@ final class TokenInfo: Encodable, @unchecked Sendable {
     }
     
     var renewToken: Bool {
-        expiresAt >= Date().addingTimeInterval(-30)
+        Logger.token.debug("Check if token needs renewing: \(self.expiresAt <= Date().addingTimeInterval(-30), privacy: .public)")
+        return expiresAt <= Date().addingTimeInterval(-30)
     }
 }
 

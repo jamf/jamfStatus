@@ -293,9 +293,9 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     func getStatus2(completion: @escaping (_ result: String) -> Void) {
         Task {
-            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
-                await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
-            }
+//            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+//                await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
+//            }
             
             if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                 var localResult = ""
@@ -411,7 +411,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 })   // let task - end
                 task.resume()
             }
-            
         }
     }
     

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 actor TokenManager {
     static let shared = TokenManager()
@@ -21,6 +22,7 @@ actor TokenManager {
         let newTokenInfo: TokenInfo
         
         let tokenUrlString = (useApiClient == 0) ? "\(serverUrl)/api/v1/auth/token" : "\(serverUrl)/api/oauth/token"
+        Logger.check.debug("request token from: \(tokenUrlString, privacy: .public)")
         
         guard let tokenUrl = URL(string: tokenUrlString) else {
             writeToLog.message(stringOfText: ["Invalid URL: \(tokenUrlString)"])
@@ -63,7 +65,7 @@ actor TokenManager {
                     let code = statusCode == -1 ? "Unknown error" : "\(statusCode)"
                     authMessage = "\(code): login failed"
                 }
-                print("[setToken] authMessage: \(authMessage)")
+                Logger.check.debug("failed to get token: \(authMessage, privacy: .public)")
                 newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: authMessage)
                 await MainActor.run {
                     self.tokenInfo = newTokenInfo
@@ -75,15 +77,16 @@ actor TokenManager {
             decoder.dateDecodingStrategy = .formatted(DateFormatter.customISO8601)
 
             let tokenResponse = try decoder.decode(TokenResponse.self, from: data)
+            print("raw token info: \(tokenResponse)")
+            print("      Date.now: \(Date.now)")
 
             switch tokenResponse {
             case .tokenData(let data):
                 let token = data.token
                 let expiration: Date
-
-                if let date = data.expires as? Date {
-                    let renewIn = timeDiff(startTime: date)
-                    expiration = Date.now + renewIn.3
+                
+                if let _ = data.expires as? Date {
+                    expiration = data.expires
                 } else {
                     expiration = Date.now + 20 * 60
                 }
@@ -103,13 +106,14 @@ actor TokenManager {
             }
 
             JamfProServer.accessToken = newTokenInfo.token
+            Logger.check.debug("granted new token, expires \(newTokenInfo.expiresAt, privacy: .public)")
             
             await MainActor.run {
                 self.tokenInfo = newTokenInfo
             }
 
         } catch {
-            print("Token request failed: \(error.localizedDescription)")
+            Logger.check.debug("Token request failed: \(error.localizedDescription, privacy: .public)")
             newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: error.localizedDescription)
             await MainActor.run {
                 self.tokenInfo = newTokenInfo

@@ -283,25 +283,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                     self.siteConnectionStatus_ImageView.isHidden = false
                 }
             }
-            
-            
-//            TokenDelegate().getToken(serverUrl: server, base64creds: JamfProServer.base64Creds) {
-//                (authResult: (Int,String)) in
-//                            
-//                if authResult.1 == "success" {
-////                    print("authentication verified")
-//                    DispatchQueue.main.async {
-//                        self.siteConnectionStatus_ImageView.image = self.statusImage[1]
-//                    }
-//                    Credentials().save(service: server.fqdnFromUrl, account: username, data: password)
-//                } else {
-//                    print("authentication failed")
-//                    DispatchQueue.main.async {
-//                        self.siteConnectionStatus_ImageView.image = self.statusImage[0]
-//                    }
-//                }
-//                self.siteConnectionStatus_ImageView.isHidden = false
-//            } // JamfPro().getToken(serverUrl - end
         }
     }
     
