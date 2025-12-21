@@ -8,8 +8,7 @@
 import Foundation
 
 final class HealthStatus: Codable {
-    let api, ui, enrollment, device: API
-    let healthStatusDefault: API
+    let api, ui, enrollment, device, healthStatusDefault: API
 
     enum CodingKeys: String, CodingKey {
         case api, ui, enrollment, device
@@ -37,3 +36,7 @@ final class API: Codable {
     }
 }
 
+enum HealthStatusError: Error {
+    case authenticationFailed
+    case invalidResponse
+}

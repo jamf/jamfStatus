@@ -174,7 +174,7 @@ struct Preferences {
     static var hideUntilStatusChange: Bool? = true
     static var launchAgent: Bool?           = false
     static var pollingInterval: Int?        = 300
-    static var baseUrl: String?             = "https://status.jamf.com"
+    static var baseUrl: String              = "https://status.jamf.com"
     static var jamfServerUrl                = ""
     static var username                     = ""
     static var password                     = ""

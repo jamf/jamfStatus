@@ -113,7 +113,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             defaults.set("https://status.jamf.com", forKey: "baseUrl")
             prefs.baseUrl = "https://status.jamf.com"
         } else {
-            prefs.baseUrl = defaults.string(forKey:"baseUrl")
+            prefs.baseUrl = defaults.string(forKey:"baseUrl") ?? "https://status.jamf.com"
         }
         
         // set menu icon style
@@ -141,12 +141,14 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         cloudStatusItem.menu = cloudStatusMenu
         
         JamfProServer.base64Creds = ("\(JamfProServer.username):\(JamfProServer.password)".data(using: .utf8)?.base64EncodedString())!
-        monitor()
+        Task {
+            await monitor()
+        }
         
     }
     
-    func monitor() {
-        DispatchQueue.global(qos: .background).async { [self] in
+    func monitor() async {
+//        DispatchQueue.global(qos: .background).async { [self] in
             while true {
                 
                 // check site server - start
@@ -194,25 +196,25 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 //                print("checking status")
                 prefs.pollingInterval = (defaults.integer(forKey: "pollingInterval") < 60 ? 300 : defaults.integer(forKey: "pollingInterval"))
                 prefs.hideMenubarIcon = false // defaults.bool(forKey: "hideMenubarIcon")
-                getStatus2() {
-                    (result: String) in
-                    self.healthStatus() {
-                        (result: String) in
-                        DispatchQueue.main.async { [self] in
-                            iconName = result
-                            //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
-                            //                        print("iconName: \(result)")
-                            //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
-                            prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
-                            
-                            //                        cloudStatusItem.image = icon
-                            cloudStatusItem.button?.image = icon
-                        }
-                    }
+                
+                let result = (try? await getStatus2()) ?? "cloudStatus-green"
+                try? await healthStatus()
+                if let api = await HealthStatusStore.shared.healthStatus?.api {
+                    print("API 30 seconds: \(api.thirtySeconds * 100)%")
+                }
+                
+                DispatchQueue.main.async { [self] in
+                    iconName = result
+                    //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
+                    //                        print("iconName: \(result)")
+                    //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
+                    prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
+                    
+                    //                        cloudStatusItem.image = icon
+                    cloudStatusItem.button?.image = icon
                 }
                 sleep(UInt32(Int(prefs.pollingInterval!)))
             }
-        }
     }
     
     @IBAction func alertWindowPref_Action(_ sender: NSButton) {
@@ -293,10 +295,12 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         self.alert_window.setIsVisible(true)
     }
     
-    func getStatus2(completion: @escaping (_ result: String) -> Void) {
-        Task {
-            
-            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+//    func getStatus2(completion: @escaping (_ result: String) -> Void) {
+//        Task {
+    @MainActor
+    func getStatus2() async throws -> String {
+        
+            if TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                 var localResult = ""
                 
                 var operationalArray = [String]()
@@ -312,25 +316,30 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 
                 Logger.check.info("checking Jamf Cloud")
                 //        JSON parsing - start
-                let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
+                let apiStatusUrl = "\(prefs.baseUrl)/api/v2/components.json"
         //        url to test app - need to set up your own
         //        need to create the folder /jamfStatus and populate the page: components.json
         //        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
                 
                 URLCache.shared.removeAllCachedResponses()
-                let encodedURL = NSURL(string: apiStatusUrl)
-                let request = NSMutableURLRequest(url: encodedURL! as URL)
+                let encodedURL = URL(string: apiStatusUrl)!
+                var request = URLRequest(url: encodedURL)
                 request.httpMethod = "GET"
                 let configuration = URLSessionConfiguration.default
                 
                 configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
                 let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-                let task = session.dataTask(with: request as URLRequest, completionHandler: {
-                    (data, response, error) -> Void in
-                    if (response as? HTTPURLResponse) != nil {
+                let (data, response) = try await URLSession.shared.data(for: request)
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200..<300).contains(httpResponse.statusCode) else {
+                    throw HealthStatusError.invalidResponse
+                }
+//                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+//                    (data, response, error) -> Void in
+//                    if (response as? HTTPURLResponse) != nil {
                         do {
-                            if let data = data,
-                                let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
+//                            if let data = data,
+                            if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
                                 let cloudServices = json["components"] as? [[String: Any]] {
         //                        print("cloudServices: \(cloudServices)")
                                 for cloudService in cloudServices {
@@ -357,7 +366,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         } catch {
                             print("Error deserializing JSON: \(error)")
                         }   // do - end
-                    }   // if let httpResponse - end
+//                    }   // if let httpResponse - end
                     if criticalArray.count > 0 {
                         self.alert_header = "Jamf Cloud Critical Issue Alert"
                         localResult = "cloudStatus-red"
@@ -405,50 +414,86 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                             localResult = self.iconName
                         }
                     }
-                    
-                    completion(localResult)
-                })   // let task - end
-                task.resume()
+                    return(localResult)
+//                    completion(localResult)
+//                })   // let task - end
+//                task.resume()
             }
-        }
+        return("cloudStatus-green")
+//        }
     }
     
-    private func healthStatus(completion: @escaping (_ result: String) -> Void) {
-        Task {
-            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
-                
-                URLCache.shared.removeAllCachedResponses()
-                
-                Logger.check.info("checking server health status")
-                //        JSON parsing - start
-                let apiStatusUrl = "\(JamfProServer.url)/api/v1/health-status"
-                
-                URLCache.shared.removeAllCachedResponses()
-                let encodedURL = NSURL(string: apiStatusUrl)
-                let request = NSMutableURLRequest(url: encodedURL! as URL)
-                request.httpMethod = "GET"
-                let configuration = URLSessionConfiguration.default
-                
-                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
-                let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-                let task = session.dataTask(with: request as URLRequest, completionHandler: {
-                    (data, response, error) -> Void in
-                    if (response as? HTTPURLResponse) != nil {
-                        if let decodedHealthStatus = try? JSONDecoder().decode(HealthStatus.self, from: data ?? Data()) {
-                            await MainActor.run {
-                                HealthStatusStore.shared.update(from: decodedHealthStatus)
-                            }
-                            print("API 30 seconds: \(healthStatus.api.thirtySeconds * 100) %")
-                        } else {
-                            print("Error deserializing JSON: \(error?.localizedDescription ?? "unknown")")
-                        }
-                    }
-                    completion("healthStatus")
-                })   // let task - end
-                task.resume()
-            }
+    @MainActor
+    private func healthStatus() async throws {
+
+        guard TokenManager.shared.tokenInfo?.authMessage == "success" else {
+            throw HealthStatusError.authenticationFailed
         }
+
+        Logger.check.info("checking server health status")
+
+        let apiStatusURL = URL(string: "\(JamfProServer.url)/api/v1/health-status")!
+
+        var request = URLRequest(url: apiStatusURL)
+        request.httpMethod = "GET"
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("Bearer \(JamfProServer.accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(AppInfo.userAgentHeader, forHTTPHeaderField: "User-Agent")
+
+        URLCache.shared.removeAllCachedResponses()
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw HealthStatusError.invalidResponse
+        }
+
+        let decodedHealthStatus = try JSONDecoder().decode(HealthStatus.self, from: data)
+
+        HealthStatusStore.shared.update(from: decodedHealthStatus)
+
+        Logger.check.info("health status updated")
     }
+
+    
+//    private func healthStatus(completion: @escaping (_ result: String) -> Void) {
+//        Task {
+//            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+//                
+//                URLCache.shared.removeAllCachedResponses()
+//                
+//                Logger.check.info("checking server health status")
+//                //        JSON parsing - start
+//                let apiStatusUrl = "\(JamfProServer.url)/api/v1/health-status"
+//                
+//                URLCache.shared.removeAllCachedResponses()
+//                let encodedURL = NSURL(string: apiStatusUrl)
+//                let request = NSMutableURLRequest(url: encodedURL! as URL)
+//                request.httpMethod = "GET"
+//                let configuration = URLSessionConfiguration.default
+//                
+//                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
+//                let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+//                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+//                    (data, response, error) -> Void in
+//                    if (response as? HTTPURLResponse) != nil {
+//                        if let decodedHealthStatus = try? JSONDecoder().decode(HealthStatus.self, from: data ?? Data()) {
+//                            await MainActor.run {
+//                                HealthStatusStore.shared.update(from: decodedHealthStatus)
+//                            }
+//                            print("API 30 seconds: \(healthStatus.api.thirtySeconds * 100) %")
+//                        } else {
+//                            print("Error deserializing JSON: \(error?.localizedDescription ?? "unknown")")
+//                        }
+//                    }
+//                    completion("healthStatus")
+//                })   // let task - end
+//                task.resume()
+//            }
+//        }
+//    }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
