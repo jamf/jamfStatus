@@ -25,6 +25,8 @@
 		CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996942EF663F800EDDD1C /* TokenManager.swift */; };
 		CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996962EF6651C00EDDD1C /* TokenInfo.swift */; };
 		CEB996992EF6D96A00EDDD1C /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */; };
+		CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */; };
+		CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */; };
 		CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63462EEC96B4004A58C9 /* TelemetryDeck */; };
 		CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +54,8 @@
 		CEB996942EF663F800EDDD1C /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		CEB996962EF6651C00EDDD1C /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
+		CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatus.swift; sourceTree = "<group>"; };
+		CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentHealthStatus.swift; sourceTree = "<group>"; };
 		CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,7 +97,9 @@
 				B5AC20331F37855800C16EAA /* about */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
 				B5BD6AD623297762001D244A /* Credentials.swift */,
+				CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */,
 				B542A1F024BA902C00EE33C8 /* Globals.swift */,
+				CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */,
 				CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */,
 				B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
@@ -229,6 +235,8 @@
 			files = (
 				CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */,
 				B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */,
+				CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */,
+				CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */,
 				B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */,
 				CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */,
 				B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */,

@@ -77,8 +77,6 @@ actor TokenManager {
             decoder.dateDecodingStrategy = .formatted(DateFormatter.customISO8601)
 
             let tokenResponse = try decoder.decode(TokenResponse.self, from: data)
-            print("raw token info: \(tokenResponse)")
-            print("      Date.now: \(Date.now)")
 
             switch tokenResponse {
             case .tokenData(let data):

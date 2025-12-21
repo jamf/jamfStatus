@@ -44,6 +44,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var about_NSWindow: NSWindow!
     @IBOutlet weak var about_WebView: WKWebView!
     
+    @IBOutlet weak var healthStatus_Window: NSWindow!
+    
     let prefs = Preferences.self
 //    let defaults = UserDefaults()
     
@@ -331,6 +333,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         saveCreds(server: serverUrl, username: JamfProServer.username, password: JamfProServer.password)
         showOnActiveScreen(windowName: prefs_Window)
 
+    }
+    
+
+    @IBOutlet weak var api_30s_TextField: NSTextField!
+    @IBAction func showHealthStatus_MenuItem(_ sender: NSMenuItem) {
+        api_30s_TextField.stringValue = "\(healthStatus.api.thirtyseconds)%"
+        showOnActiveScreen(windowName: healthStatus_Window)
     }
     
     func showOnActiveScreen(windowName: NSWindow) {

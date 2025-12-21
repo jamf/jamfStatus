@@ -1,5 +1,5 @@
 //
-//  Token.swift
+//  TokenInfo.swift
 //  Wallpaper
 //
 //  Created by leslie on 7/2/25.

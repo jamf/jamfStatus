@@ -196,16 +196,18 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 prefs.hideMenubarIcon = false // defaults.bool(forKey: "hideMenubarIcon")
                 getStatus2() {
                     (result: String) in
-                    
-                    DispatchQueue.main.async { [self] in
-                        iconName = result
-                        //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
-                        //                        print("iconName: \(result)")
-                        //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
-                        prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
-                        
-//                        cloudStatusItem.image = icon
-                        cloudStatusItem.button?.image = icon
+                    self.healthStatus() {
+                        (result: String) in
+                        DispatchQueue.main.async { [self] in
+                            iconName = result
+                            //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
+                            //                        print("iconName: \(result)")
+                            //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
+                            prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
+                            
+                            //                        cloudStatusItem.image = icon
+                            cloudStatusItem.button?.image = icon
+                        }
                     }
                 }
                 sleep(UInt32(Int(prefs.pollingInterval!)))
@@ -293,9 +295,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     func getStatus2(completion: @escaping (_ result: String) -> Void) {
         Task {
-//            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
-//                await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
-//            }
             
             if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                 var localResult = ""
@@ -408,6 +407,43 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     }
                     
                     completion(localResult)
+                })   // let task - end
+                task.resume()
+            }
+        }
+    }
+    
+    private func healthStatus(completion: @escaping (_ result: String) -> Void) {
+        Task {
+            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+                
+                URLCache.shared.removeAllCachedResponses()
+                
+                Logger.check.info("checking server health status")
+                //        JSON parsing - start
+                let apiStatusUrl = "\(JamfProServer.url)/api/v1/health-status"
+                
+                URLCache.shared.removeAllCachedResponses()
+                let encodedURL = NSURL(string: apiStatusUrl)
+                let request = NSMutableURLRequest(url: encodedURL! as URL)
+                request.httpMethod = "GET"
+                let configuration = URLSessionConfiguration.default
+                
+                configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
+                let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                    (data, response, error) -> Void in
+                    if (response as? HTTPURLResponse) != nil {
+                        if let decodedHealthStatus = try? JSONDecoder().decode(HealthStatus.self, from: data ?? Data()) {
+                            await MainActor.run {
+                                HealthStatusStore.shared.update(from: decodedHealthStatus)
+                            }
+                            print("API 30 seconds: \(healthStatus.api.thirtySeconds * 100) %")
+                        } else {
+                            print("Error deserializing JSON: \(error?.localizedDescription ?? "unknown")")
+                        }
+                    }
+                    completion("healthStatus")
                 })   // let task - end
                 task.resume()
             }
