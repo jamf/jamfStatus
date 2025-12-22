@@ -1,6 +1,8 @@
 # jamfStatus
 Download: [jamfStatus](https://github.com/jamf/jamfStatus/releases/latest/download/jamfStatus.zip)
 
+The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the About window.
+
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
 <img src="./jamfStatus/images/menubar.png" alt="menu bar" width="200" />
@@ -47,6 +49,11 @@ There are two different menu bar icon styles to choose from.  One uses colors to
 Notifications, if any, will appear after the next polling cycle once the information has been entered.
 
 <img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
+
+The health status can also be viewed for Jamf Cloud hosted instances. The status displays the percent of incoming requests that are successful.
+
+<img src="./jamfStatus/images/healthStatusMenu.png" alt="Health Status" width="150" />
+<img src="./jamfStatus/images/healthStatus.png" alt="Health Status" width="600" />
 
 Status changes are logged to ~/Library/Logs/jamfStatus/jamfStatus.log.  Once the log exceeds 5MB it will be zipped and a new log will be created.  A maximum of 10 zipped log files are retained.  Sample log data:
 

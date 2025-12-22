@@ -97,7 +97,6 @@
 			children = (
 				CEB9969E2EF8DB6600EDDD1C /* About.swift */,
 				B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */,
-				B5AC20331F37855800C16EAA /* about */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
 				B5BD6AD623297762001D244A /* Credentials.swift */,
 				CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */,
@@ -113,6 +112,7 @@
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
 				B5BD6AD8232F108A001D244A /* VersionCheck.swift */,
 				B542A1F224BA90A900EE33C8 /* WriteToLog.swift */,
+				B5AC20361F37859F00C16EAA /* images */,
 				B5013BC81E95817C0099300A /* Assets.xcassets */,
 				B515969E1E95BB2200ED3CA3 /* Images.xcassets */,
 				B5013BCA1E95817C0099300A /* MainMenu.xib */,
@@ -137,14 +137,6 @@
 				B5A470AF2271CE7200C2A88D /* WebKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B5AC20331F37855800C16EAA /* about */ = {
-			isa = PBXGroup;
-			children = (
-				B5AC20361F37859F00C16EAA /* images */,
-			);
-			name = about;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
