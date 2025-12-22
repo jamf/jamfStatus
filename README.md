@@ -1,4 +1,7 @@
 # jamfStatus
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/jamf/jamfStatus?display_name=tag) ![GitHub all releases](https://img.shields.io/github/downloads/jamf/jamfStatus/total) ![GitHub latest release](https://img.shields.io/github/downloads/jamf/jamfStatus/latest/total)
+ ![GitHub issues](https://img.shields.io/github/issues-raw/jamf/jamfStatus) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/jamf/jamfStatus) ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/jamf/jamfStatus) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/jamf/jamfStatus)
+ 
 Download: [jamfStatus](https://github.com/jamf/jamfStatus/releases/latest/download/jamfStatus.zip)
 
 The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the About window.
