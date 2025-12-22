@@ -55,7 +55,7 @@ Notifications, if any, will appear after the next polling cycle once the informa
 
 <img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
-The health status can also be viewed for Jamf Cloud hosted instances. The status displays the percent of incoming requests that are successful.
+The health status can also be viewed for Jamf Cloud hosted instances. The status displays the percent of incoming requests that are successfully accepted.
 
 <img src="./jamfStatus/images/healthStatusMenu.png" alt="Health Status" width="150" />
 <img src="./jamfStatus/images/healthStatus.png" alt="Health Status" width="600" />
@@ -145,4 +145,5 @@ Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 2022-06-12: v2.3.1 - Clean up notificatations not displaying properly.
 
 2021-10-15: v2.3.0 - Updated notifications display.
+
 
