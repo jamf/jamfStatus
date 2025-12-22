@@ -14,15 +14,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Window: NSWindow!
-    @IBOutlet weak var aboutVersion_TextField: NSTextField!
-    @IBOutlet weak var aboutHomeUrl_Button: NSButton!
-    
     
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
     @IBOutlet weak var iconStyle_Button: NSPopUpButton!
     
-
     // site specific settings
     @IBOutlet weak var jamfServerUrl_TextField: NSTextField!
     @IBOutlet weak var username_Label: NSTextField!
@@ -31,34 +27,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var password_TextField: NSSecureTextField!
     @IBOutlet weak var useApiClient_button: NSButton!
     @IBAction func useApiClient_action(_ sender: NSButton) {
-        setLabels()
         useApiClient = useApiClient_button.state.rawValue
         defaults.set(useApiClient_button.state.rawValue, forKey: "useApiClient")
+        setLabels()
         fetchPassword()
     }
     
     @IBOutlet weak var siteConnectionStatus_ImageView: NSImageView!
     let statusImage:[NSImage] = [NSImage(named: "red-dot")!,
                                  NSImage(named: "green-dot")!]
-    
-    //    @IBOutlet weak var monitorUrl_TextField: NSTextField!
-    
+        
+    // About
     @IBOutlet weak var about_NSWindow: NSWindow!
-    @IBOutlet weak var about_WebView: WKWebView!
+    @IBOutlet weak var about_image: NSImageView!
+    @IBOutlet weak var appName_textfield: NSTextField!
+    @IBOutlet weak var version_textfield: NSTextField!
+    @IBOutlet var license_textfield: NSTextView!
+    
+    @IBOutlet weak var optOut_button: NSButton!
+    @IBAction func optOut_action(_ sender: NSButton) {
+        UserDefaults.standard.set(sender.state == .on, forKey: "optOut")
+        TelemetryDeckConfig.OptOut = (sender.state == .on)
+    }
+    
+    
+    
+    @IBOutlet weak var healthStatus_Window: NSWindow!
     
     let prefs = Preferences.self
-    let defaults = UserDefaults()
     
     let fm = FileManager()
     var pollingInterval: Int = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
-    
-    @objc func notificationsAction(_ sender: NSMenuItem) {
-//        print("\(sender.identifier!.rawValue)")
-//        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
-    }
-    
     
     @IBAction func iconStyle_Action(_ sender: Any) {
         if iconStyle_Button.indexOfSelectedItem == 0 {
@@ -69,32 +70,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         defaults.set(prefs.menuIconStyle, forKey: "menuIconStyle")
     }
     
-    
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
-        
-        let appInfo = Bundle.main.infoDictionary!
-        let version = appInfo["CFBundleShortVersionString"] as! String
-        
-        let filePath = Bundle.main.path(forResource: "index", ofType: "html")
-        let folderPath = Bundle.main.resourcePath
-//        
-        let fileUrl = NSURL(fileURLWithPath: filePath!)
-        let baseUrl = NSURL(fileURLWithPath: folderPath!, isDirectory: true)
-        
-        about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
-
-        aboutVersion_TextField.stringValue = "Version: \(version)"
-        
-        let stringAttributes: [NSAttributedString.Key: Any] = [.underlineStyle: NSUnderlineStyle.single.rawValue, .foregroundColor: NSColor.systemBlue]
-        let attributedTitle = NSAttributedString(string: "Home", attributes: stringAttributes)
-        aboutHomeUrl_Button.attributedTitle = attributedTitle
-        aboutHomeUrl_Button.toolTip = "https://github.com/jamf/jamfStatus"
+        about_image.image = NSImage(named: "AppIcon")
+        appName_textfield.stringValue = "\(AppInfo.name)"
+        version_textfield.stringValue = "Version \(AppInfo.version) (\(AppInfo.build))"
+        license_textfield.textStorage?.setAttributedString(formattedText())
         
         showOnActiveScreen(windowName: about_NSWindow)
-        
-    }
-    @IBAction func aboutHomeUrl_Button(_ sender: NSButton) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/jamf/jamfStatus")!)
     }
     
     @IBAction func checkForUpdates(_ sender: AnyObject) {
@@ -131,6 +113,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var prefWindowIcon_Button: NSButton!
     
     @IBAction func prefs_MenuItem(_ sender: NSMenuItem) {
+        setLabels()
         showPrefsWindow()
     }
     
@@ -147,9 +130,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     @IBAction func prefWindowAlerts_Action(_ sender: NSButton) {
 //        print("sender: \(String(describing: sender.identifier?.rawValue))")
-//        if ("\(String(describing: sender.identifier?.rawValue))" == "_NS:18") {
-//
-//        }
         prefs.hideUntilStatusChange = (prefWindowAlerts_Button.state.rawValue == 0 ? false:true)
         defaults.set(prefs.hideUntilStatusChange, forKey: "hideUntilStatusChange")
 //        defaults.synchronize()
@@ -218,7 +198,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
     func setLabels() {
-        useApiClient = useApiClient_button.state.rawValue
+        useApiClient = defaults.integer(forKey: "useApiClient")
         if useApiClient == 0 {
             username_Label.stringValue = "Username:"
             password_Label.stringValue = "Password:"
@@ -256,8 +236,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                 NSWorkspace.shared.open(url)
             }
         }
-        
-        //return true
     }   // func alert_dialog - end
 
     func saveCreds(server: String, username: String, password: String) {
@@ -269,11 +247,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             token.isValid = false
             // update the connection indicator for the site server
-            TokenDelegate().getToken(serverUrl: server, base64creds: JamfProServer.base64Creds) {
-                (authResult: (Int,String)) in
-                            
-                if authResult.1 == "success" {
-//                    print("authentication verified")
+            Task {
+                if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+                    await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
+                }
+                
+                if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
@@ -284,8 +263,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[0]
                     }
                 }
-                self.siteConnectionStatus_ImageView.isHidden = false
-            } // JamfPro().getToken(serverUrl - end
+                DispatchQueue.main.async {
+                    self.siteConnectionStatus_ImageView.isHidden = false
+                }
+            }
         }
     }
     
@@ -295,7 +276,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 
         prefWindowAlerts_Button.state = NSControl.StateValue.on
         
-        useApiClient_button.state =  NSControl.StateValue(rawValue: useApiClient)
+        useApiClient_button.state =  NSControl.StateValue(rawValue: defaults.integer(forKey: "useApiClient"))
 
         if (defaults.bool(forKey: "hideMenubarIcon")) {
             prefWindowIcon_Button.state = NSControl.StateValue.on
@@ -318,8 +299,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
         if serverUrl != "" {
             jamfServerUrl_TextField.stringValue = serverUrl
-//            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-//            let serverFqdn = urlRegex.stringByReplacingMatches(in: serverUrl, options: [], range: NSRange(0..<serverUrl.utf16.count), withTemplate: "")
 
             let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdnFromUrl)
             if credentialsArray.count == 2 {
@@ -338,8 +317,80 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 
     }
     
+
+    @IBOutlet weak var api_30s_TextField: NSTextField!
+    @IBOutlet weak var api_1m_TextField: NSTextField!
+    @IBOutlet weak var api_5m_TextField: NSTextField!
+    @IBOutlet weak var api_15m_TextField: NSTextField!
+    @IBOutlet weak var api_30m_TextField: NSTextField!
+    
+    @IBOutlet weak var ui_30s_TextField: NSTextField!
+    @IBOutlet weak var ui_1m_TextField: NSTextField!
+    @IBOutlet weak var ui_5m_TextField: NSTextField!
+    @IBOutlet weak var ui_15m_TextField: NSTextField!
+    @IBOutlet weak var ui_30m_TextField: NSTextField!
+    
+    @IBOutlet weak var enrollment_30s_TextField: NSTextField!
+    @IBOutlet weak var enrollment_1m_TextField: NSTextField!
+    @IBOutlet weak var enrollment_5m_TextField: NSTextField!
+    @IBOutlet weak var enrollment_15m_TextField: NSTextField!
+    @IBOutlet weak var enrollment_30m_TextField: NSTextField!
+    
+    @IBOutlet weak var device_30s_TextField: NSTextField!
+    @IBOutlet weak var device_1m_TextField: NSTextField!
+    @IBOutlet weak var device_5m_TextField: NSTextField!
+    @IBOutlet weak var device_15m_TextField: NSTextField!
+    @IBOutlet weak var device_30m_TextField: NSTextField!
+    
+    @IBOutlet weak var default_30s_TextField: NSTextField!
+    @IBOutlet weak var default_1m_TextField: NSTextField!
+    @IBOutlet weak var default_5m_TextField: NSTextField!
+    @IBOutlet weak var default_15m_TextField: NSTextField!
+    @IBOutlet weak var default_30m_TextField: NSTextField!
+    
+    @IBAction func showHealthStatus_MenuItem(_ sender: NSMenuItem) {
+        if let api = HealthStatusStore.shared.healthStatus?.api,
+            let ui = HealthStatusStore.shared.healthStatus?.ui,
+            let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
+            let device = HealthStatusStore.shared.healthStatus?.device,
+            let defaultStatus = HealthStatusStore.shared.healthStatus?.healthStatusDefault {
+            
+            api_30s_TextField.stringValue = "\(Int(api.thirtySeconds * 100))%"
+            api_1m_TextField.stringValue  = "\(Int(api.oneMinute * 100))%"
+            api_5m_TextField.stringValue  = "\(Int(api.fiveMinutes * 100))%"
+            api_15m_TextField.stringValue = "\(Int(api.fifteenMinutes * 100))%"
+            api_30m_TextField.stringValue = "\(Int(api.thirtyMinutes * 100))%"
+            
+            ui_30s_TextField.stringValue = "\(Int(ui.thirtySeconds * 100))%"
+            ui_1m_TextField.stringValue  = "\(Int(ui.oneMinute * 100))%"
+            ui_5m_TextField.stringValue  = "\(Int(ui.fiveMinutes * 100))%"
+            ui_15m_TextField.stringValue = "\(Int(ui.fifteenMinutes * 100))%"
+            ui_30m_TextField.stringValue = "\(Int(ui.thirtyMinutes * 100))%"
+            
+            enrollment_30s_TextField.stringValue = "\(Int(enrollment.thirtySeconds * 100))%"
+            enrollment_1m_TextField.stringValue  = "\(Int(enrollment.oneMinute * 100))%"
+            enrollment_5m_TextField.stringValue  = "\(Int(enrollment.fiveMinutes * 100))%"
+            enrollment_15m_TextField.stringValue = "\(Int(enrollment.fifteenMinutes * 100))%"
+            enrollment_30m_TextField.stringValue = "\(Int(enrollment.thirtyMinutes * 100))%"
+            
+            device_30s_TextField.stringValue = "\(Int(device.thirtySeconds * 100))%"
+            device_1m_TextField.stringValue  = "\(Int(device.oneMinute * 100))%"
+            device_5m_TextField.stringValue  = "\(Int(device.fiveMinutes * 100))%"
+            device_15m_TextField.stringValue = "\(Int(device.fifteenMinutes * 100))%"
+            device_30m_TextField.stringValue = "\(Int(device.thirtyMinutes * 100))%"
+            
+            default_30s_TextField.stringValue = "\(Int(defaultStatus.thirtySeconds * 100))%"
+            default_1m_TextField.stringValue  = "\(Int(defaultStatus.oneMinute * 100))%"
+            default_5m_TextField.stringValue  = "\(Int(defaultStatus.fiveMinutes * 100))%"
+            default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
+            default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
+            
+            showOnActiveScreen(windowName: healthStatus_Window)
+        }
+    }
+    
     func showOnActiveScreen(windowName: NSWindow) {
-        
+        windowName.contentView?.layer?.backgroundColor = isDarkMode ? CGColor.init(gray: 0.2, alpha: 1.0):CGColor.init(gray: 0.2, alpha: 0.2)
         var xPos = 0.0
         var yPos = 0.0
            
@@ -363,6 +414,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+    }
+    
+    func setTheme(darkMode: Bool) {
+        defaultTextColor = darkMode ? NSColor.white:NSColor.black
+        // delegate to update view in real time?
+    }
+    
+    @objc func notificationsAction(_ sender: NSMenuItem) {
+//        print("\(sender.identifier!.rawValue)")
+//        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
     }
     
 }

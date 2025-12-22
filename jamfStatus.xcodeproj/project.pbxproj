@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,14 +16,20 @@
 		B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542A1F224BA90A900EE33C8 /* WriteToLog.swift */; };
 		B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A470AF2271CE7200C2A88D /* WebKit.framework */; };
 		B5AC20321F36479A00C16EAA /* com.jamf.cloudmonitor.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */; };
-		B5AC20351F37858800C16EAA /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20341F37858800C16EAA /* index.html */; };
 		B5AC20371F37859F00C16EAA /* images in Resources */ = {isa = PBXBuildFile; fileRef = B5AC20361F37859F00C16EAA /* images */; };
 		B5BD6AD723297762001D244A /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD623297762001D244A /* Credentials.swift */; };
 		B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD8232F108A001D244A /* VersionCheck.swift */; };
-		B5BE0F9E2AFEF434000CBEBE /* TokenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */; };
 		B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F31231CAB640012FF5A /* UapiCall.swift */; };
 		B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */; };
-		B5FD9DAC2742AAC60044C321 /* Misc in Resources */ = {isa = PBXBuildFile; fileRef = B5FD9DAB2742AAC60044C321 /* Misc */; };
+		CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996942EF663F800EDDD1C /* TokenManager.swift */; };
+		CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996962EF6651C00EDDD1C /* TokenInfo.swift */; };
+		CEB996992EF6D96A00EDDD1C /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */; };
+		CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */; };
+		CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */; };
+		CEB9969F2EF8DB6B00EDDD1C /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969E2EF8DB6600EDDD1C /* About.swift */; };
+		CEB996A12EF9309A00EDDD1C /* MyObserverClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */; };
+		CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63462EEC96B4004A58C9 /* TelemetryDeck */; };
+		CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,14 +45,20 @@
 		B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = jamfStatus.entitlements; sourceTree = "<group>"; };
 		B5A470AF2271CE7200C2A88D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B5AC20311F36479A00C16EAA /* com.jamf.cloudmonitor.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.jamf.cloudmonitor.plist; sourceTree = "<group>"; };
-		B5AC20341F37858800C16EAA /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B5AC20361F37859F00C16EAA /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		B5BD6AD623297762001D244A /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		B5BD6AD8232F108A001D244A /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
-		B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDelegate.swift; sourceTree = "<group>"; };
 		B5E62F31231CAB640012FF5A /* UapiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UapiCall.swift; sourceTree = "<group>"; };
 		B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
 		B5FD9DAB2742AAC60044C321 /* Misc */ = {isa = PBXFileReference; lastKnownFileType = text; path = Misc; sourceTree = "<group>"; };
+		CEB996942EF663F800EDDD1C /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		CEB996962EF6651C00EDDD1C /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
+		CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
+		CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatus.swift; sourceTree = "<group>"; };
+		CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentHealthStatus.swift; sourceTree = "<group>"; };
+		CEB9969E2EF8DB6600EDDD1C /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
+		CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyObserverClass.swift; sourceTree = "<group>"; };
+		CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */,
+				CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,17 +95,24 @@
 		B5013BC51E95817C0099300A /* jamfStatus */ = {
 			isa = PBXGroup;
 			children = (
+				CEB9969E2EF8DB6600EDDD1C /* About.swift */,
 				B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */,
-				B5AC20331F37855800C16EAA /* about */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
 				B5BD6AD623297762001D244A /* Credentials.swift */,
+				CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */,
 				B542A1F024BA902C00EE33C8 /* Globals.swift */,
+				CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */,
+				CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */,
+				CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */,
 				B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */,
 				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
-				B5BE0F9D2AFEF434000CBEBE /* TokenDelegate.swift */,
+				CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */,
+				CEB996942EF663F800EDDD1C /* TokenManager.swift */,
+				CEB996962EF6651C00EDDD1C /* TokenInfo.swift */,
 				B5E62F31231CAB640012FF5A /* UapiCall.swift */,
 				B5BD6AD8232F108A001D244A /* VersionCheck.swift */,
 				B542A1F224BA90A900EE33C8 /* WriteToLog.swift */,
+				B5AC20361F37859F00C16EAA /* images */,
 				B5013BC81E95817C0099300A /* Assets.xcassets */,
 				B515969E1E95BB2200ED3CA3 /* Images.xcassets */,
 				B5013BCA1E95817C0099300A /* MainMenu.xib */,
@@ -117,15 +137,6 @@
 				B5A470AF2271CE7200C2A88D /* WebKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B5AC20331F37855800C16EAA /* about */ = {
-			isa = PBXGroup;
-			children = (
-				B5AC20341F37858800C16EAA /* index.html */,
-				B5AC20361F37859F00C16EAA /* images */,
-			);
-			name = about;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,8 +165,9 @@
 		B5013BBB1E95817C0099300A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = "Leslie Helou";
 				TargetAttributes = {
 					B5013BC21E95817C0099300A = {
@@ -183,6 +195,9 @@
 				Base,
 			);
 			mainGroup = B5013BBA1E95817C0099300A;
+			packageReferences = (
+				CEDE63452EEC96B4004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
+			);
 			productRefGroup = B5013BC41E95817C0099300A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -199,10 +214,8 @@
 			files = (
 				B515969F1E95BB2200ED3CA3 /* Images.xcassets in Resources */,
 				B5013BC91E95817C0099300A /* Assets.xcassets in Resources */,
-				B5AC20351F37858800C16EAA /* index.html in Resources */,
 				B5AC20321F36479A00C16EAA /* com.jamf.cloudmonitor.plist in Resources */,
 				B5AC20371F37859F00C16EAA /* images in Resources */,
-				B5FD9DAC2742AAC60044C321 /* Misc in Resources */,
 				B5013BCC1E95817C0099300A /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,13 +227,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */,
 				B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */,
+				CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */,
+				CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */,
+				CEB996A12EF9309A00EDDD1C /* MyObserverClass.swift in Sources */,
 				B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */,
+				CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */,
 				B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */,
+				CEB996992EF6D96A00EDDD1C /* LoggerExtension.swift in Sources */,
 				B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */,
+				CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */,
+				CEB9969F2EF8DB6B00EDDD1C /* About.swift in Sources */,
 				B5BD6AD723297762001D244A /* Credentials.swift in Sources */,
 				B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */,
-				B5BE0F9E2AFEF434000CBEBE /* TokenDelegate.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
 				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
 			);
@@ -274,8 +294,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = T82LNZG37Z;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -294,6 +316,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -334,8 +357,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = T82LNZG37Z;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -347,7 +372,9 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 			};
 			name = Release;
@@ -363,21 +390,23 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = T82LNZG37Z;
 				ENABLE_HARDENED_RUNTIME = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = Notes;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = JamfStatus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
 					"$(SDKROOT)/usr/lib/log",
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -396,21 +425,23 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = T82LNZG37Z;
 				ENABLE_HARDENED_RUNTIME = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = Notes;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = JamfStatus;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
 					"$(SDKROOT)/usr/lib/log",
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.4.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -440,6 +471,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CEDE63452EEC96B4004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CEDE63462EEC96B4004A58C9 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDE63452EEC96B4004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B5013BBB1E95817C0099300A /* Project object */;
 }

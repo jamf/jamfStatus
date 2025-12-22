@@ -6,23 +6,33 @@
 //  Copyright © 2020 Leslie Helou. All rights reserved.
 //
 
+import Cocoa
 import Foundation
 
 let httpSuccess     = 200...299
 let refreshInterval: UInt32 = 25*60 // 25 minutes
 var useApiClient    = 0
+let defaults        = UserDefaults.standard
 
 struct AppInfo {
-    static let dict    = Bundle.main.infoDictionary!
-    static let version = dict["CFBundleShortVersionString"] as! String
-    static let build   = dict["CFBundleVersion"] as! String
-    static let name    = dict["CFBundleExecutable"] as! String
+    static let dict        = Bundle.main.infoDictionary!
+    static let version     = dict["CFBundleShortVersionString"] as! String
+    static let build       = dict["CFBundleVersion"] as! String
+    static let name        = dict["CFBundleExecutable"] as! String
+    static let displayname = dict["CFBundleName"] as! String
 
     static let userAgentHeader = "\(String(describing: name.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!))/\(AppInfo.version)"
         
     static var bundlePath = Bundle.main.bundleURL
     static var iconFile   = bundlePath.appendingPathComponent("/Resources/AppIcon.icns")
 }
+
+// determine if we're using dark mode
+var isDarkMode: Bool {
+    let mode = defaults.string(forKey: "AppleInterfaceStyle")
+    return mode == "Dark"
+}
+var defaultTextColor = isDarkMode ? NSColor.white:NSColor.black
 
 struct JamfNotification {
     static let key = ["TOMCAT_SSL_CERT_EXPIRED":"CERT_EXPIRED",
@@ -80,7 +90,8 @@ struct JamfNotification {
                       "JAMF_CONNECT_UPDATE":"JAMF_CONNECT_UPDATE_AVAILABLE",
                       "JAMF_CONNECT_MAJOR_UPDATE":"JAMF_CONNECT_MAJOR_UPDATE_AVAILABLE",
                       "DEVICE_COMPLIANCE_CONNECTION_ERROR":"DEVICE_COMPLIANCE_CONNECTION_ERROR_DESCRIPTION",
-                      "CONDITIONAL_ACCESS_CONNECTION_ERROR":"CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION"]
+                      "CONDITIONAL_ACCESS_CONNECTION_ERROR":"CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION",
+                      "USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES":"USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES"]
     
     static let displayTitle = ["CERT_EXPIRED":"{{certType}} Certificate Expired",
                                "CLOUD_LDAP_CERT_EXPIRED_DESCRIPTION":"Cloud Identity Provider Certificate Expired",
@@ -130,7 +141,8 @@ struct JamfNotification {
                                "JAMF_CONNECT_UPDATE_AVAILABLE":"Jamf Connect {{latestVersion}} Now Available",
                                "JAMF_CONNECT_MAJOR_UPDATE_AVAILABLE":"Major Update for Jamf Connect Now Available (Jamf Connect {{latestVersion}})",
                                "DEVICE_COMPLIANCE_CONNECTION_ERROR_DESCRIPTION":"Device Compliance Connection Interrupted",
-                               "CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION":"Conditional Access Connection Interrupted"]
+                               "CONDITIONAL_ACCESS_CONNECTION_ERROR_DESCRIPTION":"Conditional Access Connection Interrupted",
+                               "USERS_HAVE_DUPLICATED_EMAIL_ADDRESSES":"Users Have Duplicated eMail Addresses"]
     
     static let humanReadable = ["TOMCAT_SSL_CERT_EXPIRED":"Tomcat SSL",
                       "TOMCAT_SSL_CERT_WILL_EXPIRE":"Tomcat SSL",
@@ -143,7 +155,6 @@ struct JamfProServer {
     static var accessToken  = ""
     static var authCreds    = ""
     static var authExpires  = 30.0
-    static var authType     = "Basic"
     static var base64Creds  = ""
     static var build        = ""
     static var currentCred  = ""
@@ -171,7 +182,7 @@ struct Preferences {
     static var hideUntilStatusChange: Bool? = true
     static var launchAgent: Bool?           = false
     static var pollingInterval: Int?        = 300
-    static var baseUrl: String?             = "https://status.jamf.com"
+    static var baseUrl: String              = "https://status.jamf.com"
     static var jamfServerUrl                = ""
     static var username                     = ""
     static var password                     = ""

@@ -6,11 +6,12 @@
 import AppKit
 import Cocoa
 import Foundation
+import OSLog
 
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
-    let defaults = UserDefaults.standard
     let prefs = Preferences.self
+    let myObserverClass = MyObserverClass()
     
     @IBOutlet weak var alert_window: NSPanel!
     @IBOutlet weak var cloudStatusMenu: NSMenu!
@@ -60,13 +61,34 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     
     override func awakeFromNib() {
         
+        myObserverClass.setupObserver()
+        
+        // OS version info
+        let os = ProcessInfo().operatingSystemVersion
+        
+        writeToLog.message(stringOfText: [""])
+        writeToLog.message(stringOfText: ["================================================================"])
+        writeToLog.message(stringOfText: ["    \(AppInfo.displayname) Version: \(AppInfo.version) build: \(AppInfo.build)"])
+        writeToLog.message(stringOfText: ["         macOS Version: \(os.majorVersion).\(os.minorVersion).\(os.patchVersion)"])
+        writeToLog.message(stringOfText: ["================================================================"])
+        writeToLog.message(stringOfText: ["additionsl logging available from Terminal using:"])
+        writeToLog.message(stringOfText: ["log stream --debug --predicate 'subsystem == \"\(Bundle.main.bundleIdentifier!)\"'"])
+        Task {@MainActor in
+            configureTelemetryDeck()
+            writeToLog.message(stringOfText: ["analytics enabled: \(!TelemetryDeckConfig.OptOut)"])
+        }
+        
         useApiClient = defaults.integer(forKey: "useApiClient")
        
         if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
-            defaults.set(300, forKey: "pollingInterval")
             prefs.pollingInterval = 300
         } else {
-            prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int
+            prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int ?? 300
+        }
+        
+        if prefs.pollingInterval ?? 0 < 60 {
+            prefs.pollingInterval = 300
+            defaults.set(prefs.pollingInterval, forKey: "pollingInterval")
         }
         
         if (defaults.object(forKey:"hideUntilStatusChange") as? Bool == nil){
@@ -94,7 +116,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             defaults.set("https://status.jamf.com", forKey: "baseUrl")
             prefs.baseUrl = "https://status.jamf.com"
         } else {
-            prefs.baseUrl = defaults.string(forKey:"baseUrl")
+            prefs.baseUrl = defaults.string(forKey:"baseUrl") ?? "https://status.jamf.com"
         }
         
         // set menu icon style
@@ -113,10 +135,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 JamfProServer.password = ""
             }
         }
-//
-//        defaults.synchronize()
-//        
-//        defaults.synchronize()
+        
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
@@ -125,21 +144,18 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         cloudStatusItem.menu = cloudStatusMenu
         
         JamfProServer.base64Creds = ("\(JamfProServer.username):\(JamfProServer.password)".data(using: .utf8)?.base64EncodedString())!
-//        JamfPro().getVersion(jpURL: Preferences.jamfServerUrl, base64Creds: JamfProServer.base64Creds) { [self]
-//            (result: String) in
-            // move UapiCall fn to JamfPro
-            // don't check notifications if creds/server are not valid
-            monitor()
-//        }
+        Task {
+            await monitor()
+        }
         
     }
     
-    func monitor() {
-        DispatchQueue.global(qos: .background).async { [self] in
+    func monitor() async {
+//        DispatchQueue.global(qos: .background).async { [self] in
             while true {
                 
                 // check site server - start
-                WriteToLog().message(stringOfText: ["checking server: \(Preferences.jamfServerUrl)"])
+                Logger.check.info("checking server: \(JamfProServer.url, privacy: .public)")
                 UapiCall().get(endpoint: "v1/notifications") { [self]
                     (notificationAlerts: [[String: Any]]) in
                     
@@ -154,9 +170,13 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                         cloudStatusMenu.setSubmenu(subMenu, for: notifications_MenuItem)
                         for alert in notificationAlerts {
 //                            print("notification alert: \(alert)")
-                            let alertTitle = alert["type"]! as! String
+                            let alertTitle = alert["type"] as? String ?? "Unknown"
                             displayTitleKey = JamfNotification.key[alertTitle] ?? "Unknown"
                             displayTitle = JamfNotification.displayTitle[displayTitleKey] ?? "Unknown"
+                            if displayTitle == "Unknown" {
+                                writeToLog.message(stringOfText: ["unknown alert: \(alert.description.replacingOccurrences(of: "\n", with: ""))"])
+                                displayTitle = alertTitle
+                            }
                             switch displayTitleKey {
                             case "CERT_WILL_EXPIRE", "CERT_EXPIRED":
                                 displayTitle = displayTitle.replacingOccurrences(of: "{{certType}}", with: "\(String(describing: JamfNotification.humanReadable[alertTitle]!))")
@@ -177,25 +197,24 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 // check site server - end
 
                 //                print("checking status")
-                prefs.pollingInterval = defaults.integer(forKey: "pollingInterval")
-                prefs.hideMenubarIcon = defaults.bool(forKey: "hideMenubarIcon")
-                getStatus2() {
-                    (result: String) in
+                prefs.pollingInterval = (defaults.integer(forKey: "pollingInterval") < 60 ? 300 : defaults.integer(forKey: "pollingInterval"))
+                prefs.hideMenubarIcon = false // defaults.bool(forKey: "hideMenubarIcon")
+                
+                let result = (try? await getStatus2()) ?? "cloudStatus-green"
+                try? await healthStatus()
+                
+                DispatchQueue.main.async { [self] in
+                    iconName = result
+                    //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
+                    //                        print("iconName: \(result)")
+                    //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
+                    prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
                     
-                    DispatchQueue.main.async { [self] in
-                        iconName = result
-                        //                        AppDlg.hideIcon ? (icon = NSImage.init(named: NSImage.Name(rawValue: "minimizedIcon"))):(icon = NSImage.init(named: NSImage.Name(rawValue: iconName)))
-                        //                        print("iconName: \(result)")
-                        //                        print("hidemenubar is \(prefs.hideMenubarIcon!)")
-                        prefs.hideMenubarIcon! ? (icon = NSImage.init(named: "minimizedIcon")):(icon = NSImage.init(named: iconName))
-                        
-//                        cloudStatusItem.image = icon
-                        cloudStatusItem.button?.image = icon
-                    }
+                    //                        cloudStatusItem.image = icon
+                    cloudStatusItem.button?.image = icon
                 }
                 sleep(UInt32(Int(prefs.pollingInterval!)))
             }
-        }
     }
     
     @IBAction func alertWindowPref_Action(_ sender: NSButton) {
@@ -208,8 +227,10 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     func displayAlert(currentState: String) {
-        var alertHeight = 0
+//        var alertHeight = 0
+        
         DispatchQueue.main.async {
+            /*
             // adjust font size so that alert message fits in text box.
             alertHeight = 99
             //            print("count: \(alert_message.count)")
@@ -225,14 +246,17 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     alertHeight += 18*(lineLength+1)
                 }
             }
+            */
             //            self.serviceCount > 2 ? (alertHeight = 99 + 18*(self.serviceCount-2)):(alertHeight = 99)
-            self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
+           
+//            self.alert_window.setContentSize(NSSize(width: 398, height:alertHeight))
+            
             if self.alert_message.count > 55 {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 12.0)
             } else {
                 self.alert_TextView.font = NSFont(name: "Arial", size: 18.0)
             }
-            if (self.defaults.bool(forKey:"hideUntilStatusChange")) {
+            if (defaults.bool(forKey:"hideUntilStatusChange")) {
                 self.alertWindowPref_Button.state = NSControl.StateValue.on
             } else {
                 self.alertWindowPref_Button.state = NSControl.StateValue.off
@@ -242,7 +266,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     self.refreshAlert()
                 }
             } else {
-                if !(self.defaults.bool(forKey:"hideUntilStatusChange")) && self.prevState != "cloudStatus-green" {
+                if !(defaults.bool(forKey:"hideUntilStatusChange")) && self.prevState != "cloudStatus-green" {
                     DispatchQueue.main.async {
                         self.refreshAlert()
                     }
@@ -271,68 +295,74 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         self.alert_window.setIsVisible(true)
     }
     
-    func getStatus2(completion: @escaping (_ result: String) -> Void) {
-        var localResult = ""
+//    func getStatus2(completion: @escaping (_ result: String) -> Void) {
+//        Task {
+    @MainActor
+    func getStatus2() async throws -> String {
         
-        var operationalArray = [String]()
-        var warningArray     = [String]()
-        var criticalArray    = [String]()
-        
-        // clear current arrays
-        operationalArray.removeAll()
-        warningArray.removeAll()
-        criticalArray.removeAll()
-        affectedServices = ""
-        URLCache.shared.removeAllCachedResponses()
-        
-        WriteToLog().message(stringOfText: ["checking Jamf Cloud"])
-        //        JSON parsing - start
-        let apiStatusUrl = "\(String(describing: prefs.baseUrl!))/api/v2/components.json"
-//        url to test app - need to set up your own
-//        need to create the folder /jamfStatus and populate the page: components.json
-//        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
-        
-        URLCache.shared.removeAllCachedResponses()
-        let encodedURL = NSURL(string: apiStatusUrl)
-        let request = NSMutableURLRequest(url: encodedURL! as URL)
-        request.httpMethod = "GET"
-        let configuration = URLSessionConfiguration.default
-        
-        configuration.httpAdditionalHeaders = ["Accept" : "application/json"]
-        let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
-        let task = session.dataTask(with: request as URLRequest, completionHandler: {
-            (data, response, error) -> Void in
-            if (response as? HTTPURLResponse) != nil {
-                do {
-                    if let data = data,
-                        let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
-                        let cloudServices = json["components"] as? [[String: Any]] {
+        if TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+            var localResult = ""
+            
+            var operationalArray = [String]()
+            var warningArray     = [String]()
+            var criticalArray    = [String]()
+            
+            // clear current arrays
+            operationalArray.removeAll()
+            warningArray.removeAll()
+            criticalArray.removeAll()
+            affectedServices = ""
+            URLCache.shared.removeAllCachedResponses()
+            
+            Logger.check.info("checking Jamf Cloud")
+            //        JSON parsing - start
+            let apiStatusUrl = "\(prefs.baseUrl)/api/v2/components.json"
+    //        url to test app - need to set up your own
+    //        need to create the folder /jamfStatus and populate the page: components.json
+    //        let apiStatusUrl = "http://your.jamfpro.server/jamfStatus/components.json"
+            
+            URLCache.shared.removeAllCachedResponses()
+            let encodedURL = URL(string: apiStatusUrl)!
+            var request = URLRequest(url: encodedURL)
+            request.httpMethod = "GET"
+            let configuration = URLSessionConfiguration.default
+            
+            configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
+            let session = Foundation.URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)
+            let (data, response) = try await session.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200..<300).contains(httpResponse.statusCode) else {
+                throw HealthStatusError.invalidResponse
+            }
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
+                    let cloudServices = json["components"] as? [[String: Any]] {
 //                        print("cloudServices: \(cloudServices)")
-                        for cloudService in cloudServices {
-                            if let name = cloudService["name"] as? String,
-                                let status = cloudService["status"] as? String {
-                                switch status {
-                                case "degraded_performance", "partial_outage":
-                                    if status == "partial_outage" {
-                                        self.displayedStatus = "Partial Outage"
-                                    } else {
-                                        self.displayedStatus = "Degraded Performance"
-                                    }
-                                    warningArray.append(name + ": " + self.displayedStatus)
-                                case "major_outage":
-                                    self.displayedStatus = "Major Outage"
-                                    criticalArray.append(name + ": " + self.displayedStatus)
-                                default:
-                                    self.displayedStatus = "Operational"
-                                    operationalArray.append(name + ": " + self.displayedStatus)
+                    for cloudService in cloudServices {
+                        if let name = cloudService["name"] as? String,
+                            let status = cloudService["status"] as? String {
+                            switch status {
+                            case "degraded_performance", "partial_outage":
+                                if status == "partial_outage" {
+                                    self.displayedStatus = "Partial Outage"
+                                } else {
+                                    self.displayedStatus = "Degraded Performance"
                                 }
+                                warningArray.append(name + ": " + self.displayedStatus)
+                            case "major_outage":
+                                self.displayedStatus = "Major Outage"
+                                criticalArray.append(name + ": " + self.displayedStatus)
+                            default:
+                                self.displayedStatus = "Operational"
+                                operationalArray.append(name + ": " + self.displayedStatus)
                             }
                         }
                     }
-                } catch {
-                    print("Error deserializing JSON: \(error)")
-                }   // do - end
-            }   // if let httpResponse - end
+                }
+            } catch {
+                print("Error deserializing JSON: \(error)")
+            }   // do - end
+
             if criticalArray.count > 0 {
                 self.alert_header = "Jamf Cloud Critical Issue Alert"
                 localResult = "cloudStatus-red"
@@ -380,25 +410,49 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                     localResult = self.iconName
                 }
             }
-            
-            completion(localResult)
-        })   // let task - end
-        task.resume()
-//        print("")
-        //        JSON parsing - end
-    }
-    
-    func readSettings() -> NSMutableDictionary? {
-        if fileManager.fileExists(atPath: SettingsPlistPath) {
-            guard let dict = NSMutableDictionary(contentsOfFile: SettingsPlistPath) else { return .none }
-            return dict
-        } else {
-            return .none
+            return(localResult)
         }
+        return("cloudStatus-green")
     }
     
+    @MainActor
+    private func healthStatus() async throws {
+
+        guard TokenManager.shared.tokenInfo?.authMessage == "success" else {
+            Logger.check.info("health status was not updated")
+            throw HealthStatusError.authenticationFailed
+        }
+
+        Logger.check.info("checking server health status")
+
+        let apiStatusURL = URL(string: "\(JamfProServer.url)/api/v1/health-status")!
+
+        var request = URLRequest(url: apiStatusURL)
+        request.httpMethod = "GET"
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        request.setValue("Bearer \(JamfProServer.accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(AppInfo.userAgentHeader, forHTTPHeaderField: "User-Agent")
+
+        URLCache.shared.removeAllCachedResponses()
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200..<300).contains(httpResponse.statusCode) else {
+            throw HealthStatusError.invalidResponse
+        }
+
+        let decodedHealthStatus = try JSONDecoder().decode(HealthStatus.self, from: data)
+
+        HealthStatusStore.shared.update(from: decodedHealthStatus)
+
+        Logger.check.info("health status updated")
+    }
+
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
     
 }
+

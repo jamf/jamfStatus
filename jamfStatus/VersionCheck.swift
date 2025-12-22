@@ -26,7 +26,7 @@ class VersionCheck: NSObject, URLSessionDelegate {
         var request = URLRequest(url: versionUrl!)
         request.httpMethod = "GET"
         
-        configuration.httpAdditionalHeaders = ["Accept" : "application/vnd.github.jean-grey-preview+json"]
+        configuration.httpAdditionalHeaders = ["Accept" : "application/vnd.github.jean-grey-preview+json", "User-Agent" : AppInfo.userAgentHeader]
         let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
         let task = session.dataTask(with: request as URLRequest, completionHandler: {
             (data, response, error) -> Void in

@@ -14,25 +14,24 @@ import Foundation
 
 class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSessionTaskDelegate {
     
-    let defaults = UserDefaults.standard
     var theUapiQ = OperationQueue() // create operation queue for API calls
     
     func get(endpoint: String, completion: @escaping (_ notificationAlerts: [Dictionary<String,Any>]) -> Void) {
-        
-        let jps = defaults.string(forKey:"jamfServerUrl") ?? ""
-        
-        TokenDelegate().getToken(serverUrl: jps, base64creds: JamfProServer.base64Creds) {
-            (authResult: (Int,String)) in
-                        
-            if authResult.1 == "success" {
-                    
-                URLCache.shared.removeAllCachedResponses()
                 
-                var workingUrlString = "\(jps)/api/\(endpoint)"
-                workingUrlString     = workingUrlString.replacingOccurrences(of: "//api", with: "/api")
+        Task {
+            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+                await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
+            }
+            
+            if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
                 
-                self.theUapiQ.maxConcurrentOperationCount = 1
-                
+            URLCache.shared.removeAllCachedResponses()
+            
+            var workingUrlString = "\(JamfProServer.url)/api/\(endpoint)"
+            workingUrlString     = workingUrlString.replacingOccurrences(of: "//api", with: "/api")
+            
+            self.theUapiQ.maxConcurrentOperationCount = 1
+            
                 self.theUapiQ.addOperation {
                     URLCache.shared.removeAllCachedResponses()
                     
@@ -42,8 +41,8 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                     let configuration  = URLSessionConfiguration.default
                     request.httpMethod = "GET"
                     
-                    configuration.httpAdditionalHeaders = ["Authorization" : "\(JamfProServer.authType) \(JamfProServer.accessToken)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
-
+                    configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(JamfProServer.accessToken)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
+                    
                     let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
                     
                     let task = session.dataTask(with: request as URLRequest, completionHandler: {
@@ -69,7 +68,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                         }
                     })
                     task.resume()
-                }   // theUapiQ.addOperation - end
+                }
             }
         }
     }   // func get - end
@@ -79,3 +78,4 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     }
     
 }
+
