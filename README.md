@@ -127,7 +127,7 @@ Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 
 ## Change log
 
-2025-12-21: v2.5.0 - Add basic hardware, OS, and Object Info app useage collection. Data is sent anonymously to [TelemetryDeck](https:telemetrydeck.com) to aid in the development of the app. View 'About...' to opt out of sending the data. Add ability to view health-status for Jamf Cloud hosted instances. Fix an issue with token renewal.
+2025-12-21: v2.5.0 - Add basic hardware, OS, and jamfStatus app useage collection. Data is sent anonymously to [TelemetryDeck](https:telemetrydeck.com) to aid in the development of the app. View 'About...' to opt out of sending the data. Add ability to view health-status for Jamf Cloud hosted instances. Fix an issue with token renewal.
 
 2023-12-06: v2.4.1 - Minor updates to the alerts display.
 
