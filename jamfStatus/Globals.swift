@@ -6,6 +6,7 @@
 //  Copyright © 2020 Leslie Helou. All rights reserved.
 //
 
+import Cocoa
 import Foundation
 
 let httpSuccess     = 200...299
@@ -25,6 +26,13 @@ struct AppInfo {
     static var bundlePath = Bundle.main.bundleURL
     static var iconFile   = bundlePath.appendingPathComponent("/Resources/AppIcon.icns")
 }
+
+// determine if we're using dark mode
+var isDarkMode: Bool {
+    let mode = defaults.string(forKey: "AppleInterfaceStyle")
+    return mode == "Dark"
+}
+var defaultTextColor = isDarkMode ? NSColor.white:NSColor.black
 
 struct JamfNotification {
     static let key = ["TOMCAT_SSL_CERT_EXPIRED":"CERT_EXPIRED",

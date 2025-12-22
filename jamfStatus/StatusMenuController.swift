@@ -11,6 +11,7 @@ import OSLog
 class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
         
     let prefs = Preferences.self
+    let myObserverClass = MyObserverClass()
     
     @IBOutlet weak var alert_window: NSPanel!
     @IBOutlet weak var cloudStatusMenu: NSMenu!
@@ -59,6 +60,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
     }
     
     override func awakeFromNib() {
+        
+        myObserverClass.setupObserver()
         
         // OS version info
         let os = ProcessInfo().operatingSystemVersion

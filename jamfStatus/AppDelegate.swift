@@ -14,15 +14,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Window: NSWindow!
-    @IBOutlet weak var aboutVersion_TextField: NSTextField!
-    @IBOutlet weak var aboutHomeUrl_Button: NSButton!
-    
     
     @IBOutlet weak var pollingInterval_TextField: NSTextField!
     @IBOutlet weak var launchAgent_Button: NSButton!
     @IBOutlet weak var iconStyle_Button: NSPopUpButton!
     
-
     // site specific settings
     @IBOutlet weak var jamfServerUrl_TextField: NSTextField!
     @IBOutlet weak var username_Label: NSTextField!
@@ -41,24 +37,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     let statusImage:[NSImage] = [NSImage(named: "red-dot")!,
                                  NSImage(named: "green-dot")!]
         
+    // About
     @IBOutlet weak var about_NSWindow: NSWindow!
-    @IBOutlet weak var about_WebView: WKWebView!
+    @IBOutlet weak var about_image: NSImageView!
+    @IBOutlet weak var appName_textfield: NSTextField!
+    @IBOutlet weak var version_textfield: NSTextField!
+    @IBOutlet var license_textfield: NSTextView!
+    
+    @IBOutlet weak var optOut_button: NSButton!
+    @IBAction func optOut_action(_ sender: NSButton) {
+        UserDefaults.standard.set(sender.state == .on, forKey: "optOut")
+        TelemetryDeckConfig.OptOut = (sender.state == .on)
+    }
+    
+    
     
     @IBOutlet weak var healthStatus_Window: NSWindow!
     
     let prefs = Preferences.self
-//    let defaults = UserDefaults()
     
     let fm = FileManager()
     var pollingInterval: Int = 300
     var hideIcon: Bool = false
     let launchAgentPath = NSHomeDirectory()+"/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
-    
-    @objc func notificationsAction(_ sender: NSMenuItem) {
-//        print("\(sender.identifier!.rawValue)")
-//        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
-    }
-    
     
     @IBAction func iconStyle_Action(_ sender: Any) {
         if iconStyle_Button.indexOfSelectedItem == 0 {
@@ -69,32 +70,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         defaults.set(prefs.menuIconStyle, forKey: "menuIconStyle")
     }
     
-    
     @IBAction func showAbout_MenuItem(_ sender: NSMenuItem) {
-        
-        let appInfo = Bundle.main.infoDictionary!
-        let version = appInfo["CFBundleShortVersionString"] as! String
-        
-        let filePath = Bundle.main.path(forResource: "index", ofType: "html")
-        let folderPath = Bundle.main.resourcePath
-//        
-        let fileUrl = NSURL(fileURLWithPath: filePath!)
-        let baseUrl = NSURL(fileURLWithPath: folderPath!, isDirectory: true)
-        
-        about_WebView.loadFileURL(fileUrl as URL, allowingReadAccessTo: baseUrl as URL)
-
-        aboutVersion_TextField.stringValue = "Version: \(version)"
-        
-        let stringAttributes: [NSAttributedString.Key: Any] = [.underlineStyle: NSUnderlineStyle.single.rawValue, .foregroundColor: NSColor.systemBlue]
-        let attributedTitle = NSAttributedString(string: "Home", attributes: stringAttributes)
-        aboutHomeUrl_Button.attributedTitle = attributedTitle
-        aboutHomeUrl_Button.toolTip = "https://github.com/jamf/jamfStatus"
+        about_image.image = NSImage(named: "AppIcon")
+        appName_textfield.stringValue = "\(AppInfo.name)"
+        version_textfield.stringValue = "Version \(AppInfo.version) (\(AppInfo.build))"
+        license_textfield.textStorage?.setAttributedString(formattedText())
         
         showOnActiveScreen(windowName: about_NSWindow)
-        
-    }
-    @IBAction func aboutHomeUrl_Button(_ sender: NSButton) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/jamf/jamfStatus")!)
     }
     
     @IBAction func checkForUpdates(_ sender: AnyObject) {
@@ -403,13 +385,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
             default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
             
-            
             showOnActiveScreen(windowName: healthStatus_Window)
         }
     }
     
     func showOnActiveScreen(windowName: NSWindow) {
-        
+        windowName.contentView?.layer?.backgroundColor = isDarkMode ? CGColor.init(gray: 0.2, alpha: 1.0):CGColor.init(gray: 0.2, alpha: 0.2)
         var xPos = 0.0
         var yPos = 0.0
            
@@ -433,6 +414,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+    }
+    
+    func setTheme(darkMode: Bool) {
+        defaultTextColor = darkMode ? NSColor.white:NSColor.black
+        // delegate to update view in real time?
+    }
+    
+    @objc func notificationsAction(_ sender: NSMenuItem) {
+//        print("\(sender.identifier!.rawValue)")
+//        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
     }
     
 }
