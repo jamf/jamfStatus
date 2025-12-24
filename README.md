@@ -4,7 +4,7 @@
  
 Download: [jamfStatus](https://github.com/jamf/jamfStatus/releases/latest/download/jamfStatus.zip)
 
-The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the About window.
+The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the 'About...' window.
 
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
