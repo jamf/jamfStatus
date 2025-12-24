@@ -448,6 +448,31 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         HealthStatusStore.shared.update(from: decodedHealthStatus)
 
         Logger.check.info("health status updated")
+        
+        // log rates below 1.0
+        if let _ = HealthStatusStore.shared.healthStatus {
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.api, area: "API")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.ui, area: "UI")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.enrollment, area: "Enrollment")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.device, area: "Device")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.healthStatusDefault, area: "Default")
+        }
+    }
+    
+    private func logHealthStatus(_ values: API, area: String) async {
+        let apiMirror = Mirror(reflecting: values as API)
+        var percents: [String] = []
+        for timeInterval in apiMirror.children {
+            if let label = timeInterval.label {
+                if let theRate = timeInterval.value as? Double, theRate < 1.0  {
+                    percents.append("    \(label): \(timeInterval.value)")
+                }
+            }
+        }
+        if !percents.isEmpty {
+            writeToLog.message(stringOfText: ["\(area) rate warning:"])
+            writeToLog.message(stringOfText: percents)
+        }
     }
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
