@@ -11,6 +11,7 @@
 
 
 import Foundation
+import OSLog
 
 class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSessionTaskDelegate {
     
@@ -49,17 +50,23 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                         (data, response, error) -> Void in
                         if let httpResponse = response as? HTTPURLResponse {
                             if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 {
-                                let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                                if let notificationsDictArray = json! as? [[String: Any]] {
-                                    completion(notificationsDictArray)
-                                    return
-                                } else {    // if let endpointJSON error
-                                    print("[UapiCall] get JSON error")
-                                    completion([])
-                                    return
+                                do {
+                                    let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+                                    if let notificationsDictArray = json as? [[String: Any]] {
+                                        completion(notificationsDictArray)
+                                        return
+                                    } else {
+                                        Logger.jpapi.info("An error creating notifications array")
+                                        let dataString = String(data: data!, encoding: .utf8) ?? "No data"
+                                        Logger.jpapi.info("returned data: \(dataString, privacy: .public)")
+                                        completion([])
+                                        return
+                                    }
+                                } catch {
+                                    Logger.jpapi.info("An error parsing notification data occurred: \(error.localizedDescription, privacy: .public)")
                                 }
                             } else {    // if httpResponse.statusCode <200 or >299
-                                print("[UapiCall] \(endpoint) - get response error: \(httpResponse.statusCode)")
+                                Logger.jpapi.debug("\(endpoint, privacy: .public) - get response error: \(httpResponse.statusCode, privacy: .public)")
                                 if httpResponse.statusCode == 401 {
                                     JamfProServer.accessToken = ""
                                     JamfProServer.validToken = false
@@ -68,7 +75,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                                 return
                             }
                         } else {
-                            print("\n HTTP error \n")
+                            Logger.jpapi.info("An error occurred: \(error!.localizedDescription, privacy: .public)")
                         }
                     })
                     task.resume()

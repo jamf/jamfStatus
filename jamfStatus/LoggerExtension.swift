@@ -10,4 +10,5 @@ extension Logger {
     
     static let check = Logger(subsystem: subsystem, category: "check")
     static let token = Logger(subsystem: subsystem, category: "token")
+    static let jpapi = Logger(subsystem: subsystem, category: "jpapi")
 }
