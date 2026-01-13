@@ -256,7 +256,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         if !( server.isEmpty || username.isEmpty || password.isEmpty ) {
                         
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
-            token.isValid = false
+            JamfProServer.validToken = false
+            
             // update the connection indicator for the site server
             Task {
                 if await TokenManager.shared.tokenInfo?.renewToken ?? true {

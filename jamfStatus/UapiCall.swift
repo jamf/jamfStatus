@@ -19,7 +19,7 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
     func get(endpoint: String, completion: @escaping (_ notificationAlerts: [Dictionary<String,Any>]) -> Void) {
                 
         Task {
-            if await TokenManager.shared.tokenInfo?.renewToken ?? true {
+            if await TokenManager.shared.tokenInfo?.renewToken ?? true || !JamfProServer.validToken {
                 await TokenManager.shared.setToken(serverUrl: JamfProServer.url, username: JamfProServer.username.lowercased(), password: JamfProServer.password)
             }
             
@@ -60,6 +60,10 @@ class UapiCall: NSObject, URLSessionDelegate, URLSessionDataDelegate, URLSession
                                 }
                             } else {    // if httpResponse.statusCode <200 or >299
                                 print("[UapiCall] \(endpoint) - get response error: \(httpResponse.statusCode)")
+                                if httpResponse.statusCode == 401 {
+                                    JamfProServer.accessToken = ""
+                                    JamfProServer.validToken = false
+                                }
                                 completion([])
                                 return
                             }

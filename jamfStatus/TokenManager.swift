@@ -104,6 +104,7 @@ actor TokenManager {
             }
 
             JamfProServer.accessToken = newTokenInfo.token
+            JamfProServer.validToken = true
             Logger.check.debug("granted new token, expires \(newTokenInfo.expiresAt, privacy: .public)")
             
             await MainActor.run {

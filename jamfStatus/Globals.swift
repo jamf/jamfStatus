@@ -189,30 +189,14 @@ struct Preferences {
     static var menuIconStyle                = "color"
 }
 
-
-struct token {
-    static var refreshInterval:UInt32 = 10*60  // 10 minutes
-    static var sourceServer  = ""
-    static var sourceExpires = ""
-    static var startTime     = Date()
-    static var isValid       = false
-}
-
 public func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
     let endTime = Date()
-//                    let components = Calendar.current.dateComponents([.second, .nanosecond], from: startTime, to: endTime)
-//                    let timeDifference = Double(components.second!) + Double(components.nanosecond!)/1000000000
-//                    WriteToLog().message(stringOfText: "[ViewController.download] time difference: \(timeDifference) seconds")
     let components = Calendar.current.dateComponents([
         .hour, .minute, .second, .nanosecond], from: startTime, to: endTime)
     var diffInSeconds = Double(components.hour!)*3600 + Double(components.minute!)*60 + Double(components.second!) + Double(components.nanosecond!)/1000000000
     diffInSeconds = Double(round(diffInSeconds * 1000) / 1000)
-//    let timeDifference = Int(components.second!) //+ Double(components.nanosecond!)/1000000000
-//    let (h,r) = timeDifference.quotientAndRemainder(dividingBy: 3600)
-//    let (m,s) = r.quotientAndRemainder(dividingBy: 60)
-//    WriteToLog().message(stringOfText: "[ViewController.download] download time: \(h):\(m):\(s) (h:m:s)")
+
     return (Int(components.hour!), Int(components.minute!), Int(components.second!), diffInSeconds)
-//    return (h, m, s)
 }
 
 extension String {
