@@ -122,12 +122,12 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         // set menu icon style
         prefs.menuIconStyle = defaults.string(forKey: "menuIconStyle") ?? prefs.menuIconStyle
         
-        if (defaults.object(forKey:"jamfServerUrl") as? String == nil) {
+        if (defaults.string(forKey:"jamfServerUrl") == nil) || (defaults.string(forKey:"jamfServerUrl") == "") {
             defaults.set("", forKey: "jamfServerUrl")
             JamfProServer.url = ""
         } else {
-            JamfProServer.url = defaults.string(forKey:"jamfServerUrl")!
-            let credentialsArray = Credentials().itemLookup(service: JamfProServer.url.fqdnFromUrl)
+            JamfProServer.url = (defaults.string(forKey:"jamfServerUrl") ?? "").baseUrl
+            let credentialsArray = Credentials().itemLookup(service: JamfProServer.url.fqdn)
             if credentialsArray.count == 2 {
                 JamfProServer.username = credentialsArray[0]
                 JamfProServer.password = credentialsArray[1]
@@ -135,7 +135,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 JamfProServer.password = ""
             }
         }
-        
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?

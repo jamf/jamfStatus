@@ -216,22 +216,33 @@ public func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
 }
 
 extension String {
-    var fqdnFromUrl: String {
+    var baseUrl: String {
         get {
-            var fqdn = ""
-            let nameArray = self.components(separatedBy: "/")
-            if nameArray.count > 2 {
-                fqdn = nameArray[2]
-            } else {
-                fqdn =  self
+            guard let url = URL(string: self),
+                  let scheme = url.scheme,
+                  let host = url.host else {
+                return ""
             }
-            if fqdn.contains(":") {
-                let fqdnArray = fqdn.components(separatedBy: ":")
-                fqdn = fqdnArray[0]
+            
+            // Construct base URL with scheme and host
+            var baseURL = "\(scheme)://\(host)"
+            
+            // Include port if it exists and is not default
+            if let port = url.port {
+                baseURL += ":\(port)"
             }
-            let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
-            fqdn = urlRegex.stringByReplacingMatches(in: fqdn, options: [], range: NSRange(0..<fqdn.utf16.count), withTemplate: "")
-            return fqdn
+                
+            return baseURL
+        }
+    }
+    var fqdn: String {
+        get {
+            guard let url = URL(string: self),
+                  let host = url.host else {
+                return ""
+            }
+                
+            return host
         }
     }
 }

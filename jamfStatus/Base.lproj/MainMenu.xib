@@ -491,7 +491,7 @@
                             <action selector="credentials_Action:" target="Voe-Tx-rLC" id="fwf-30-4UF"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zDZ-oy-eFu">
+                    <textField identifier="account" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zDZ-oy-eFu">
                         <rect key="frame" x="82" y="65" width="218" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="218" id="aLp-mt-Acs"/>
@@ -506,7 +506,7 @@
                             <action selector="credentials_Action:" target="Voe-Tx-rLC" id="sKb-WH-I93"/>
                         </connections>
                     </textField>
-                    <secureTextField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iJJ-5w-6g2">
+                    <secureTextField identifier="credential" focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iJJ-5w-6g2">
                         <rect key="frame" x="82" y="39" width="218" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="jWI-Wc-qV6"/>
@@ -615,7 +615,7 @@
                     <constraint firstAttribute="trailing" secondItem="SLI-gn-Ejs" secondAttribute="trailing" constant="32" id="zgB-xV-qpa"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-841" y="-46.5"/>
+            <point key="canvasLocation" x="-572" y="-19"/>
         </window>
         <window title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="LmC-DW-plF" userLabel="About Window">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
@@ -717,7 +717,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1725" y="142" width="566" height="668"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="949"/>
+            <rect key="screenRect" x="1512" y="-83" width="2048" height="1122"/>
             <view key="contentView" id="6iB-xm-KCd">
                 <rect key="frame" x="0.0" y="0.0" width="566" height="668"/>
                 <autoresizingMask key="autoresizingMask"/>

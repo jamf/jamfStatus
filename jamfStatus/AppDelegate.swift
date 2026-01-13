@@ -170,17 +170,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         }
     }
     
-    @IBAction func credentials_Action(_ sender: Any) {
-        JamfProServer.url = jamfServerUrl_TextField.stringValue
+    @IBAction func credentials_Action(_ sender: NSTextField) {
         
-        let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
-        JamfProServer.url = urlRegex.stringByReplacingMatches(in: JamfProServer.url, options: [], range: NSRange(0..<JamfProServer.url.utf16.count), withTemplate: "")
-        
-        defaults.set(JamfProServer.url, forKey: "jamfServerUrl")
-//        defaults.synchronize()
-        
-        JamfProServer.username = username_TextField.stringValue
-        JamfProServer.password = password_TextField.stringValue
+        switch sender.identifier?.rawValue {
+        case "jamfProURL":
+            JamfProServer.url = jamfServerUrl_TextField.stringValue
+            if jamfServerUrl_TextField.stringValue.baseUrl.isEmpty {
+                DispatchQueue.main.async { [self] in
+                    jamfServerUrl_TextField.becomeFirstResponder()
+                    alert_dialog(header: "", message: "Invlid URL\nMust be in the format: https://server.example.com", updateAvail: false)
+                    if siteConnectionStatus_ImageView.image != statusImage[0] {
+                        siteConnectionStatus_ImageView.image = statusImage[0]
+                    }
+                    return
+                }
+            } else {
+                JamfProServer.url = jamfServerUrl_TextField.stringValue.baseUrl
+                jamfServerUrl_TextField.stringValue = JamfProServer.url
+            }
+        case "account":
+            JamfProServer.username = username_TextField.stringValue
+        case "credential":
+            JamfProServer.password = password_TextField.stringValue
+        default:
+            break
+        }
         
         saveCreds(server: JamfProServer.url, username: JamfProServer.username, password: JamfProServer.password)
     }
@@ -188,7 +202,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     // actions for preferences window - start
     
     func fetchPassword() {
-        let credentialsArray = Credentials().itemLookup(service: jamfServerUrl_TextField.stringValue.fqdnFromUrl)
+        let credentialsArray = Credentials().itemLookup(service: jamfServerUrl_TextField.stringValue.fqdn)
         if credentialsArray.count == 2 {
             username_TextField.stringValue = credentialsArray[0]
             password_TextField.stringValue = credentialsArray[1]
@@ -239,11 +253,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }   // func alert_dialog - end
 
     func saveCreds(server: String, username: String, password: String) {
-        if ( server != "" && username != "" && password != "" ) {
-            
-            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-            let serverFqdn = urlRegex.stringByReplacingMatches(in: server, options: [], range: NSRange(0..<server.utf16.count), withTemplate: "")
-            
+        if !( server.isEmpty || username.isEmpty || password.isEmpty ) {
+                        
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
             token.isValid = false
             // update the connection indicator for the site server
@@ -253,10 +264,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                 }
                 
                 if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+                    defaults.set(JamfProServer.url, forKey: "jamfServerUrl")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
-                    Credentials().save(service: server.fqdnFromUrl, account: username, data: password)
+                    Credentials().save(service: server.fqdn, account: username, data: password)
                 } else {
                     print("authentication failed")
                     DispatchQueue.main.async {
@@ -296,11 +308,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             iconStyle_Button.selectItem(at: 1)
         }
         
-        let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
-        if serverUrl != "" {
+        var serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
+        serverUrl = serverUrl.baseUrl
+        if !serverUrl.isEmpty {
             jamfServerUrl_TextField.stringValue = serverUrl
 
-            let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdnFromUrl)
+            let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdn)
             if credentialsArray.count == 2 {
                 JamfProServer.username = credentialsArray[0]
                 JamfProServer.password = credentialsArray[1]
@@ -427,4 +440,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }
     
 }
-
