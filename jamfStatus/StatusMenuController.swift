@@ -422,21 +422,18 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             throw HealthStatusError.authenticationFailed
         }
         
-//        if appDelegate.cloudStatusWindow.isVisible {
-//            print("\n--- health status window is already visible, let's just update the content instead of refreshing ---\n")
+        refreshHealthStatus = healthStatusIsVisible()
+//        let options = CGWindowListOption(arrayLiteral: CGWindowListOption.excludeDesktopElements, CGWindowListOption.optionOnScreenOnly)
+//        let windowListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
+//        let infoList = windowListInfo as NSArray? as? [[String: AnyObject]]
+//        for item in infoList! {
+//            if let owner = item["kCGWindowOwnerName"], let name = item["kCGWindowName"] {
+//                if "\(owner)" == "jamfStatus" && "\(name)" == "Health Status" {
+//                    refreshHealthStatus = true
+//                    break
+//                }
+//            }
 //        }
-        refreshHealthStatus = false
-        let options = CGWindowListOption(arrayLiteral: CGWindowListOption.excludeDesktopElements, CGWindowListOption.optionOnScreenOnly)
-        let windowListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
-        let infoList = windowListInfo as NSArray? as? [[String: AnyObject]]
-        for item in infoList! {
-            if let owner = item["kCGWindowOwnerName"], let name = item["kCGWindowName"] {
-                if "\(owner)" == "jamfStatus" && "\(name)" == "Health Status" {
-                    refreshHealthStatus = true
-                    break
-                }
-            }
-        }
 
         Logger.check.info("checking server health status")
 

@@ -406,7 +406,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
             default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
             
-            showOnActiveScreen(windowName: healthStatus_Window)
+            if !healthStatusIsVisible() {
+                showOnActiveScreen(windowName: healthStatus_Window)
+            }
         }
     }
     

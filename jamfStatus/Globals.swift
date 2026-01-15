@@ -190,6 +190,24 @@ struct Preferences {
     static var menuIconStyle                = "color"
 }
 
+public func healthStatusIsVisible() -> Bool {
+    refreshHealthStatus = false
+
+    let options: CGWindowListOption = [.excludeDesktopElements, .optionOnScreenOnly]
+    guard let windowListInfo = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[CFString: Any]] else {
+        return false
+    }
+
+    refreshHealthStatus = windowListInfo.contains { windowInfo in
+        guard let ownerName = windowInfo[kCGWindowOwnerName] as? String,
+              let windowName = windowInfo[kCGWindowName] as? String else {
+            return false
+        }
+        return ownerName == "jamfStatus" && windowName == "Health Status"
+    }
+    return refreshHealthStatus
+}
+
 public func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
     let endTime = Date()
     let components = Calendar.current.dateComponents([
