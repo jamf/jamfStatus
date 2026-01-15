@@ -366,12 +366,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var default_30m_TextField: NSTextField!
     
     @objc func updateHealthStatusView(_ notification: Notification) {
-        print("[AppDelegate.updateHealthStatusView]")
         showHealthStatus_Action(showHealthStatus_MenuItem)
     }
     
     @IBAction func showHealthStatus_Action(_ sender: NSMenuItem) {
-        print("[AppDelegate.showHealthStatus_MenuItem]")
         if let api = HealthStatusStore.shared.healthStatus?.api,
             let ui = HealthStatusStore.shared.healthStatus?.ui,
             let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,

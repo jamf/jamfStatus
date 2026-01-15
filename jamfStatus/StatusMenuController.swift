@@ -433,11 +433,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             if let owner = item["kCGWindowOwnerName"], let name = item["kCGWindowName"] {
                 if "\(owner)" == "jamfStatus" && "\(name)" == "Health Status" {
                     refreshHealthStatus = true
-                    print("owner: \(owner), name: \(name)")
-                    print("refresh: \(refreshHealthStatus)")
                     break
                 }
-                print("owner: \(owner), name: \(name)")
             }
         }
 
@@ -465,7 +462,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
 
         HealthStatusStore.shared.update(from: decodedHealthStatus)
         if refreshHealthStatus {
-            print("[StatusMenuController.refreshHealthStatus] Health status updated")
             NotificationCenter.default.post(name: .updateHealthStatusView, object: self)
         }
 
