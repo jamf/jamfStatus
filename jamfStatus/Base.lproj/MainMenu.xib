@@ -54,6 +54,7 @@
                 <outlet property="prefWindowAlerts_Button" destination="SLI-gn-Ejs" id="ckP-0i-7tD"/>
                 <outlet property="prefWindowIcon_Button" destination="qeJ-Bb-E0c" id="nQs-Cu-bqO"/>
                 <outlet property="prefs_Window" destination="WEB-hD-Ngs" id="mHB-Yd-z5M"/>
+                <outlet property="showHealthStatus_MenuItem" destination="Wqs-QH-aUg" id="Ehj-iD-rB3"/>
                 <outlet property="siteConnectionStatus_ImageView" destination="qwn-kK-uEc" id="jSQ-c5-gEe"/>
                 <outlet property="ui_15m_TextField" destination="yRh-d1-vLK" id="w0B-ng-ugg"/>
                 <outlet property="ui_1m_TextField" destination="J8d-b5-d7z" id="PQS-Nn-kdv"/>
@@ -117,7 +118,7 @@
                 <menuItem title="Health Status..." id="Wqs-QH-aUg">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="showHealthStatus_MenuItem:" target="Voe-Tx-rLC" id="Hp0-Od-brh"/>
+                        <action selector="showHealthStatus_Action:" target="-1" id="8W4-Qy-THA"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Notifications" id="9Lr-kF-tbc">
@@ -158,7 +159,7 @@
                     </connections>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="-182" y="-156"/>
+            <point key="canvasLocation" x="-182" y="-156.5"/>
         </menu>
         <window title="Jamf Cloud Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titleVisibility="hidden" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -713,12 +714,12 @@
             </view>
             <point key="canvasLocation" x="-146" y="255"/>
         </window>
-        <window title="Health Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="XqO-ps-oTf">
+        <window identifier="healthStatusWindow" title="Health Status" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="XqO-ps-oTf">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="1725" y="142" width="566" height="668"/>
             <rect key="screenRect" x="1512" y="-83" width="2048" height="1122"/>
-            <view key="contentView" id="6iB-xm-KCd">
+            <view key="contentView" identifier="healthStatusView" id="6iB-xm-KCd">
                 <rect key="frame" x="0.0" y="0.0" width="566" height="668"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>

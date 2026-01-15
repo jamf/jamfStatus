@@ -33,6 +33,7 @@ var isDarkMode: Bool {
     return mode == "Dark"
 }
 var defaultTextColor = isDarkMode ? NSColor.white:NSColor.black
+var refreshHealthStatus: Bool = false
 
 struct JamfNotification {
     static let key = ["TOMCAT_SSL_CERT_EXPIRED":"CERT_EXPIRED",

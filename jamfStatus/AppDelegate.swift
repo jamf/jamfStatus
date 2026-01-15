@@ -9,8 +9,15 @@ import WebKit
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHealthStatusView(_:)), name: .updateHealthStatusView, object: nil)
+    }
+    
     @IBOutlet weak var cloudStatus_Toolbar: NSToolbar!
     @IBOutlet weak var cloudStatusWindow: NSWindow!
+    @IBOutlet weak var healthStatus_Window: NSWindow!
+    
+    @IBOutlet weak var showHealthStatus_MenuItem: NSMenuItem!
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Window: NSWindow!
@@ -49,10 +56,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         UserDefaults.standard.set(sender.state == .on, forKey: "optOut")
         TelemetryDeckConfig.OptOut = (sender.state == .on)
     }
-    
-    
-    
-    @IBOutlet weak var healthStatus_Window: NSWindow!
     
     let prefs = Preferences.self
     
@@ -362,7 +365,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var default_15m_TextField: NSTextField!
     @IBOutlet weak var default_30m_TextField: NSTextField!
     
-    @IBAction func showHealthStatus_MenuItem(_ sender: NSMenuItem) {
+    @objc func updateHealthStatusView(_ notification: Notification) {
+        print("[AppDelegate.updateHealthStatusView]")
+        showHealthStatus_Action(showHealthStatus_MenuItem)
+    }
+    
+    @IBAction func showHealthStatus_Action(_ sender: NSMenuItem) {
+        print("[AppDelegate.showHealthStatus_MenuItem]")
         if let api = HealthStatusStore.shared.healthStatus?.api,
             let ui = HealthStatusStore.shared.healthStatus?.ui,
             let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
@@ -440,4 +449,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
 //        WriteToLog().message(stringOfText: ["\(sender.identifier!.rawValue)"])
     }
     
+}
+
+extension Notification.Name {
+    public static let updateHealthStatusView = Notification.Name("updateHealthStatusView")
 }
