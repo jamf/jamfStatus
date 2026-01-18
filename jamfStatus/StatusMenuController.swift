@@ -423,17 +423,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         }
         
         refreshHealthStatus = healthStatusIsVisible()
-//        let options = CGWindowListOption(arrayLiteral: CGWindowListOption.excludeDesktopElements, CGWindowListOption.optionOnScreenOnly)
-//        let windowListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
-//        let infoList = windowListInfo as NSArray? as? [[String: AnyObject]]
-//        for item in infoList! {
-//            if let owner = item["kCGWindowOwnerName"], let name = item["kCGWindowName"] {
-//                if "\(owner)" == "jamfStatus" && "\(name)" == "Health Status" {
-//                    refreshHealthStatus = true
-//                    break
-//                }
-//            }
-//        }
 
         Logger.check.info("checking server health status")
 

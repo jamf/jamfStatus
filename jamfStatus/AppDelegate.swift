@@ -365,51 +365,56 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var default_15m_TextField: NSTextField!
     @IBOutlet weak var default_30m_TextField: NSTextField!
     
-    @objc func updateHealthStatusView(_ notification: Notification) {
-        showHealthStatus_Action(showHealthStatus_MenuItem)
+    @MainActor @objc func updateHealthStatusView(_ notification: Notification) {
+        healthStatus_BringToFront(false)
     }
     
     @IBAction func showHealthStatus_Action(_ sender: NSMenuItem) {
-        if let api = HealthStatusStore.shared.healthStatus?.api,
-            let ui = HealthStatusStore.shared.healthStatus?.ui,
-            let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
-            let device = HealthStatusStore.shared.healthStatus?.device,
-            let defaultStatus = HealthStatusStore.shared.healthStatus?.healthStatusDefault {
-            
-            api_30s_TextField.stringValue = "\(Int(api.thirtySeconds * 100))%"
-            api_1m_TextField.stringValue  = "\(Int(api.oneMinute * 100))%"
-            api_5m_TextField.stringValue  = "\(Int(api.fiveMinutes * 100))%"
-            api_15m_TextField.stringValue = "\(Int(api.fifteenMinutes * 100))%"
-            api_30m_TextField.stringValue = "\(Int(api.thirtyMinutes * 100))%"
-            
-            ui_30s_TextField.stringValue = "\(Int(ui.thirtySeconds * 100))%"
-            ui_1m_TextField.stringValue  = "\(Int(ui.oneMinute * 100))%"
-            ui_5m_TextField.stringValue  = "\(Int(ui.fiveMinutes * 100))%"
-            ui_15m_TextField.stringValue = "\(Int(ui.fifteenMinutes * 100))%"
-            ui_30m_TextField.stringValue = "\(Int(ui.thirtyMinutes * 100))%"
-            
-            enrollment_30s_TextField.stringValue = "\(Int(enrollment.thirtySeconds * 100))%"
-            enrollment_1m_TextField.stringValue  = "\(Int(enrollment.oneMinute * 100))%"
-            enrollment_5m_TextField.stringValue  = "\(Int(enrollment.fiveMinutes * 100))%"
-            enrollment_15m_TextField.stringValue = "\(Int(enrollment.fifteenMinutes * 100))%"
-            enrollment_30m_TextField.stringValue = "\(Int(enrollment.thirtyMinutes * 100))%"
-            
-            device_30s_TextField.stringValue = "\(Int(device.thirtySeconds * 100))%"
-            device_1m_TextField.stringValue  = "\(Int(device.oneMinute * 100))%"
-            device_5m_TextField.stringValue  = "\(Int(device.fiveMinutes * 100))%"
-            device_15m_TextField.stringValue = "\(Int(device.fifteenMinutes * 100))%"
-            device_30m_TextField.stringValue = "\(Int(device.thirtyMinutes * 100))%"
-            
-            default_30s_TextField.stringValue = "\(Int(defaultStatus.thirtySeconds * 100))%"
-            default_1m_TextField.stringValue  = "\(Int(defaultStatus.oneMinute * 100))%"
-            default_5m_TextField.stringValue  = "\(Int(defaultStatus.fiveMinutes * 100))%"
-            default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
-            default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
-            
-            if !healthStatusIsVisible() {
-                showOnActiveScreen(windowName: healthStatus_Window)
+        healthStatus_BringToFront(true)
+    }
+    
+    @MainActor
+    func healthStatus_BringToFront(_ bringToFront: Bool) {
+            if let api = HealthStatusStore.shared.healthStatus?.api,
+                let ui = HealthStatusStore.shared.healthStatus?.ui,
+                let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
+                let device = HealthStatusStore.shared.healthStatus?.device,
+                let defaultStatus = HealthStatusStore.shared.healthStatus?.healthStatusDefault {
+                
+                api_30s_TextField.stringValue = "\(Int(api.thirtySeconds * 100))%"
+                api_1m_TextField.stringValue  = "\(Int(api.oneMinute * 100))%"
+                api_5m_TextField.stringValue  = "\(Int(api.fiveMinutes * 100))%"
+                api_15m_TextField.stringValue = "\(Int(api.fifteenMinutes * 100))%"
+                api_30m_TextField.stringValue = "\(Int(api.thirtyMinutes * 100))%"
+                
+                ui_30s_TextField.stringValue = "\(Int(ui.thirtySeconds * 100))%"
+                ui_1m_TextField.stringValue  = "\(Int(ui.oneMinute * 100))%"
+                ui_5m_TextField.stringValue  = "\(Int(ui.fiveMinutes * 100))%"
+                ui_15m_TextField.stringValue = "\(Int(ui.fifteenMinutes * 100))%"
+                ui_30m_TextField.stringValue = "\(Int(ui.thirtyMinutes * 100))%"
+                
+                enrollment_30s_TextField.stringValue = "\(Int(enrollment.thirtySeconds * 100))%"
+                enrollment_1m_TextField.stringValue  = "\(Int(enrollment.oneMinute * 100))%"
+                enrollment_5m_TextField.stringValue  = "\(Int(enrollment.fiveMinutes * 100))%"
+                enrollment_15m_TextField.stringValue = "\(Int(enrollment.fifteenMinutes * 100))%"
+                enrollment_30m_TextField.stringValue = "\(Int(enrollment.thirtyMinutes * 100))%"
+                
+                device_30s_TextField.stringValue = "\(Int(device.thirtySeconds * 100))%"
+                device_1m_TextField.stringValue  = "\(Int(device.oneMinute * 100))%"
+                device_5m_TextField.stringValue  = "\(Int(device.fiveMinutes * 100))%"
+                device_15m_TextField.stringValue = "\(Int(device.fifteenMinutes * 100))%"
+                device_30m_TextField.stringValue = "\(Int(device.thirtyMinutes * 100))%"
+                
+                default_30s_TextField.stringValue = "\(Int(defaultStatus.thirtySeconds * 100))%"
+                default_1m_TextField.stringValue  = "\(Int(defaultStatus.oneMinute * 100))%"
+                default_5m_TextField.stringValue  = "\(Int(defaultStatus.fiveMinutes * 100))%"
+                default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
+                default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
+
+                if !healthStatusIsVisible() || bringToFront {
+                    showOnActiveScreen(windowName: healthStatus_Window)
+                }
             }
-        }
     }
     
     func showOnActiveScreen(windowName: NSWindow) {
@@ -425,7 +430,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
             yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
         }
-//            windowName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+
         windowName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
         windowName.setIsVisible(true)
                 
