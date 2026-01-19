@@ -33,6 +33,7 @@ var isDarkMode: Bool {
     return mode == "Dark"
 }
 var defaultTextColor = isDarkMode ? NSColor.white:NSColor.black
+var refreshHealthStatus: Bool = false
 
 struct JamfNotification {
     static let key = ["TOMCAT_SSL_CERT_EXPIRED":"CERT_EXPIRED",
@@ -189,49 +190,62 @@ struct Preferences {
     static var menuIconStyle                = "color"
 }
 
+public func healthStatusIsVisible() -> Bool {
+    refreshHealthStatus = false
 
-struct token {
-    static var refreshInterval:UInt32 = 10*60  // 10 minutes
-    static var sourceServer  = ""
-    static var sourceExpires = ""
-    static var startTime     = Date()
-    static var isValid       = false
+    let options: CGWindowListOption = [.excludeDesktopElements, .optionOnScreenOnly]
+    guard let windowListInfo = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[CFString: Any]] else {
+        return false
+    }
+
+    refreshHealthStatus = windowListInfo.contains { windowInfo in
+        guard let ownerName = windowInfo[kCGWindowOwnerName] as? String,
+              let windowName = windowInfo[kCGWindowName] as? String else {
+            return false
+        }
+        return ownerName == "jamfStatus" && windowName == "Health Status"
+    }
+    return refreshHealthStatus
 }
 
 public func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
     let endTime = Date()
-//                    let components = Calendar.current.dateComponents([.second, .nanosecond], from: startTime, to: endTime)
-//                    let timeDifference = Double(components.second!) + Double(components.nanosecond!)/1000000000
-//                    WriteToLog().message(stringOfText: "[ViewController.download] time difference: \(timeDifference) seconds")
     let components = Calendar.current.dateComponents([
         .hour, .minute, .second, .nanosecond], from: startTime, to: endTime)
     var diffInSeconds = Double(components.hour!)*3600 + Double(components.minute!)*60 + Double(components.second!) + Double(components.nanosecond!)/1000000000
     diffInSeconds = Double(round(diffInSeconds * 1000) / 1000)
-//    let timeDifference = Int(components.second!) //+ Double(components.nanosecond!)/1000000000
-//    let (h,r) = timeDifference.quotientAndRemainder(dividingBy: 3600)
-//    let (m,s) = r.quotientAndRemainder(dividingBy: 60)
-//    WriteToLog().message(stringOfText: "[ViewController.download] download time: \(h):\(m):\(s) (h:m:s)")
+
     return (Int(components.hour!), Int(components.minute!), Int(components.second!), diffInSeconds)
-//    return (h, m, s)
 }
 
 extension String {
-    var fqdnFromUrl: String {
+    var baseUrl: String {
         get {
-            var fqdn = ""
-            let nameArray = self.components(separatedBy: "/")
-            if nameArray.count > 2 {
-                fqdn = nameArray[2]
-            } else {
-                fqdn =  self
+            guard let url = URL(string: self),
+                  let scheme = url.scheme,
+                  let host = url.host else {
+                return ""
             }
-            if fqdn.contains(":") {
-                let fqdnArray = fqdn.components(separatedBy: ":")
-                fqdn = fqdnArray[0]
+            
+            // Construct base URL with scheme and host
+            var baseURL = "\(scheme)://\(host)"
+            
+            // Include port if it exists and is not default
+            if let port = url.port {
+                baseURL += ":\(port)"
             }
-            let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
-            fqdn = urlRegex.stringByReplacingMatches(in: fqdn, options: [], range: NSRange(0..<fqdn.utf16.count), withTemplate: "")
-            return fqdn
+                
+            return baseURL
+        }
+    }
+    var fqdn: String {
+        get {
+            guard let url = URL(string: self),
+                  let host = url.host else {
+                return ""
+            }
+                
+            return host
         }
     }
 }

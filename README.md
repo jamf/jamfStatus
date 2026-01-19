@@ -1,12 +1,10 @@
 # jamfStatus
-
-
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/jamf/jamfStatus?display_name=tag) ![GitHub all releases](https://img.shields.io/github/downloads/jamf/jamfStatus/total) ![GitHub latest release](https://img.shields.io/github/downloads/jamf/jamfStatus/latest/total)
  ![GitHub issues](https://img.shields.io/github/issues-raw/jamf/jamfStatus) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/jamf/jamfStatus) ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/jamf/jamfStatus) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/jamf/jamfStatus)
-
+ 
 Download: [jamfStatus](https://github.com/jamf/jamfStatus/releases/latest/download/jamfStatus.zip)
 
-The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the About window.
+The application submits basic hardware, OS, and jamfStatus application usage to [TelemetryDeck](https://telemetrydeck.com) by default. The data is sent anonymously and can be disabled by clicking 'Opt out of analytics' from the 'About...' window.
 
 Keep an eye on the status of Jamf Cloud with jamfStatus.  The app will place an icon in the menu bar to reflect the current cloud status.
 
@@ -55,7 +53,7 @@ Notifications, if any, will appear after the next polling cycle once the informa
 
 <img src="./jamfStatus/images/notifications.png" alt="Preferences" width="600" />
 
-The health status can also be viewed for Jamf Cloud hosted instances. The status displays the percent of incoming requests that are successfully accepted.
+The health status can also be viewed for Jamf Cloud hosted instances. The status displays the percent of incoming requests that are successful.
 
 <img src="./jamfStatus/images/healthStatusMenu.png" alt="Health Status" width="150" />
 <img src="./jamfStatus/images/healthStatus.png" alt="Health Status" width="600" />
@@ -128,22 +126,3 @@ Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 * Major Update for Jamf Connect Now Available (Jamf Connect &lt;latestVersion&gt;)
 * Device Compliance Connection Interrupted
 * Conditional Access Connection Interrupted
-
-
-## Change log
-
-2025-12-21: v2.5.0 - Add basic hardware, OS, and jamfStatus app usage collection. Data is sent anonymously to [TelemetryDeck](https:telemetrydeck.com) to aid in the development of the app. View 'About...' to opt out of sending the data. Add ability to view health-status for Jamf Cloud hosted instances. Fix an issue with token renewal.
-
-2023-12-06: v2.4.1 - Minor updates to the alerts display.
-
-2023-11-11: v2.4.0 - Fix issue with notifications not being displayed.  Add ability to use API client.
-
-2023-04-07: v2.3.6 - Update logging to prevent potential looping.  
-
-2022-10-02: v2.3.2 - Rework authentication/token refresh.
-
-2022-06-12: v2.3.1 - Clean up notificatations not displaying properly.
-
-2021-10-15: v2.3.0 - Updated notifications display.
-
-

@@ -122,12 +122,12 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         // set menu icon style
         prefs.menuIconStyle = defaults.string(forKey: "menuIconStyle") ?? prefs.menuIconStyle
         
-        if (defaults.object(forKey:"jamfServerUrl") as? String == nil) {
+        if (defaults.string(forKey:"jamfServerUrl") == nil) || (defaults.string(forKey:"jamfServerUrl") == "") {
             defaults.set("", forKey: "jamfServerUrl")
             JamfProServer.url = ""
         } else {
-            JamfProServer.url = defaults.string(forKey:"jamfServerUrl")!
-            let credentialsArray = Credentials().itemLookup(service: JamfProServer.url.fqdnFromUrl)
+            JamfProServer.url = (defaults.string(forKey:"jamfServerUrl") ?? "").baseUrl
+            let credentialsArray = Credentials().itemLookup(service: JamfProServer.url.fqdn)
             if credentialsArray.count == 2 {
                 JamfProServer.username = credentialsArray[0]
                 JamfProServer.password = credentialsArray[1]
@@ -135,7 +135,6 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
                 JamfProServer.password = ""
             }
         }
-        
         
         icon = NSImage(named: iconName)
 //        icon?.isTemplate = true // best for dark mode?
@@ -422,6 +421,8 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
             Logger.check.info("health status was not updated")
             throw HealthStatusError.authenticationFailed
         }
+        
+        refreshHealthStatus = healthStatusIsVisible()
 
         Logger.check.info("checking server health status")
 
@@ -446,8 +447,36 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
         let decodedHealthStatus = try JSONDecoder().decode(HealthStatus.self, from: data)
 
         HealthStatusStore.shared.update(from: decodedHealthStatus)
+        if refreshHealthStatus {
+            NotificationCenter.default.post(name: .updateHealthStatusView, object: self)
+        }
 
         Logger.check.info("health status updated")
+        
+        // log rates below 1.0
+        if let _ = HealthStatusStore.shared.healthStatus {
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.api, area: "API")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.ui, area: "UI")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.enrollment, area: "Enrollment")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.device, area: "Device")
+            await logHealthStatus(HealthStatusStore.shared.healthStatus!.healthStatusDefault, area: "Default")
+        }
+    }
+    
+    private func logHealthStatus(_ values: API, area: String) async {
+        let apiMirror = Mirror(reflecting: values as API)
+        var percents: [String] = []
+        for timeInterval in apiMirror.children {
+            if let label = timeInterval.label {
+                if let theRate = timeInterval.value as? Double, theRate < 1.0  {
+                    percents.append("    \(label): \(timeInterval.value)")
+                }
+            }
+        }
+        if !percents.isEmpty {
+            writeToLog.message(stringOfText: ["\(area) rate warning:"])
+            writeToLog.message(stringOfText: percents)
+        }
     }
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping(  URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

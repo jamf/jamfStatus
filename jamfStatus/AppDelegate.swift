@@ -9,8 +9,15 @@ import WebKit
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateHealthStatusView(_:)), name: .updateHealthStatusView, object: nil)
+    }
+    
     @IBOutlet weak var cloudStatus_Toolbar: NSToolbar!
     @IBOutlet weak var cloudStatusWindow: NSWindow!
+    @IBOutlet weak var healthStatus_Window: NSWindow!
+    
+    @IBOutlet weak var showHealthStatus_MenuItem: NSMenuItem!
     
     @IBOutlet var page_WebView: WKWebView!
     @IBOutlet weak var prefs_Window: NSWindow!
@@ -49,10 +56,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         UserDefaults.standard.set(sender.state == .on, forKey: "optOut")
         TelemetryDeckConfig.OptOut = (sender.state == .on)
     }
-    
-    
-    
-    @IBOutlet weak var healthStatus_Window: NSWindow!
     
     let prefs = Preferences.self
     
@@ -170,17 +173,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
         }
     }
     
-    @IBAction func credentials_Action(_ sender: Any) {
-        JamfProServer.url = jamfServerUrl_TextField.stringValue
+    @IBAction func credentials_Action(_ sender: NSTextField) {
         
-        let urlRegex = try! NSRegularExpression(pattern: "/?failover(.*?)", options:.caseInsensitive)
-        JamfProServer.url = urlRegex.stringByReplacingMatches(in: JamfProServer.url, options: [], range: NSRange(0..<JamfProServer.url.utf16.count), withTemplate: "")
-        
-        defaults.set(JamfProServer.url, forKey: "jamfServerUrl")
-//        defaults.synchronize()
-        
-        JamfProServer.username = username_TextField.stringValue
-        JamfProServer.password = password_TextField.stringValue
+        switch sender.identifier?.rawValue {
+        case "jamfProURL":
+            JamfProServer.url = jamfServerUrl_TextField.stringValue
+            if jamfServerUrl_TextField.stringValue.baseUrl.isEmpty {
+                DispatchQueue.main.async { [self] in
+                    jamfServerUrl_TextField.becomeFirstResponder()
+                    alert_dialog(header: "", message: "Invlid URL\nMust be in the format: https://server.example.com", updateAvail: false)
+                    if siteConnectionStatus_ImageView.image != statusImage[0] {
+                        siteConnectionStatus_ImageView.image = statusImage[0]
+                    }
+                    return
+                }
+            } else {
+                JamfProServer.url = jamfServerUrl_TextField.stringValue.baseUrl
+                jamfServerUrl_TextField.stringValue = JamfProServer.url
+            }
+        case "account":
+            JamfProServer.username = username_TextField.stringValue
+        case "credential":
+            JamfProServer.password = password_TextField.stringValue
+        default:
+            break
+        }
         
         saveCreds(server: JamfProServer.url, username: JamfProServer.username, password: JamfProServer.password)
     }
@@ -188,7 +205,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     // actions for preferences window - start
     
     func fetchPassword() {
-        let credentialsArray = Credentials().itemLookup(service: jamfServerUrl_TextField.stringValue.fqdnFromUrl)
+        let credentialsArray = Credentials().itemLookup(service: jamfServerUrl_TextField.stringValue.fqdn)
         if credentialsArray.count == 2 {
             username_TextField.stringValue = credentialsArray[0]
             password_TextField.stringValue = credentialsArray[1]
@@ -239,13 +256,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     }   // func alert_dialog - end
 
     func saveCreds(server: String, username: String, password: String) {
-        if ( server != "" && username != "" && password != "" ) {
-            
-            let urlRegex = try! NSRegularExpression(pattern: "http(.*?)://", options:.caseInsensitive)
-            let serverFqdn = urlRegex.stringByReplacingMatches(in: server, options: [], range: NSRange(0..<server.utf16.count), withTemplate: "")
-            
+        if !( server.isEmpty || username.isEmpty || password.isEmpty ) {
+                        
             JamfProServer.base64Creds = ("\(username):\(password)".data(using: .utf8)?.base64EncodedString())!
-            token.isValid = false
+            JamfProServer.validToken = false
+            
             // update the connection indicator for the site server
             Task {
                 if await TokenManager.shared.tokenInfo?.renewToken ?? true {
@@ -253,10 +268,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
                 }
                 
                 if await TokenManager.shared.tokenInfo?.authMessage ?? "" == "success" {
+                    defaults.set(JamfProServer.url, forKey: "jamfServerUrl")
                     DispatchQueue.main.async {
                         self.siteConnectionStatus_ImageView.image = self.statusImage[1]
                     }
-                    Credentials().save(service: server.fqdnFromUrl, account: username, data: password)
+                    Credentials().save(service: server.fqdn, account: username, data: password)
                 } else {
                     print("authentication failed")
                     DispatchQueue.main.async {
@@ -296,11 +312,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             iconStyle_Button.selectItem(at: 1)
         }
         
-        let serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
-        if serverUrl != "" {
+        var serverUrl = defaults.string(forKey:"jamfServerUrl") ?? ""
+        serverUrl = serverUrl.baseUrl
+        if !serverUrl.isEmpty {
             jamfServerUrl_TextField.stringValue = serverUrl
 
-            let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdnFromUrl)
+            let credentialsArray = Credentials().itemLookup(service: serverUrl.fqdn)
             if credentialsArray.count == 2 {
                 JamfProServer.username = credentialsArray[0]
                 JamfProServer.password = credentialsArray[1]
@@ -348,45 +365,56 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     @IBOutlet weak var default_15m_TextField: NSTextField!
     @IBOutlet weak var default_30m_TextField: NSTextField!
     
-    @IBAction func showHealthStatus_MenuItem(_ sender: NSMenuItem) {
-        if let api = HealthStatusStore.shared.healthStatus?.api,
-            let ui = HealthStatusStore.shared.healthStatus?.ui,
-            let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
-            let device = HealthStatusStore.shared.healthStatus?.device,
-            let defaultStatus = HealthStatusStore.shared.healthStatus?.healthStatusDefault {
-            
-            api_30s_TextField.stringValue = "\(Int(api.thirtySeconds * 100))%"
-            api_1m_TextField.stringValue  = "\(Int(api.oneMinute * 100))%"
-            api_5m_TextField.stringValue  = "\(Int(api.fiveMinutes * 100))%"
-            api_15m_TextField.stringValue = "\(Int(api.fifteenMinutes * 100))%"
-            api_30m_TextField.stringValue = "\(Int(api.thirtyMinutes * 100))%"
-            
-            ui_30s_TextField.stringValue = "\(Int(ui.thirtySeconds * 100))%"
-            ui_1m_TextField.stringValue  = "\(Int(ui.oneMinute * 100))%"
-            ui_5m_TextField.stringValue  = "\(Int(ui.fiveMinutes * 100))%"
-            ui_15m_TextField.stringValue = "\(Int(ui.fifteenMinutes * 100))%"
-            ui_30m_TextField.stringValue = "\(Int(ui.thirtyMinutes * 100))%"
-            
-            enrollment_30s_TextField.stringValue = "\(Int(enrollment.thirtySeconds * 100))%"
-            enrollment_1m_TextField.stringValue  = "\(Int(enrollment.oneMinute * 100))%"
-            enrollment_5m_TextField.stringValue  = "\(Int(enrollment.fiveMinutes * 100))%"
-            enrollment_15m_TextField.stringValue = "\(Int(enrollment.fifteenMinutes * 100))%"
-            enrollment_30m_TextField.stringValue = "\(Int(enrollment.thirtyMinutes * 100))%"
-            
-            device_30s_TextField.stringValue = "\(Int(device.thirtySeconds * 100))%"
-            device_1m_TextField.stringValue  = "\(Int(device.oneMinute * 100))%"
-            device_5m_TextField.stringValue  = "\(Int(device.fiveMinutes * 100))%"
-            device_15m_TextField.stringValue = "\(Int(device.fifteenMinutes * 100))%"
-            device_30m_TextField.stringValue = "\(Int(device.thirtyMinutes * 100))%"
-            
-            default_30s_TextField.stringValue = "\(Int(defaultStatus.thirtySeconds * 100))%"
-            default_1m_TextField.stringValue  = "\(Int(defaultStatus.oneMinute * 100))%"
-            default_5m_TextField.stringValue  = "\(Int(defaultStatus.fiveMinutes * 100))%"
-            default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
-            default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
-            
-            showOnActiveScreen(windowName: healthStatus_Window)
-        }
+    @MainActor @objc func updateHealthStatusView(_ notification: Notification) {
+        healthStatus_BringToFront(false)
+    }
+    
+    @IBAction func showHealthStatus_Action(_ sender: NSMenuItem) {
+        healthStatus_BringToFront(true)
+    }
+    
+    @MainActor
+    func healthStatus_BringToFront(_ bringToFront: Bool) {
+            if let api = HealthStatusStore.shared.healthStatus?.api,
+                let ui = HealthStatusStore.shared.healthStatus?.ui,
+                let enrollment = HealthStatusStore.shared.healthStatus?.enrollment,
+                let device = HealthStatusStore.shared.healthStatus?.device,
+                let defaultStatus = HealthStatusStore.shared.healthStatus?.healthStatusDefault {
+                
+                api_30s_TextField.stringValue = "\(Int(api.thirtySeconds * 100))%"
+                api_1m_TextField.stringValue  = "\(Int(api.oneMinute * 100))%"
+                api_5m_TextField.stringValue  = "\(Int(api.fiveMinutes * 100))%"
+                api_15m_TextField.stringValue = "\(Int(api.fifteenMinutes * 100))%"
+                api_30m_TextField.stringValue = "\(Int(api.thirtyMinutes * 100))%"
+                
+                ui_30s_TextField.stringValue = "\(Int(ui.thirtySeconds * 100))%"
+                ui_1m_TextField.stringValue  = "\(Int(ui.oneMinute * 100))%"
+                ui_5m_TextField.stringValue  = "\(Int(ui.fiveMinutes * 100))%"
+                ui_15m_TextField.stringValue = "\(Int(ui.fifteenMinutes * 100))%"
+                ui_30m_TextField.stringValue = "\(Int(ui.thirtyMinutes * 100))%"
+                
+                enrollment_30s_TextField.stringValue = "\(Int(enrollment.thirtySeconds * 100))%"
+                enrollment_1m_TextField.stringValue  = "\(Int(enrollment.oneMinute * 100))%"
+                enrollment_5m_TextField.stringValue  = "\(Int(enrollment.fiveMinutes * 100))%"
+                enrollment_15m_TextField.stringValue = "\(Int(enrollment.fifteenMinutes * 100))%"
+                enrollment_30m_TextField.stringValue = "\(Int(enrollment.thirtyMinutes * 100))%"
+                
+                device_30s_TextField.stringValue = "\(Int(device.thirtySeconds * 100))%"
+                device_1m_TextField.stringValue  = "\(Int(device.oneMinute * 100))%"
+                device_5m_TextField.stringValue  = "\(Int(device.fiveMinutes * 100))%"
+                device_15m_TextField.stringValue = "\(Int(device.fifteenMinutes * 100))%"
+                device_30m_TextField.stringValue = "\(Int(device.thirtyMinutes * 100))%"
+                
+                default_30s_TextField.stringValue = "\(Int(defaultStatus.thirtySeconds * 100))%"
+                default_1m_TextField.stringValue  = "\(Int(defaultStatus.oneMinute * 100))%"
+                default_5m_TextField.stringValue  = "\(Int(defaultStatus.fiveMinutes * 100))%"
+                default_15m_TextField.stringValue = "\(Int(defaultStatus.fifteenMinutes * 100))%"
+                default_30m_TextField.stringValue = "\(Int(defaultStatus.thirtyMinutes * 100))%"
+
+                if !healthStatusIsVisible() || bringToFront {
+                    showOnActiveScreen(windowName: healthStatus_Window)
+                }
+            }
     }
     
     func showOnActiveScreen(windowName: NSWindow) {
@@ -402,7 +430,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
             xPos = currentFrameWidth - windowWidth + Double(screen.frame.origin.x) - 20.0
             yPos = currentFrameHeight - windowHeight + Double(screen.frame.origin.y) - 40.0
         }
-//            windowName.collectionBehavior = NSWindow.CollectionBehavior.moveToActiveSpace
+
         windowName.setFrameOrigin(NSPoint(x: xPos, y: yPos))
         windowName.setIsVisible(true)
                 
@@ -428,3 +456,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, URLSessionDelegate {
     
 }
 
+extension Notification.Name {
+    public static let updateHealthStatusView = Notification.Name("updateHealthStatusView")
+}
