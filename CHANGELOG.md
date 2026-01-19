@@ -1,5 +1,7 @@
 ## Change log
 
+2025-01-19: v2.5.4 - Better handling of the health status window.
+
 2025-01-15: v2.5.3 - Actively update health status window if it is presented.
 
 2025-12-24: v2.5.1 - Log health status rates below 1.0.
