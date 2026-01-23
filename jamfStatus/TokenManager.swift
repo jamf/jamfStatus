@@ -1,6 +1,6 @@
 //
 //  TokenManager.swift
-//  Wallpaper
+//  jamfStatus
 //
 //  Created by leslie on 7/9/25.
 //

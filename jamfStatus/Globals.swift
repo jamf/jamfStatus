@@ -10,7 +10,7 @@ import Cocoa
 import Foundation
 
 let httpSuccess     = 200...299
-let refreshInterval: UInt32 = 25*60 // 25 minutes
+let refreshInterval: UInt32 = 20*60 // 20 minutes
 var useApiClient    = 0
 let defaults        = UserDefaults.standard
 
