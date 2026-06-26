@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EBDE4374A8396549F6083C0D /* StatusAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */; };
 		08E154C31DB4ACFEC37CA010 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133513CE88E780471F6A416 /* MonitorViewModel.swift */; };
 		373690D62B5415882B46312A /* CloudStatusWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */; };
 		5AD762F930C578F10D3DFA41 /* HealthStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusAlertView.swift; sourceTree = "<group>"; };
 		123EBE836812C80E1645E10A /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		206B123F37754E664F75D755 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatusView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				CEB9969E2EF8DB6600EDDD1C /* About.swift */,
 				B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
+				D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */,
 				C133513CE88E780471F6A416 /* MonitorViewModel.swift */,
 				123EBE836812C80E1645E10A /* MenuBarView.swift */,
 				206B123F37754E664F75D755 /* SettingsView.swift */,
@@ -261,6 +264,7 @@
 				B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
 				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
+				EBDE4374A8396549F6083C0D /* StatusAlertView.swift in Sources */,
 				08E154C31DB4ACFEC37CA010 /* MonitorViewModel.swift in Sources */,
 				AEED53FA50A0BF12F0B4C26B /* MenuBarView.swift in Sources */,
 				EF8C6EEBF9CDC3157A12572F /* SettingsView.swift in Sources */,

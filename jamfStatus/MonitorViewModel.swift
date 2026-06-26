@@ -43,6 +43,7 @@ final class MonitorViewModel: ObservableObject {
 
     private var prevState: String = "cloudStatus-green"
     private var monitorTask: Task<Void, Never>?
+    private var alertPanel: StatusAlertPanel?
 
     private let fm = FileManager.default
     private let launchAgentPath = NSHomeDirectory() + "/Library/LaunchAgents/com.jamf.cloudmonitor.plist"
@@ -121,25 +122,35 @@ final class MonitorViewModel: ObservableObject {
     // MARK: - Cloud status
 
     private func getCloudStatus() async throws -> String {
-        guard await TokenManager.shared.tokenInfo?.authMessage == "success" else {
-            return "cloudStatus-green"
-        }
+        // Debug override: load from local file instead of network
+        let data: Data
+        if let testPath = UserDefaults.standard.string(forKey: "debugCloudStatusFile") {
+            guard let fileData = try? Data(contentsOf: URL(fileURLWithPath: testPath)) else {
+                return "cloudStatus-green"
+            }
+            data = fileData
+        } else {
+            guard await TokenManager.shared.tokenInfo?.authMessage == "success" else {
+                return "cloudStatus-green"
+            }
 
-        let apiUrl = "\(Preferences.baseUrl)/api/v2/components.json"
-        guard let url = URL(string: apiUrl) else { return "cloudStatus-green" }
+            let apiUrl = "\(Preferences.baseUrl)/api/v2/components.json"
+            guard let url = URL(string: apiUrl) else { return "cloudStatus-green" }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        let config = URLSessionConfiguration.default
-        config.httpAdditionalHeaders = [
-            "Authorization": "Bearer \(JamfProServer.accessToken)",
-            "Accept": "application/json",
-            "User-Agent": AppInfo.userAgentHeader
-        ]
-        let session = URLSession(configuration: config)
-        let (data, response) = try await session.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            throw HealthStatusError.invalidResponse
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            let config = URLSessionConfiguration.default
+            config.httpAdditionalHeaders = [
+                "Authorization": "Bearer \(JamfProServer.accessToken)",
+                "Accept": "application/json",
+                "User-Agent": AppInfo.userAgentHeader
+            ]
+            let session = URLSession(configuration: config)
+            let (networkData, response) = try await session.data(for: request)
+            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+                throw HealthStatusError.invalidResponse
+            }
+            data = networkData
         }
 
         var operational = [String](), warning = [String](), critical = [String]()
@@ -192,12 +203,10 @@ final class MonitorViewModel: ObservableObject {
         let stateChanged = prevState != state
         let shouldShow   = stateChanged || (!hideUntilChange && prevState != "cloudStatus-green")
         if shouldShow {
-            let alert = NSAlert()
-            alert.messageText     = header
-            alert.informativeText = message
-            alert.alertStyle      = .informational
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
+            writeToLog.message(stringOfText: ["[Alert] \(header): \(message)"])
+            alertPanel?.orderOut(nil)
+            alertPanel = StatusAlertPanel(header: header, message: message, alertState: state)
+            alertPanel?.showOnActiveScreen()
         }
         prevState = state
     }
