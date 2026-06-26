@@ -82,6 +82,7 @@ class StatusMenuController: NSObject, URLSessionDelegate, URLSessionTaskDelegate
        
         if (defaults.object(forKey:"pollingInterval") as? Int == nil) {
             prefs.pollingInterval = 300
+            defaults.set(300, forKey: "pollingInterval")
         } else {
             prefs.pollingInterval = defaults.object(forKey:"pollingInterval") as? Int ?? 300
         }
