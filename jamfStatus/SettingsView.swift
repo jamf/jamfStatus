@@ -10,11 +10,9 @@ struct SettingsView: View {
     @AppStorage("useApiClient")          private var useApiClientRaw: Int    = 0
     @AppStorage("optOut")                private var optOut: Bool            = false
 
-    @State private var serverUrl:    String = ""
-    @State private var username:     String = ""
-    @State private var password:     String = ""
-    @State private var pollingText:  String = ""
-    @FocusState private var pollingFocused: Bool
+    @State private var serverUrl: String = ""
+    @State private var username:  String = ""
+    @State private var password:  String = ""
 
     private var useApiClient: Bool { useApiClientRaw != 0 }
 
@@ -42,15 +40,14 @@ struct SettingsView: View {
     private var generalTab: some View {
         Form {
             Section("Polling") {
-                HStack {
-                    Text("Interval (seconds):")
-                    TextField("", text: $pollingText)
-                        .frame(width: 70)
-                        .focused($pollingFocused)
-                        .onSubmit { commitPollingInterval() }
-                        .onChange(of: pollingFocused) { focused in
-                            if !focused { commitPollingInterval() }
-                        }
+                Stepper(value: $pollingInterval, in: 60...3600, step: 10) {
+                    HStack {
+                        Text("Interval (seconds):")
+                        TextField("", value: $pollingInterval, format: .number)
+                            .frame(width: 60)
+                            .multilineTextAlignment(.trailing)
+                            .onSubmit { clampPollingInterval() }
+                    }
                 }
             }
 
@@ -141,7 +138,6 @@ struct SettingsView: View {
     // MARK: - Helpers
 
     private func loadCurrentValues() {
-        pollingText = "\(pollingInterval)"
         loadStoredCredentials()
     }
 
@@ -160,10 +156,8 @@ struct SettingsView: View {
         }
     }
 
-    private func commitPollingInterval() {
-        let parsed = Int(pollingText) ?? 0
-        pollingInterval = parsed < 60 ? 300 : parsed
-        pollingText = "\(pollingInterval)"
+    private func clampPollingInterval() {
+        if pollingInterval < 60 { pollingInterval = 300 }
     }
 
     private func validateAndSave() {
