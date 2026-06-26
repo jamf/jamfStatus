@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08E154C31DB4ACFEC37CA010 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133513CE88E780471F6A416 /* MonitorViewModel.swift */; };
+		373690D62B5415882B46312A /* CloudStatusWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */; };
+		5AD762F930C578F10D3DFA41 /* HealthStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */; };
+		AEED53FA50A0BF12F0B4C26B /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123EBE836812C80E1645E10A /* MenuBarView.swift */; };
 		B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5013BC61E95817C0099300A /* AppDelegate.swift */; };
 		B5013BC91E95817C0099300A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5013BC81E95817C0099300A /* Assets.xcassets */; };
 		B5013BCC1E95817C0099300A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5013BCA1E95817C0099300A /* MainMenu.xib */; };
@@ -21,6 +25,7 @@
 		B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BD6AD8232F108A001D244A /* VersionCheck.swift */; };
 		B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F31231CAB640012FF5A /* UapiCall.swift */; };
 		B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */; };
+		B8F9E22517DFB402C2AA6F73 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83873AC4025EC7A5D5C6C23E /* AboutView.swift */; };
 		CEB996952EF663F800EDDD1C /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996942EF663F800EDDD1C /* TokenManager.swift */; };
 		CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996962EF6651C00EDDD1C /* TokenInfo.swift */; };
 		CEB996992EF6D96A00EDDD1C /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */; };
@@ -30,9 +35,14 @@
 		CEB996A12EF9309A00EDDD1C /* MyObserverClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */; };
 		CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63462EEC96B4004A58C9 /* TelemetryDeck */; };
 		CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */; };
+		EF8C6EEBF9CDC3157A12572F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B123F37754E664F75D755 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		123EBE836812C80E1645E10A /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		206B123F37754E664F75D755 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatusView.swift; sourceTree = "<group>"; };
+		83873AC4025EC7A5D5C6C23E /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B5013BC31E95817C0099300A /* jamfStatus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jamfStatus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5013BC61E95817C0099300A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5013BC81E95817C0099300A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -51,6 +61,7 @@
 		B5E62F31231CAB640012FF5A /* UapiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UapiCall.swift; sourceTree = "<group>"; };
 		B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
 		B5FD9DAB2742AAC60044C321 /* Misc */ = {isa = PBXFileReference; lastKnownFileType = text; path = Misc; sourceTree = "<group>"; };
+		C133513CE88E780471F6A416 /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorViewModel.swift; sourceTree = "<group>"; };
 		CEB996942EF663F800EDDD1C /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		CEB996962EF6651C00EDDD1C /* TokenInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
@@ -59,6 +70,7 @@
 		CEB9969E2EF8DB6600EDDD1C /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyObserverClass.swift; sourceTree = "<group>"; };
 		CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
+		DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStatusWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +110,12 @@
 				CEB9969E2EF8DB6600EDDD1C /* About.swift */,
 				B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */,
 				B5013BC61E95817C0099300A /* AppDelegate.swift */,
+				C133513CE88E780471F6A416 /* MonitorViewModel.swift */,
+				123EBE836812C80E1645E10A /* MenuBarView.swift */,
+				206B123F37754E664F75D755 /* SettingsView.swift */,
+				2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */,
+				DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */,
+				83873AC4025EC7A5D5C6C23E /* AboutView.swift */,
 				B5BD6AD623297762001D244A /* Credentials.swift */,
 				CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */,
 				B542A1F024BA902C00EE33C8 /* Globals.swift */,
@@ -243,6 +261,12 @@
 				B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */,
 				B5013BC71E95817C0099300A /* AppDelegate.swift in Sources */,
 				B5BD6AD9232F108A001D244A /* VersionCheck.swift in Sources */,
+				08E154C31DB4ACFEC37CA010 /* MonitorViewModel.swift in Sources */,
+				AEED53FA50A0BF12F0B4C26B /* MenuBarView.swift in Sources */,
+				EF8C6EEBF9CDC3157A12572F /* SettingsView.swift in Sources */,
+				5AD762F930C578F10D3DFA41 /* HealthStatusView.swift in Sources */,
+				373690D62B5415882B46312A /* CloudStatusWebView.swift in Sources */,
+				B8F9E22517DFB402C2AA6F73 /* AboutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,7 +336,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -369,7 +393,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -405,8 +429,8 @@
 					"$(SDKROOT)/usr/lib/log",
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
-				MARKETING_VERSION = 2.5.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -440,8 +464,8 @@
 					"$(SDKROOT)/usr/lib/log",
 					"$(SDKROOT)/usr/lib/system/introspection",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
-				MARKETING_VERSION = 2.5.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.pse.jamfStatus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

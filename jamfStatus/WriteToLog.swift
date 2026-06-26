@@ -12,37 +12,9 @@ import os.log
 let writeToLog = WriteToLog()
 
 class WriteToLog {
-    
-    let logFileW    = FileHandle(forUpdatingAtPath: Log.path! + Log.file)
-    let fm          = FileManager()
-    
-    func createLogFolder(completionHandler: @escaping (_ result: String) -> Void) {
-        DispatchQueue.main.async { [self] in
-            var attributes = [FileAttributeKey: Any]()
-            attributes[.posixPermissions] = 0o700
-            do {
-                try fm.createDirectory(atPath: Log.path!, withIntermediateDirectories: true, attributes: attributes)
-                completionHandler("log folder created")
-            } catch {
-                completionHandler("log folder not created")
-            }
-        }
-    }
-    
-    func createLogFile(completionHandler: @escaping (_ result: String) -> Void) {
-        if !fm.fileExists(atPath: Log.path!) {
-            createLogFolder() { [self]
-                (result: String) in
-                print(result)
 
-                fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
-            }
-            
-        } else if !fm.fileExists(atPath: Log.path! + Log.file) {
-            fm.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
-        }
-        completionHandler("created")
-    }
+    let fm = FileManager()
+
     
     // func logCleanup - start
     func logCleanup(completionHandler: @escaping (_ result: String) -> Void) {
@@ -110,30 +82,30 @@ class WriteToLog {
     // func logCleanup - end
 
     func message(stringOfText: [String]) {
-        if !fm.fileExists(atPath: Log.path!) {
-            do {
-                try fm.createDirectory(atPath: Log.path!, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                
-            }
+        guard let logDir = Log.path else { return }
+        let logPath = logDir + Log.file
+
+        if !fm.fileExists(atPath: logDir) {
+            try? fm.createDirectory(atPath: logDir, withIntermediateDirectories: true, attributes: nil)
         }
-        createLogFile() { [self]
-            (result: String) in
-            logCleanup() {
-                (result: String) in
-                for theString in stringOfText {
-                    var logString = "\(self.logDate()) \(theString)\n"
-                    logString = logString.replacingOccurrences(of: "\n    ", with: "\n\(self.logDate())    ")
-                    logString = logString.replacingOccurrences(of: "\nJamf Cloud:", with: "Jamf Cloud:")
-                    logString = logString.replacingOccurrences(of: "All systems go.", with: "All systems go.\n")
-                    
-                    self.logFileW?.seekToEndOfFile()
-                    
-                    let logText = (logString as NSString).data(using: String.Encoding.utf8.rawValue)
-                    self.logFileW?.write(logText!)
-                }
-            }
+        if !fm.fileExists(atPath: logPath) {
+            fm.createFile(atPath: logPath, contents: nil, attributes: nil)
         }
+
+        var output = ""
+        for theString in stringOfText {
+            var line = "\(logDate()) \(theString)\n"
+            line = line.replacingOccurrences(of: "\n    ", with: "\n\(logDate())    ")
+            line = line.replacingOccurrences(of: "\nJamf Cloud:", with: "Jamf Cloud:")
+            line = line.replacingOccurrences(of: "All systems go.", with: "All systems go.\n")
+            output += line
+        }
+
+        guard let data = output.data(using: .utf8),
+              let handle = FileHandle(forWritingAtPath: logPath) else { return }
+        handle.seekToEndOfFile()
+        handle.write(data)
+        handle.closeFile()
     }
     
     func getCurrentTime() -> String {

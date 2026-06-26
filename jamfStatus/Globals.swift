@@ -190,6 +190,10 @@ struct Preferences {
     static var menuIconStyle                = "color"
 }
 
+extension Notification.Name {
+    public static let updateHealthStatusView = Notification.Name("updateHealthStatusView")
+}
+
 public func healthStatusIsVisible() -> Bool {
     refreshHealthStatus = false
 
