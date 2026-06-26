@@ -102,6 +102,8 @@ final class MonitorViewModel: ObservableObject {
         let iconResult = (try? await getCloudStatus()) ?? "cloudStatus-green"
         try? await refreshHealthStatus()
         updateMenuBarIcon(for: iconResult)
+        let authOk = await TokenManager.shared.tokenInfo?.authMessage == "success"
+        connectionStatus = authOk ? .connected : .failed
     }
 
     // MARK: - Notifications

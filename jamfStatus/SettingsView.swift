@@ -28,7 +28,7 @@ struct SettingsView: View {
                 .tabItem { Label("Analytics", systemImage: "chart.bar") }
         }
         .padding(20)
-        .frame(width: 420)
+        .frame(width: 420, height: 400)
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             loadCurrentValues()
@@ -83,21 +83,27 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Jamf Pro Server") {
-                TextField("https://server.example.com", text: $serverUrl)
-                    .textFieldStyle(.roundedBorder)
-                    .onSubmit { validateAndSave() }
+            Section {
+                TextField(text: $serverUrl, prompt: Text("https://server.example.com")) {
+                    EmptyView()
+                }
+                .textFieldStyle(.roundedBorder)
+                .onSubmit { validateAndSave() }
 
                 TextField(useApiClient ? "Client ID" : "Username", text: $username)
                     .textFieldStyle(.roundedBorder)
 
                 SecureField(useApiClient ? "Secret" : "Password", text: $password)
                     .textFieldStyle(.roundedBorder)
+            } header: {
+                HStack(spacing: 6) {
+                    connectionIndicator
+                    Text("Jamf Pro Server")
+                }
             }
 
             HStack {
                 Spacer()
-                connectionIndicator
                 Button("Save") { validateAndSave() }
                     .buttonStyle(.borderedProminent)
             }
@@ -107,14 +113,10 @@ struct SettingsView: View {
 
     @ViewBuilder
     private var connectionIndicator: some View {
-        switch monitor.connectionStatus {
-        case .unknown:
-            EmptyView()
-        case .connected:
-            Image(nsImage: NSImage(named: "green-dot")!)
-        case .failed:
-            Image(nsImage: NSImage(named: "red-dot")!)
-        }
+        let imageName: String = monitor.connectionStatus == .connected ? "green-dot" : "red-dot"
+        Image(nsImage: NSImage(named: imageName)!)
+            .resizable()
+            .frame(width: 10, height: 10)
     }
 
     // MARK: - Analytics tab
