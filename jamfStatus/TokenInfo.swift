@@ -1,6 +1,5 @@
 //
 //  TokenInfo.swift
-//  jamfStatus
 //
 //  Created by leslie on 7/2/25.
 //
@@ -29,8 +28,8 @@ final class TokenInfo: Encodable, @unchecked Sendable {
     }
     
     var renewToken: Bool {
-        Logger.token.debug("Check if token needs renewing: \(self.expiresAt <= Date().addingTimeInterval(-30), privacy: .public)")
-        return expiresAt <= Date().addingTimeInterval(-30)
+        //Logger.token.debug("Check if token needs renewing: \(self.expiresAt <= Date().addingTimeInterval(-30), privacy: .public)")
+        return expiresAt <= Date().addingTimeInterval(30)
     }
 }
 
