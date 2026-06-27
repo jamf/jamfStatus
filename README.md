@@ -28,7 +28,9 @@ Access Preferences from the menu bar icon.  Here you'll be able to set the follo
 - Information for your specific Jamf Cloud instance. Use either a local user account or API client.  Keyboard shortcuts for copy/paste do not function, however you can right-click a field to paste URL, username, API client...<br>
 - Most notification can be viewed using an account with no permissions set in Jamf Pro.  Using an account with ready-only on all objects ensure you'll see all notifications. If your cloud server does not utilize the standard HTTPS port (443) be sure to include the port you use in the URL.
 
-<img src="./jamfStatus/images/prefs.png" alt="notifications" width="600" /><br>
+<img src="./jamfStatus/images/generalPref.png" alt="General" width="300px" />
+<img src="./jamfStatus/images/serverPref.png" alt="Server" width="300px" />
+<img src="./jamfStatus/images/analyticsPref.png" alt="Analytics" width="300px" /><br><br><br>
 
 There are two different menu bar icon styles to choose from.  One uses colors to indicate the status and the other uses slashes.<br><br>
             <div style="margin-left: 55px;">
@@ -74,6 +76,12 @@ Thu Sep 17 20:25:30    Database Services - US: Degraded Performance
 Thu Sep 17 20:27:30 Notice
 Thu Sep 17 20:27:30 Jamf Cloud: All systems go.
 ```
+<br>
+
+## Login Item
+Ensure notifications are not missed. Add the application to Settings --> General --> Login Items & Extensions
+<img src="./jamfStatus/images/loginItem.png" alt="Login Items" width="660" /><br>
+
 
 ## Notifications for the following will be displayed:
 
