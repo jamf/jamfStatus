@@ -28,7 +28,7 @@ struct SettingsView: View {
                 .tabItem { Label("Analytics", systemImage: "chart.bar") }
         }
         .padding(20)
-        .frame(width: 420, height: 400)
+        .frame(width: 460, height: 400)
         .onAppear {
             NSApp.activate(ignoringOtherApps: true)
             loadCurrentValues()

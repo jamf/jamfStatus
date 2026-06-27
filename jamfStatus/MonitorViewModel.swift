@@ -62,6 +62,9 @@ final class MonitorViewModel: ObservableObject {
             UserDefaults.standard.set(false, forKey: "launchAgent")
         }
 
+        // Sync useApiClient global from UserDefaults so TokenManager/Credentials use the right mode
+        useApiClient = UserDefaults.standard.integer(forKey: "useApiClient")
+
         let serverUrl = (UserDefaults.standard.string(forKey: "jamfServerUrl") ?? "").baseUrl
         if !serverUrl.isEmpty {
             JamfProServer.url = serverUrl
@@ -69,7 +72,12 @@ final class MonitorViewModel: ObservableObject {
             if creds.count == 2 {
                 JamfProServer.username = creds[0]
                 JamfProServer.password = creds[1]
+                writeToLog.message(stringOfText: ["[Auth] Credentials loaded from keychain for \(serverUrl.fqdn), auth mode: \(useApiClient == 0 ? "username/password" : "API client")"])
+            } else {
+                writeToLog.message(stringOfText: ["[Auth] No credentials found in keychain for \(serverUrl.isEmpty ? "(no server)" : serverUrl.fqdn)"])
             }
+        } else {
+            writeToLog.message(stringOfText: ["[Auth] No server URL configured"])
         }
 
         let os = ProcessInfo().operatingSystemVersion
@@ -277,6 +285,8 @@ final class MonitorViewModel: ObservableObject {
 
     func saveCredentials(server: String, username: String, password: String) {
         guard !server.isEmpty, !username.isEmpty, !password.isEmpty else { return }
+        // Keep global in sync with the setting the user just saved
+        useApiClient = UserDefaults.standard.integer(forKey: "useApiClient")
         JamfProServer.url      = server
         JamfProServer.username = username
         JamfProServer.password = password
@@ -297,6 +307,7 @@ final class MonitorViewModel: ObservableObject {
                 UserDefaults.standard.set(server, forKey: "jamfServerUrl")
                 Credentials().save(service: server.fqdn, account: username, data: password)
                 connectionStatus = .connected
+                writeToLog.message(stringOfText: ["[Auth] Settings saved — token granted for \(server)"])
             } else {
                 connectionStatus = .failed
             }

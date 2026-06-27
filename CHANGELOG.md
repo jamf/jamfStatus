@@ -1,5 +1,7 @@
 ## Change log
 
+2026-06-26: v3.0.0 - Significant code update. Resolve crash that could occur when trying to edit app settings.
+
 2025-01-19: v2.5.4 - Better handling of the health status window.
 
 2025-01-15: v2.5.3 - Actively update health status window if it is presented.

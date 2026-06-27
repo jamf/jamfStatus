@@ -1,23 +1,33 @@
 import SwiftUI
 
+// Wrapper that injects openSettings from the environment on macOS 14+,
+// falling back to sendAction on macOS 13. Needed because @Environment(\.openSettings)
+// cannot be guarded with @available on a stored property.
+@available(macOS 14.0, *)
+private struct SettingsButton: View {
+    @Environment(\.openSettings) private var openSettings
+    var body: some View {
+        Button("Settings…") {
+            NSApp.activate(ignoringOtherApps: true)
+            openSettings()
+        }
+    }
+}
+
 struct MenuBarView: View {
     @EnvironmentObject var monitor: MonitorViewModel
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        // Notifications submenu
-        if !monitor.notifications.isEmpty {
-            Menu("Notifications (\(monitor.notifications.count))") {
-                ForEach(monitor.notifications) { note in
-                    Text(note.displayTitle)
-                }
-            }
+        Button("About…") {
+            NSApp.activate(ignoringOtherApps: true)
+            openWindow(id: "about")
         }
 
         Divider()
 
         if #available(macOS 14.0, *) {
-            SettingsLink { Text("Settings…") }
+            SettingsButton()
         } else {
             Button("Settings…") {
                 NSApp.activate(ignoringOtherApps: true)
@@ -25,29 +35,34 @@ struct MenuBarView: View {
             }
         }
 
-        Button("Jamf Cloud Status") {
-            NSApp.activate(ignoringOtherApps: true)
-            openWindow(id: "cloud-status")
-        }
-
-        Button("Health Status") {
-            NSApp.activate(ignoringOtherApps: true)
-            openWindow(id: "health-status")
-        }
-
-        Divider()
-
         Button("Check for Updates…") {
             checkForUpdates()
         }
 
-        Button("Show Logs") {
+        Divider()
+
+        Button("View Status Page") {
+            NSApp.activate(ignoringOtherApps: true)
+            openWindow(id: "cloud-status")
+        }
+
+        Button("View Log") {
             showLogs()
         }
 
-        Button("About jamfStatus") {
+        Divider()
+
+        Button("Health Status…") {
             NSApp.activate(ignoringOtherApps: true)
-            openWindow(id: "about")
+            openWindow(id: "health-status")
+        }
+
+        if !monitor.notifications.isEmpty {
+            Menu("Notifications (\(monitor.notifications.count))") {
+                ForEach(monitor.notifications) { note in
+                    Text(note.displayTitle)
+                }
+            }
         }
 
         Divider()
