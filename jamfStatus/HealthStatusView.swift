@@ -9,6 +9,9 @@ struct HealthStatusView: View {
         Group {
             if let hs = store.healthStatus {
                 VStack(spacing: 0) {
+                    Text("Request Acceptance Percent")
+                        .font(.headline)
+                        .padding(.bottom, 8)
                     headerRow
                     Divider()
                     dataRow(label: "API",        api: hs.api)
