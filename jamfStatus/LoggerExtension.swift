@@ -1,5 +1,5 @@
 //
-//  Copyright 2025, Jamf
+//  LoggerExtension.swift
 //
 
 import Foundation

@@ -1,9 +1,5 @@
 //
 //  Globals.swift
-//  jamfStatus
-//
-//  Created by Leslie Helou on 7/11/20.
-//  Copyright © 2020 Leslie Helou. All rights reserved.
 //
 
 import Cocoa

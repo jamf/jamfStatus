@@ -1,8 +1,6 @@
 //
 //  TokenInfo.swift
 //
-//  Created by leslie on 7/2/25.
-//
 
 //import Cocoa
 import Foundation

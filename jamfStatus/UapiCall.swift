@@ -1,9 +1,5 @@
 //
 //  UapiCall.swift
-//  jamfStatus
-//
-//  Created by Leslie Helou on 9/1/19.
-//  Copyright © 2019 Leslie Helou. All rights reserved.
 //
 
 // get notifications from https://jamf.pro.server/uapi/notifications/alerts - old

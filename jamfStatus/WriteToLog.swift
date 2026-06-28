@@ -1,9 +1,5 @@
 //
 //  WriteToLog.swift
-//  jamfStatus
-//
-//  Created by Leslie Helou on 7/11/20.
-//  Copyright © 2019 jamf. All rights reserved.
 //
 
 import Foundation

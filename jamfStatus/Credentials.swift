@@ -1,9 +1,5 @@
 //
 //  Credentials.swift
-//  jamfStatus
-//
-//  Created by Leslie Helou on 9/11/19.
-//  Copyright © 2019 Leslie Helou. All rights reserved.
 //
 
 import Foundation

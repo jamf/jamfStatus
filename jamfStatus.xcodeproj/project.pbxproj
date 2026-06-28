@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EBDE4374A8396549F6083C0D /* StatusAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */; };
 		08E154C31DB4ACFEC37CA010 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133513CE88E780471F6A416 /* MonitorViewModel.swift */; };
 		373690D62B5415882B46312A /* CloudStatusWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */; };
 		5AD762F930C578F10D3DFA41 /* HealthStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */; };
@@ -16,7 +15,6 @@
 		B5013BC91E95817C0099300A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5013BC81E95817C0099300A /* Assets.xcassets */; };
 		B5013BCC1E95817C0099300A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5013BCA1E95817C0099300A /* MainMenu.xib */; };
 		B515969F1E95BB2200ED3CA3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B515969E1E95BB2200ED3CA3 /* Images.xcassets */; };
-		B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */; };
 		B542A1F124BA902C00EE33C8 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542A1F024BA902C00EE33C8 /* Globals.swift */; };
 		B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B542A1F224BA90A900EE33C8 /* WriteToLog.swift */; };
 		B5A470B02271CE7200C2A88D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A470AF2271CE7200C2A88D /* WebKit.framework */; };
@@ -33,14 +31,13 @@
 		CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */; };
 		CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */; };
 		CEB9969F2EF8DB6B00EDDD1C /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB9969E2EF8DB6600EDDD1C /* About.swift */; };
-		CEB996A12EF9309A00EDDD1C /* MyObserverClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */; };
 		CEDE63472EEC96B4004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63462EEC96B4004A58C9 /* TelemetryDeck */; };
 		CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */; };
+		EBDE4374A8396549F6083C0D /* StatusAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */; };
 		EF8C6EEBF9CDC3157A12572F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B123F37754E664F75D755 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusAlertView.swift; sourceTree = "<group>"; };
 		123EBE836812C80E1645E10A /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		206B123F37754E664F75D755 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2B978E2E8F10DCBB4FB6614E /* HealthStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatusView.swift; sourceTree = "<group>"; };
@@ -51,7 +48,6 @@
 		B5013BCB1E95817C0099300A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B5013BCD1E95817C0099300A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B515969E1E95BB2200ED3CA3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMenuController.swift; sourceTree = "<group>"; };
 		B542A1F024BA902C00EE33C8 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		B542A1F224BA90A900EE33C8 /* WriteToLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteToLog.swift; sourceTree = "<group>"; };
 		B5A46CCE226FB1E300C2A88D /* jamfStatus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = jamfStatus.entitlements; sourceTree = "<group>"; };
@@ -70,8 +66,8 @@
 		CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStatus.swift; sourceTree = "<group>"; };
 		CEB9969C2EF8170400EDDD1C /* CurrentHealthStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentHealthStatus.swift; sourceTree = "<group>"; };
 		CEB9969E2EF8DB6600EDDD1C /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
-		CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyObserverClass.swift; sourceTree = "<group>"; };
 		CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
+		D6E93ABAF11D23D559521AD3 /* StatusAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusAlertView.swift; sourceTree = "<group>"; };
 		DA1E024C5FB77C789B5A8E9B /* CloudStatusWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudStatusWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,9 +120,7 @@
 				B542A1F024BA902C00EE33C8 /* Globals.swift */,
 				CEB9969A2EF7DB4500EDDD1C /* HealthStatus.swift */,
 				CEB996982EF6D96A00EDDD1C /* LoggerExtension.swift */,
-				CEB996A02EF9309100EDDD1C /* MyObserverClass.swift */,
 				B5E62F33231DA09F0012FF5A /* NotificationAlert.swift */,
-				B51596A01E963D2D00ED3CA3 /* StatusMenuController.swift */,
 				CEDE63482EEC96CB004A58C9 /* TelemetryDeckConfig.swift */,
 				CEB996962EF6651C00EDDD1C /* TokenInfo.swift */,
 				CEB996942EF663F800EDDD1C /* TokenManager.swift */,
@@ -252,12 +246,10 @@
 				B5E62F34231DA09F0012FF5A /* NotificationAlert.swift in Sources */,
 				CEB9969B2EF7DB4500EDDD1C /* HealthStatus.swift in Sources */,
 				CEB9969D2EF8170B00EDDD1C /* CurrentHealthStatus.swift in Sources */,
-				CEB996A12EF9309A00EDDD1C /* MyObserverClass.swift in Sources */,
 				B542A1F324BA90AA00EE33C8 /* WriteToLog.swift in Sources */,
 				CEB996972EF6651C00EDDD1C /* TokenInfo.swift in Sources */,
 				B5E62F32231CAB640012FF5A /* UapiCall.swift in Sources */,
 				CEB996992EF6D96A00EDDD1C /* LoggerExtension.swift in Sources */,
-				B51596A11E963D2D00ED3CA3 /* StatusMenuController.swift in Sources */,
 				CEDE63492EEC96CB004A58C9 /* TelemetryDeckConfig.swift in Sources */,
 				CEB9969F2EF8DB6B00EDDD1C /* About.swift in Sources */,
 				B5BD6AD723297762001D244A /* Credentials.swift in Sources */,

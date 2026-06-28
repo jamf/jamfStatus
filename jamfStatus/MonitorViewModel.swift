@@ -111,7 +111,7 @@ final class MonitorViewModel: ObservableObject {
         let iconResult = (try? await getCloudStatus()) ?? "cloudStatus-green"
         try? await refreshHealthStatus()
         updateMenuBarIcon(for: iconResult)
-        let authOk = await TokenManager.shared.tokenInfo?.authMessage == "success"
+        let authOk = TokenManager.shared.tokenInfo?.authMessage == "success"
         connectionStatus = authOk ? .connected : .failed
     }
 
@@ -138,7 +138,7 @@ final class MonitorViewModel: ObservableObject {
             }
             data = fileData
         } else {
-            guard await TokenManager.shared.tokenInfo?.authMessage == "success" else {
+            guard TokenManager.shared.tokenInfo?.authMessage == "success" else {
                 return "cloudStatus-green"
             }
 
@@ -231,7 +231,7 @@ final class MonitorViewModel: ObservableObject {
     // MARK: - Health status
 
     private func refreshHealthStatus() async throws {
-        guard await TokenManager.shared.tokenInfo?.authMessage == "success",
+        guard TokenManager.shared.tokenInfo?.authMessage == "success",
               !JamfProServer.url.isEmpty,
               let url = URL(string: "\(JamfProServer.url)/api/v1/health-status") else { return }
 
@@ -302,7 +302,7 @@ final class MonitorViewModel: ObservableObject {
                 username: username.lowercased(),
                 password: password
             )
-            let authMessage = await TokenManager.shared.tokenInfo?.authMessage ?? ""
+            let authMessage = TokenManager.shared.tokenInfo?.authMessage ?? ""
             if authMessage == "success" {
                 UserDefaults.standard.set(server, forKey: "jamfServerUrl")
                 Credentials().save(service: server.fqdn, account: username, data: password)

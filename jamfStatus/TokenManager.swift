@@ -1,8 +1,5 @@
 //
 //  TokenManager.swift
-//  jamfStatus
-//
-//  Created by leslie on 7/9/25.
 //
 
 import Foundation
