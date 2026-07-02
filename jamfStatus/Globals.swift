@@ -1,16 +1,12 @@
 //
 //  Globals.swift
-//  jamfStatus
-//
-//  Created by Leslie Helou on 7/11/20.
-//  Copyright © 2020 Leslie Helou. All rights reserved.
 //
 
 import Cocoa
 import Foundation
 
 let httpSuccess     = 200...299
-let refreshInterval: UInt32 = 25*60 // 25 minutes
+let refreshInterval: UInt32 = 20*60 // 20 minutes
 var useApiClient    = 0
 let defaults        = UserDefaults.standard
 
@@ -188,6 +184,10 @@ struct Preferences {
     static var username                     = ""
     static var password                     = ""
     static var menuIconStyle                = "color"
+}
+
+extension Notification.Name {
+    public static let updateHealthStatusView = Notification.Name("updateHealthStatusView")
 }
 
 public func healthStatusIsVisible() -> Bool {

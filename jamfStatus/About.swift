@@ -1,9 +1,5 @@
 //
 //  About.swift
-//  jamfStatus
-//
-//  Created by leslie on 12/21/25.
-//  Copyright © 2025 Leslie Helou. All rights reserved.
 //
 
 import AppKit

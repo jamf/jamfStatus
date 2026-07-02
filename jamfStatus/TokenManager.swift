@@ -1,8 +1,5 @@
 //
 //  TokenManager.swift
-//  Wallpaper
-//
-//  Created by leslie on 7/9/25.
 //
 
 import Foundation
@@ -25,7 +22,7 @@ actor TokenManager {
         Logger.check.debug("request token from: \(tokenUrlString, privacy: .public)")
         
         guard let tokenUrl = URL(string: tokenUrlString) else {
-            writeToLog.message(stringOfText: ["Invalid URL: \(tokenUrlString)"])
+            writeToLog.message(stringOfText: ["[Auth] Invalid token URL: \(tokenUrlString)"])
             newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: "Invalid URL: \(tokenUrlString)")
             await MainActor.run {
                 self.tokenInfo = newTokenInfo
@@ -55,7 +52,6 @@ actor TokenManager {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                writeToLog.message(stringOfText: ["[setToken] Failed to authenticate, \(serverUrl). Status code: \(statusCode)"])
                 switch statusCode {
                 case 401:
                     authMessage = "\(401): Incorrect credentials"
@@ -66,6 +62,7 @@ actor TokenManager {
                     authMessage = "\(code): login failed"
                 }
                 Logger.check.debug("failed to get token: \(authMessage, privacy: .public)")
+                writeToLog.message(stringOfText: ["[Auth] Token request failed for \(serverUrl): \(authMessage)"])
                 newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: authMessage)
                 await MainActor.run {
                     self.tokenInfo = newTokenInfo
@@ -113,6 +110,7 @@ actor TokenManager {
 
         } catch {
             Logger.check.debug("Token request failed: \(error.localizedDescription, privacy: .public)")
+            writeToLog.message(stringOfText: ["[Auth] Token request error for \(serverUrl): \(error.localizedDescription)"])
             newTokenInfo = TokenInfo(url: serverUrl, token: "", expiresAt: Date(), authMessage: error.localizedDescription)
             await MainActor.run {
                 self.tokenInfo = newTokenInfo
