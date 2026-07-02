@@ -187,7 +187,6 @@
 				TargetAttributes = {
 					B5013BC21E95817C0099300A = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = T82LNZG37Z;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -410,6 +409,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = PS2F6S478M;
 				ENABLE_HARDENED_RUNTIME = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = Notes;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
@@ -445,6 +445,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = PS2F6S478M;
 				ENABLE_HARDENED_RUNTIME = YES;
 				EXCLUDED_SOURCE_FILE_NAMES = Notes;
 				INFOPLIST_FILE = jamfStatus/Info.plist;
